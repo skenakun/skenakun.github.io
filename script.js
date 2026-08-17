@@ -8,7 +8,31 @@ const seedPhotos = [
   { id: "seed-7", src: "./assets/waifu-07.jpg", title: "Sakura Bride", category: "wedding", uploaded: false },
   { id: "seed-8", src: "./assets/waifu-08.jpg", title: "Violet Bride", category: "wedding", uploaded: false },
   { id: "seed-9", src: "./assets/waifu-09.jpg", title: "Moonlight Bride", category: "wedding", uploaded: false },
-  { id: "seed-10", src: "./assets/waifu-10.jpg", title: "Sunny Street", category: "casual", uploaded: false }
+  { id: "seed-10", src: "./assets/waifu-10.jpg", title: "Sunny Street", category: "casual", uploaded: false },
+  { id: "seed-11", src: "./assets/waifu-11.jpg", title: "Frostlight Portrait", category: "portrait", uploaded: false },
+  { id: "seed-12", src: "./assets/waifu-12.jpg", title: "Gentle Afternoon", category: "casual", uploaded: false },
+  { id: "seed-13", src: "./assets/waifu-13.jpg", title: "Moonlit Blossom", category: "classic", uploaded: false },
+  { id: "seed-14", src: "./assets/waifu-14.jpg", title: "Lavender Stage", category: "classic", uploaded: false },
+  { id: "seed-15", src: "./assets/waifu-15.jpg", title: "Twilight Reflection", category: "classic", uploaded: false },
+  { id: "seed-16", src: "./assets/waifu-16.jpg", title: "Feather Moon", category: "portrait", uploaded: false },
+  { id: "seed-17", src: "./assets/waifu-17.jpg", title: "Starlit Water", category: "classic", uploaded: false },
+  { id: "seed-18", src: "./assets/waifu-18.jpg", title: "White Dress Portrait", category: "portrait", uploaded: false },
+  { id: "seed-19", src: "./assets/waifu-19.jpg", title: "Featherfall Garden", category: "classic", uploaded: false },
+  { id: "seed-20", src: "./assets/waifu-20.jpg", title: "Blue Moon Garden", category: "wedding", uploaded: false },
+  { id: "seed-21", src: "./assets/waifu-21.jpg", title: "Azure Flower Night", category: "wedding", uploaded: false },
+  { id: "seed-22", src: "./assets/waifu-22.jpg", title: "Violet Close-up", category: "portrait", uploaded: false },
+  { id: "seed-23", src: "./assets/waifu-23.jpg", title: "Winter Crown", category: "portrait", uploaded: false },
+  { id: "seed-24", src: "./assets/waifu-24.jpg", title: "Crystal Reverie", category: "portrait", uploaded: false },
+  { id: "seed-25", src: "./assets/waifu-25.jpg", title: "Ice Throne", category: "classic", uploaded: false },
+  { id: "seed-26", src: "./assets/waifu-26.jpg", title: "Frost Scepter", category: "classic", uploaded: false },
+  { id: "seed-27", src: "./assets/waifu-27.jpg", title: "Blue Palace", category: "classic", uploaded: false },
+  { id: "seed-28", src: "./assets/waifu-28.jpg", title: "Snow Festival", category: "casual", uploaded: false },
+  { id: "seed-29", src: "./assets/waifu-29.jpg", title: "Cozy Winter", category: "casual", uploaded: false },
+  { id: "seed-30", src: "./assets/waifu-30.jpg", title: "Snow Clinic", category: "casual", uploaded: false },
+  { id: "seed-31", src: "./assets/waifu-31.jpg", title: "Blooming Bride", category: "wedding", uploaded: false },
+  { id: "seed-32", src: "./assets/waifu-32.jpg", title: "Soft Bridal Moment", category: "wedding", uploaded: false },
+  { id: "seed-33", src: "./assets/waifu-33.jpg", title: "Casual Violet", category: "casual", uploaded: false },
+  { id: "seed-34", src: "./assets/waifu-34.jpg", title: "Purple Rose Garden", category: "classic", uploaded: false }
 ];
 
 const gallery = document.getElementById("gallery");
