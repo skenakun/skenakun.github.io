@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./minigame.css">
 </head>
 <body>
   <div class="background-layer" aria-hidden="true">
@@ -32,6 +33,10 @@
       <button class="icon-button" id="themeBurstBtn" type="button" title="Buka pengaturan tema" data-i18n-title="themeButtonTitle">
         <span>✧</span>
         <span class="desktop-only">Color Burst</span>
+      </button>
+      <button class="icon-button mini-game-button" id="miniGameBtn" type="button" title="Buka Mini Game" aria-label="Buka Mini Game">
+        <span class="mini-game-button-icon">◆</span>
+        <span class="desktop-only">Mini Game</span>
       </button>
 
       <button class="language-switch" id="languageToggle" type="button" aria-label="Ganti bahasa ke Inggris" title="Ganti bahasa ke Inggris" data-i18n-aria="languageToggleToEnglish" data-i18n-title="languageToggleToEnglish">
@@ -150,6 +155,99 @@
     </p>
   </footer>
 
+
+  <dialog class="game-dialog" id="miniGameDialog">
+    <div class="game-shell">
+      <div class="game-head">
+        <div>
+          <span class="section-label">MINI GAME</span>
+          <h2 id="gameTitle">Crystal Trail</h2>
+          <p id="gameSubtitle">Kumpulkan semua kristal, hindari jebakan, lalu temukan pintu keluar.</p>
+        </div>
+        <button class="game-close" id="closeMiniGame" type="button" aria-label="Tutup Mini Game">×</button>
+      </div>
+
+      <div class="game-layout">
+        <aside class="game-sidebar">
+          <div class="game-level-heading">
+            <strong id="levelSelectLabel">Pilih Level</strong>
+            <span id="progressLabel">1 / 10 terbuka</span>
+          </div>
+          <div class="game-level-grid" id="gameLevelGrid" aria-label="Pilihan level"></div>
+
+          <div class="game-legend">
+            <strong id="legendTitle">Petunjuk</strong>
+            <div><span class="legend-symbol gem-symbol">◆</span><span id="legendGem">Kristal</span></div>
+            <div><span class="legend-symbol player-symbol">✦</span><span id="legendPlayer">Penjelajah</span></div>
+            <div><span class="legend-symbol exit-symbol">⇥</span><span id="legendExit">Pintu keluar</span></div>
+            <div><span class="legend-symbol trap-symbol">▲</span><span id="legendTrap">Jebakan</span></div>
+            <div><span class="legend-symbol key-symbol">⚿</span><span id="legendKey">Kunci</span></div>
+            <div><span class="legend-symbol rock-symbol">●</span><span id="legendRock">Batu dorong</span></div>
+          </div>
+        </aside>
+
+        <section class="game-stage">
+          <div class="game-hud">
+            <div class="hud-item">
+              <span id="hudLevelLabel">Level</span>
+              <strong id="gameLevelValue">1</strong>
+            </div>
+            <div class="hud-item">
+              <span id="hudGemLabel">Kristal</span>
+              <strong id="gameGemValue">0/0</strong>
+            </div>
+            <div class="hud-item">
+              <span id="hudMoveLabel">Langkah</span>
+              <strong id="gameMoveValue">0</strong>
+            </div>
+            <div class="hud-item">
+              <span id="hudBestLabel">Terbaik</span>
+              <strong id="gameBestValue">—</strong>
+            </div>
+          </div>
+
+          <div class="game-level-name-wrap">
+            <strong id="gameLevelName">Pemanasan</strong>
+            <span id="gameGoalText">Ambil semua kristal untuk membuka pintu keluar.</span>
+          </div>
+
+          <div class="game-board-wrap">
+            <div class="game-board" id="gameBoard" role="application" aria-label="Papan permainan Crystal Trail"></div>
+            <div class="game-result" id="gameResult" hidden>
+              <div class="game-result-card">
+                <span class="game-result-icon">✦</span>
+                <h3 id="gameResultTitle">Level Selesai</h3>
+                <p id="gameResultText"></p>
+                <div class="game-result-actions">
+                  <button class="secondary-cta game-action-button" id="replayLevelBtn" type="button">Ulangi</button>
+                  <button class="primary-cta game-action-button" id="nextLevelBtn" type="button">Level Berikutnya</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="game-message" id="gameMessage" aria-live="polite"></div>
+
+          <div class="game-controls">
+            <div class="game-dpad" aria-label="Kontrol arah">
+              <button class="dpad-btn dpad-up" type="button" data-move="up" aria-label="Atas">▲</button>
+              <button class="dpad-btn dpad-left" type="button" data-move="left" aria-label="Kiri">◀</button>
+              <button class="dpad-btn dpad-center" type="button" id="resetLevelBtn" aria-label="Ulangi level">↻</button>
+              <button class="dpad-btn dpad-right" type="button" data-move="right" aria-label="Kanan">▶</button>
+              <button class="dpad-btn dpad-down" type="button" data-move="down" aria-label="Bawah">▼</button>
+            </div>
+
+            <div class="game-help">
+              <strong id="controlsTitle">Kontrol</strong>
+              <p id="controlsText">Keyboard: Arrow / WASD. Ponsel: gunakan tombol arah.</p>
+              <button class="game-reset-progress" id="resetGameProgressBtn" type="button">Reset progres game</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </dialog>
+
   <dialog class="theme-dialog" id="themeDialog">
     <div class="theme-sheet">
       <div class="theme-sheet-head">
@@ -260,5 +358,6 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="./script.js"></script>
+  <script src="./minigame.js"></script>
 </body>
 </html>
