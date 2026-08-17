@@ -836,3 +836,103 @@ body.dark-mode .game-picker-card {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* =========================================================
+   CITY DRIVE - 30 LEVELS
+   ========================================================= */
+.city-area-card {
+  margin-top: 13px;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--cyan) 8%, var(--surface-strong)),
+    color-mix(in srgb, var(--violet) 7%, var(--surface-strong)));
+}
+.city-area-card span,
+.city-area-card strong,
+.city-area-card small { display: block; }
+.city-area-card span {
+  color: var(--muted);
+  font-size: .62rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.city-area-card strong { margin-top: 3px; font-size: .95rem; }
+.city-area-card small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: .66rem;
+  font-weight: 800;
+}
+.city-level-heading {
+  margin-top: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.city-level-heading strong { font-size: .76rem; }
+.city-level-heading span {
+  color: var(--muted);
+  font-size: .64rem;
+  font-weight: 800;
+}
+.city-level-grid {
+  margin-top: 8px;
+  max-height: 128px;
+  padding: 2px 2px 4px;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 5px;
+  overflow-y: auto;
+}
+.city-level-btn {
+  min-height: 31px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--cyan) 4%, var(--surface-strong));
+  cursor: pointer;
+  font-size: .65rem;
+  font-weight: 900;
+}
+.city-level-btn.active {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+}
+.city-level-btn.completed:not(.active) {
+  color: color-mix(in srgb, #0ea5e9 78%, var(--ink));
+  background: color-mix(in srgb, #0ea5e9 12%, var(--surface-strong));
+}
+.city-level-btn:disabled { opacity: .32; cursor: not-allowed; }
+.city-action-row {
+  margin-top: 11px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+.city-action-row .arcade-start { margin-top: 0; }
+.city-next-button {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+.city-stats { grid-template-columns: repeat(2, 1fr); }
+
+@media (max-width: 900px) {
+  .city-level-grid {
+    grid-template-columns: repeat(10, minmax(34px, 1fr));
+    max-height: 96px;
+  }
+}
+@media (max-width: 640px) {
+  .city-action-row { grid-template-columns: 1fr; }
+  .city-level-grid {
+    grid-template-columns: repeat(6, 1fr);
+    max-height: 116px;
+  }
+}

@@ -320,22 +320,43 @@
       </section>
 
       <section class="hub-game-view" data-game-view="city">
-        <div class="arcade-shell">
+        <div class="arcade-shell city-arcade-shell">
           <div class="arcade-copy">
             <span class="arcade-kicker">OPEN CITY DRIVE</span>
             <h3>City Drive</h3>
-            <p id="cityDescription">Jelajahi kota dari atas, ambil checkpoint, dan selesaikan rute pengantaran.</p>
-            <div class="arcade-stats">
-              <div><span id="cityScoreLabel">Checkpoint</span><strong id="cityScore">0/6</strong></div>
+            <p id="cityDescription">Jelajahi 30 area kota yang semakin sulit, ambil checkpoint, dan buka area berikutnya.</p>
+
+            <div class="city-area-card">
+              <span id="cityAreaLabel">Area</span>
+              <strong id="cityAreaName">Sakura Avenue</strong>
+              <small id="cityDifficultyText">Kesulitan 1/30</small>
+            </div>
+
+            <div class="arcade-stats city-stats">
+              <div><span id="cityLevelLabel">Level</span><strong id="cityLevelValue">1</strong></div>
+              <div><span id="cityScoreLabel">Checkpoint</span><strong id="cityScore">0/4</strong></div>
               <div><span id="cityTimeLabel">Waktu</span><strong id="cityTime">0s</strong></div>
               <div><span id="cityBestLabel">Terbaik</span><strong id="cityBest">—</strong></div>
             </div>
-            <button class="primary-cta arcade-start" id="cityStartBtn" type="button">Mulai / Ulangi</button>
-            <p class="arcade-help" id="cityHelp">Arrow / WASD untuk mengemudi. Tidak ada senjata atau aksi kekerasan.</p>
+
+            <div class="city-level-heading">
+              <strong id="cityLevelSelectLabel">Pilih Level</strong>
+              <span id="cityProgressLabel">1 / 30 terbuka</span>
+            </div>
+            <div class="city-level-grid" id="cityLevelGrid" aria-label="Pilihan level City Drive"></div>
+
+            <div class="city-action-row">
+              <button class="primary-cta arcade-start" id="cityStartBtn" type="button">Mulai / Ulangi</button>
+              <button class="secondary-cta city-next-button" id="cityNextBtn" type="button" hidden>Level Berikutnya</button>
+            </div>
+
+            <p class="arcade-help" id="cityHelp">Arrow / WASD untuk mengemudi. Setiap level memiliki area, traffic, dan rute berbeda.</p>
           </div>
+
           <div class="arcade-canvas-wrap city-canvas-wrap">
             <canvas id="cityCanvas" width="760" height="560" aria-label="Permainan City Drive"></canvas>
           </div>
+
           <div class="arcade-touch-row">
             <button type="button" data-city-move="left">◀</button>
             <button type="button" data-city-move="up">▲</button>
@@ -344,7 +365,8 @@
           </div>
         </div>
       </section>
-    </div>
+
+</div>
   </dialog>
 
 <dialog class="theme-dialog" id="themeDialog">

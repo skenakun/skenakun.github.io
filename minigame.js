@@ -56,10 +56,19 @@ const UI = {
     lives: "Nyawa",
     dots: "Cahaya",
     mazeHelp: "Gunakan Arrow / WASD untuk bergerak.",
-    cityDescription: "Jelajahi kota dari atas, ambil checkpoint, dan selesaikan rute pengantaran.",
+    cityDescription: "Jelajahi 30 area kota yang semakin sulit, ambil checkpoint, dan buka area berikutnya.",
     checkpoint: "Checkpoint",
     time: "Waktu",
-    cityHelp: "Arrow / WASD untuk mengemudi. Fokus pada eksplorasi dan checkpoint.",
+    cityHelp: "Arrow / WASD untuk mengemudi. Setiap level memiliki area, traffic, dan rute berbeda.",
+    cityArea: "Area",
+    cityDifficulty: "Kesulitan {level}/30",
+    cityChooseLevel: "Pilih Level",
+    cityProgress: "{open} / 30 terbuka",
+    cityNext: "Level Berikutnya",
+    cityLocked: "Level City Drive ini belum terbuka.",
+    cityLevelComplete: "Area selesai!",
+    cityLevelCompleteText: "Level {level} selesai dalam {time}s.",
+    cityFinalComplete: "Semua 30 area City Drive selesai!",
     gameOver: "Game selesai. Tekan mulai untuk mencoba lagi.",
     mazeWin: "Semua cahaya terkumpul. Arena baru dibuat.",
     cityDone: "Semua checkpoint selesai.",
@@ -116,10 +125,19 @@ const UI = {
     lives: "Lives",
     dots: "Lights",
     mazeHelp: "Use Arrow keys or WASD to move.",
-    cityDescription: "Explore a top-down city, collect checkpoints, and complete the delivery route.",
+    cityDescription: "Explore 30 increasingly difficult city areas, collect checkpoints, and unlock the next area.",
     checkpoint: "Checkpoint",
     time: "Time",
-    cityHelp: "Arrow keys / WASD to drive. Focus on exploration and checkpoints.",
+    cityHelp: "Arrow keys / WASD to drive. Every level has a different area, traffic pattern, and route.",
+    cityArea: "Area",
+    cityDifficulty: "Difficulty {level}/30",
+    cityChooseLevel: "Choose Level",
+    cityProgress: "{open} / 30 unlocked",
+    cityNext: "Next Level",
+    cityLocked: "This City Drive level is still locked.",
+    cityLevelComplete: "Area Complete!",
+    cityLevelCompleteText: "Level {level} completed in {time}s.",
+    cityFinalComplete: "All 30 City Drive areas completed!",
     gameOver: "Game over. Press start to try again.",
     mazeWin: "All lights collected. A new arena is ready.",
     cityDone: "All checkpoints completed.",
@@ -881,142 +899,402 @@ modules.maze = (() => {
    --------------------------------------------------------- */
 
 modules.city = (() => {
-  const canvas=document.getElementById("cityCanvas"),ctx=canvas.getContext("2d");
-  const scoreEl=document.getElementById("cityScore"),timeEl=document.getElementById("cityTime"),bestEl=document.getElementById("cityBest");
-  const startBtn=document.getElementById("cityStartBtn");
-  const BEST="cityDriveBestV1";
-  const W=760,H=560;
-  const roads=[
-    {x:0,y:90,w:760,h:80},{x:0,y:300,w:760,h:80},
-    {x:120,y:0,w:85,h:560},{x:390,y:0,w:85,h:560},{x:625,y:0,w:80,h:560}
+  const canvas = document.getElementById("cityCanvas");
+  const ctx = canvas.getContext("2d");
+  const scoreEl = document.getElementById("cityScore");
+  const timeEl = document.getElementById("cityTime");
+  const bestEl = document.getElementById("cityBest");
+  const levelEl = document.getElementById("cityLevelValue");
+  const areaNameEl = document.getElementById("cityAreaName");
+  const difficultyEl = document.getElementById("cityDifficultyText");
+  const levelGridEl = document.getElementById("cityLevelGrid");
+  const progressEl = document.getElementById("cityProgressLabel");
+  const startBtn = document.getElementById("cityStartBtn");
+  const nextBtn = document.getElementById("cityNextBtn");
+
+  const W = 760, H = 560;
+  const STORAGE = "cityDriveProgressV2_30";
+
+  const AREA_NAMES = [
+    "Sakura Avenue","Lavender Square","Bluebell District","Moonlight Market","Wisteria Cross",
+    "Crystal Boulevard","Aurora Junction","Violet Harbor","Starlight Center","Rosewood Heights",
+    "Azure Riverside","Celestia Gate","Orchid Downtown","Snowdrop Terrace","Iris Loop",
+    "Prism Quarter","Lotus Interchange","Nebula Park","Amethyst Mile","Frostlight Ward",
+    "Mirage Terminal","Eclipse Boulevard","Starfall Harbor","Lumina Heights","Galaxy Crossing",
+    "Astral Ring","Radiant Core","Midnight Circuit","Aurora Capital","Celestial Finale"
   ];
-  const buildings=[
-    {x:15,y:15,w:90,h:60},{x:220,y:15,w:150,h:60},{x:490,y:15,w:115,h:60},{x:715,y:15,w:35,h:60},
-    {x:15,y:185,w:90,h:95},{x:220,y:185,w:150,h:95},{x:490,y:185,w:115,h:95},{x:715,y:185,w:35,h:95},
-    {x:15,y:395,w:90,h:145},{x:220,y:395,w:150,h:145},{x:490,y:395,w:115,h:145},{x:715,y:395,w:35,h:145}
+
+  const PALETTES = [
+    ["#172033","#2c3444","#40536a","#5b4b74","#60a5fa"],
+    ["#211a2d","#42364d","#665070","#825d86","#c084fc"],
+    ["#102336","#24465f","#3b6680","#557f91","#38bdf8"],
+    ["#1c1830","#30294d","#51466e","#6e5b86","#818cf8"],
+    ["#172a2c","#315053","#476d70","#5d898b","#2dd4bf"],
+    ["#22212a","#3c3d4b","#555b6b","#748091","#a5b4fc"]
   ];
-  const checkpointList=[{x:165,y:125},{x:430,y:125},{x:665,y:125},{x:665,y:340},{x:430,y:340},{x:165,y:340}];
-  let car={x:165,y:125,a:0,s:0},keys={},running=false,paused=true,startTime=0,elapsed=0,index=0,raf=null,last=performance.now();
 
-  function createTraffic() {
-    return [
-      {x:30,y:115,v:1.5,axis:"h",c:"#fb7185"},
-      {x:720,y:335,v:-1.25,axis:"h",c:"#a78bfa"},
-      {x:430,y:520,v:-1.15,axis:"v",c:"#34d399"},
-      {x:665,y:20,v:1.05,axis:"v",c:"#facc15"}
-    ];
+  function loadProgress() {
+    try {
+      const p = JSON.parse(localStorage.getItem(STORAGE) || "{}");
+      return {
+        maxUnlocked: Math.min(30, Math.max(1, Number(p.maxUnlocked || 1))),
+        completed: Array.isArray(p.completed) ? p.completed.slice(0, 30) : [],
+        best: Array.isArray(p.best) ? p.best.slice(0, 30) : []
+      };
+    } catch {
+      return { maxUnlocked: 1, completed: [], best: [] };
+    }
   }
 
-  let traffic=createTraffic();
-
-  function reset(){
-    car={x:165,y:125,a:0,s:0};
-    keys={};
-    index=0;
-    running=true;
-    paused=false;
-    startTime=performance.now();
-    elapsed=0;
-    last=startTime;
-    traffic=createTraffic();
-
-    updateHud();
-    draw();
-    loop(last);
-    focusGameHub();
+  function saveProgress() {
+    localStorage.setItem(STORAGE, JSON.stringify(progress));
   }
 
-  function onRoad(x,y){
-    return roads.some(r=>x>=r.x&&x<=r.x+r.w&&y>=r.y&&y<=r.y+r.h);
+  function seeded(seed) {
+    let value = seed >>> 0;
+    return () => {
+      value = (value * 1664525 + 1013904223) >>> 0;
+      return value / 4294967296;
+    };
   }
 
-  function update(dt){
-    if(!running||paused)return;
-    const turn=0.0032*dt;
-    if(keys.left)car.a-=turn;if(keys.right)car.a+=turn;
-    if(keys.up)car.s=Math.min(3.4,car.s+0.012*dt);
-    else if(keys.down)car.s=Math.max(-1.8,car.s-0.012*dt);
-    else car.s*=Math.pow(.985,dt/16);
+  function shuffle(array, rand) {
+    const result = [...array];
+    for (let i = result.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+  }
 
-    let nx=car.x+Math.cos(car.a)*car.s*dt/16;
-    let ny=car.y+Math.sin(car.a)*car.s*dt/16;
-    if(onRoad(nx,ny)&&nx>8&&nx<W-8&&ny>8&&ny<H-8){car.x=nx;car.y=ny;}
-    else car.s*=-.2;
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
 
-    traffic.forEach(t=>{
-      if(t.axis==="h"){t.x+=t.v*dt/16;if(t.x>W+30)t.x=-30;if(t.x<-30)t.x=W+30;}
-      else {t.y+=t.v*dt/16;if(t.y>H+30)t.y=-30;if(t.y<-30)t.y=H+30;}
-      if(Math.hypot(t.x-car.x,t.y-car.y)<22){car.s*=-.25;car.x-=Math.cos(car.a)*10;car.y-=Math.sin(car.a)*10;}
-    });
+  function makeLevel(index) {
+    const number = index + 1;
+    const rand = seeded(7000 + number * 973);
+    const tier = Math.floor(index / 5);
 
-    const cp=checkpointList[index];
-    if(cp&&Math.hypot(cp.x-car.x,cp.y-car.y)<28){
-      index++;
-      if(index>=checkpointList.length){
-        running=false;paused=true;elapsed=(performance.now()-startTime)/1000;
-        const old=Number(localStorage.getItem(BEST)||0);
-        if(!old||elapsed<old)localStorage.setItem(BEST,elapsed.toFixed(1));
+    const roadWidth = Math.max(58, 92 - tier * 6);
+    const verticalCount = 2 + Math.min(2, Math.floor(index / 8));
+    const horizontalCount = 2 + Math.min(2, Math.floor(index / 10));
+
+    const xs = shuffle([115,245,390,520,645], rand)
+      .slice(0, verticalCount)
+      .sort((a,b)=>a-b)
+      .map(x => clamp(x + Math.round((rand() - .5) * 28), 90, 670));
+
+    const ys = shuffle([90,200,310,425], rand)
+      .slice(0, horizontalCount)
+      .sort((a,b)=>a-b)
+      .map(y => clamp(y + Math.round((rand() - .5) * 22), 70, 455));
+
+    const roads = [];
+    ys.forEach(y => roads.push({
+      x:0, y:y-roadWidth/2, w:W, h:roadWidth, axis:"h", center:y
+    }));
+    xs.forEach(x => roads.push({
+      x:x-roadWidth/2, y:0, w:roadWidth, h:H, axis:"v", center:x
+    }));
+
+    const intersections = [];
+    ys.forEach(y => xs.forEach(x => intersections.push({x,y})));
+
+    const start = intersections[0] || {x:160,y:130};
+    const checkpointCount = Math.min(12, 4 + Math.floor(index / 3));
+
+    const candidates = shuffle([
+      ...intersections.filter(p => Math.hypot(p.x-start.x,p.y-start.y)>55),
+      ...ys.flatMap(y => [{x:35,y},{x:W-35,y}]),
+      ...xs.flatMap(x => [{x,y:35},{x,y:H-35}])
+    ], rand);
+
+    const checkpoints = [];
+    for (const p of candidates) {
+      if (checkpoints.length >= checkpointCount) break;
+      if (!checkpoints.some(cp => Math.hypot(cp.x-p.x,cp.y-p.y)<62)) {
+        checkpoints.push({...p});
       }
     }
-    if(running)elapsed=(performance.now()-startTime)/1000;
+    while (checkpoints.length < checkpointCount && candidates.length) {
+      checkpoints.push({...candidates[checkpoints.length % candidates.length]});
+    }
+
+    const buildings = [];
+    const xCuts = [0, ...xs.flatMap(x=>[x-roadWidth/2,x+roadWidth/2]), W].sort((a,b)=>a-b);
+    const yCuts = [0, ...ys.flatMap(y=>[y-roadWidth/2,y+roadWidth/2]), H].sort((a,b)=>a-b);
+
+    for (let xi=0; xi<xCuts.length-1; xi++) {
+      for (let yi=0; yi<yCuts.length-1; yi++) {
+        const left=xCuts[xi], right=xCuts[xi+1], top=yCuts[yi], bottom=yCuts[yi+1];
+        if (right-left<32 || bottom-top<32) continue;
+        const cx=(left+right)/2, cy=(top+bottom)/2;
+        const onRoad = roads.some(r => cx>=r.x && cx<=r.x+r.w && cy>=r.y && cy<=r.y+r.h);
+        if (onRoad) continue;
+        const m=10+Math.round(rand()*7);
+        buildings.push({x:left+m,y:top+m,w:Math.max(12,right-left-2*m),h:Math.max(12,bottom-top-2*m)});
+      }
+    }
+
+    const trafficCount = Math.min(16, 2 + Math.floor(index / 2));
+    const baseSpeed = .82 + index * .035;
+    const traffic = [];
+    for (let i=0; i<trafficCount; i++) {
+      const horizontal = (i%2===0 && ys.length) || !xs.length;
+      if (horizontal) {
+        const y=ys[i%ys.length]+(i%3-1)*Math.min(16,roadWidth*.18);
+        traffic.push({
+          x:rand()*W,y,v:(i%4<2?1:-1)*(baseSpeed+rand()*.85),axis:"h",
+          c:["#fb7185","#a78bfa","#34d399","#facc15","#38bdf8","#f97316"][i%6]
+        });
+      } else {
+        const x=xs[i%xs.length]+(i%3-1)*Math.min(16,roadWidth*.18);
+        traffic.push({
+          x,y:rand()*H,v:(i%4<2?1:-1)*(baseSpeed+rand()*.85),axis:"v",
+          c:["#fb7185","#a78bfa","#34d399","#facc15","#38bdf8","#f97316"][i%6]
+        });
+      }
+    }
+
+    const slowZones = [];
+    const slowCount = Math.min(7, Math.floor(index / 5));
+    for (let i=0; i<slowCount; i++) {
+      const road=roads[(i*3+number)%roads.length];
+      slowZones.push(road.axis==="h"
+        ? {x:110+rand()*530,y:road.center,r:24+rand()*10}
+        : {x:road.center,y:95+rand()*375,r:24+rand()*10});
+    }
+
+    return {
+      number,
+      name: AREA_NAMES[index],
+      palette: PALETTES[index%PALETTES.length],
+      roads, buildings, checkpoints, start, traffic, slowZones,
+      checkpointRadius: Math.max(18, 30-Math.floor(index/5)),
+      maxSpeed: 3.15 + Math.min(.65,index*.018)
+    };
+  }
+
+  const LEVELS = Array.from({length:30}, (_,i)=>makeLevel(i));
+
+  let progress=loadProgress();
+  let currentLevel=Math.min(progress.maxUnlocked-1,29);
+  let level=LEVELS[currentLevel];
+  let car={x:level.start.x,y:level.start.y,a:0,s:0};
+  let keys={},running=false,paused=true,completedCurrentRun=false;
+  let startTime=0,elapsed=0,checkpointIndex=0,raf=null,last=performance.now();
+  let traffic=level.traffic.map(t=>({...t}));
+
+  function onRoad(x,y) {
+    return level.roads.some(r=>x>=r.x&&x<=r.x+r.w&&y>=r.y&&y<=r.y+r.h);
+  }
+
+  function inSlowZone(x,y) {
+    return level.slowZones.some(z=>Math.hypot(z.x-x,z.y-y)<=z.r);
+  }
+
+  function renderLevelButtons() {
+    levelGridEl.innerHTML="";
+    LEVELS.forEach((item,i)=>{
+      const b=document.createElement("button");
+      b.type="button";
+      b.className="city-level-btn";
+      b.textContent=i+1;
+      const unlocked=i+1<=progress.maxUnlocked;
+      b.disabled=!unlocked;
+      if(i===currentLevel)b.classList.add("active");
+      if(progress.completed[i])b.classList.add("completed");
+      b.title=unlocked?`${tr("level")} ${i+1} • ${item.name}`:tr("cityLocked");
+      b.addEventListener("click",()=>{if(unlocked)selectLevel(i);});
+      levelGridEl.appendChild(b);
+    });
+    progressEl.textContent=tr("cityProgress",{open:progress.maxUnlocked});
+  }
+
+  function selectLevel(i) {
+    if(i+1>progress.maxUnlocked)return;
+    currentLevel=i;
+    level=LEVELS[i];
+    running=false;paused=false;completedCurrentRun=false;elapsed=0;checkpointIndex=0;keys={};
+    car={x:level.start.x,y:level.start.y,a:0,s:0};
+    traffic=level.traffic.map(t=>({...t}));
+    nextBtn.hidden=true;
+    renderLevelButtons();updateHud();draw();focusGameHub();
+  }
+
+  function reset() {
+    level=LEVELS[currentLevel];
+    car={x:level.start.x,y:level.start.y,a:0,s:0};
+    keys={};checkpointIndex=0;running=true;paused=false;completedCurrentRun=false;
+    startTime=performance.now();elapsed=0;last=startTime;
+    traffic=level.traffic.map(t=>({...t}));
+    nextBtn.hidden=true;
+    updateHud();draw();loop(last);focusGameHub();
+  }
+
+  function completeLevel() {
+    running=false;paused=true;completedCurrentRun=true;
+    elapsed=(performance.now()-startTime)/1000;
+    const old=Number(progress.best[currentLevel]||0);
+    if(!old||elapsed<old)progress.best[currentLevel]=Number(elapsed.toFixed(1));
+    progress.completed[currentLevel]=true;
+    if(currentLevel<29){
+      progress.maxUnlocked=Math.max(progress.maxUnlocked,currentLevel+2);
+      nextBtn.hidden=false;
+    } else nextBtn.hidden=true;
+    saveProgress();renderLevelButtons();updateHud();draw();
+  }
+
+  function update(dt) {
+    if(!running||paused)return;
+    const turn=(.0032+currentLevel*.000012)*dt;
+    if(keys.left)car.a-=turn;
+    if(keys.right)car.a+=turn;
+    if(keys.up)car.s=Math.min(level.maxSpeed,car.s+.012*dt);
+    else if(keys.down)car.s=Math.max(-1.75,car.s-.012*dt);
+    else car.s*=Math.pow(.985,dt/16);
+    if(inSlowZone(car.x,car.y))car.s*=Math.pow(.965,dt/16);
+
+    const nx=car.x+Math.cos(car.a)*car.s*dt/16;
+    const ny=car.y+Math.sin(car.a)*car.s*dt/16;
+    if(onRoad(nx,ny)&&nx>7&&nx<W-7&&ny>7&&ny<H-7){car.x=nx;car.y=ny;}
+    else car.s*=-.18;
+
+    traffic.forEach(v=>{
+      if(v.axis==="h"){
+        v.x+=v.v*dt/16;
+        if(v.x>W+32)v.x=-32;
+        if(v.x<-32)v.x=W+32;
+      } else {
+        v.y+=v.v*dt/16;
+        if(v.y>H+32)v.y=-32;
+        if(v.y<-32)v.y=H+32;
+      }
+      if(Math.hypot(v.x-car.x,v.y-car.y)<21){
+        car.s*=-.22;
+        car.x-=Math.cos(car.a)*8;
+        car.y-=Math.sin(car.a)*8;
+      }
+    });
+
+    const cp=level.checkpoints[checkpointIndex];
+    if(cp&&Math.hypot(cp.x-car.x,cp.y-car.y)<level.checkpointRadius){
+      checkpointIndex++;
+      if(checkpointIndex>=level.checkpoints.length){completeLevel();return;}
+    }
+    elapsed=(performance.now()-startTime)/1000;
     updateHud();
   }
 
-  function updateHud(){
-    scoreEl.textContent=`${Math.min(index,6)}/6`;
+  function updateHud() {
+    levelEl.textContent=currentLevel+1;
+    areaNameEl.textContent=level.name;
+    difficultyEl.textContent=tr("cityDifficulty",{level:currentLevel+1});
+    scoreEl.textContent=`${Math.min(checkpointIndex,level.checkpoints.length)}/${level.checkpoints.length}`;
     timeEl.textContent=`${elapsed.toFixed(1)}s`;
-    const best=localStorage.getItem(BEST);bestEl.textContent=best?`${best}s`:"—";
+    const best=Number(progress.best[currentLevel]||0);
+    bestEl.textContent=best?`${best.toFixed(1)}s`:"—";
+    startBtn.textContent=tr("startRestart");
+    nextBtn.textContent=tr("cityNext");
   }
 
-  function draw(){
-    ctx.fillStyle="#172033";ctx.fillRect(0,0,W,H);
-    ctx.fillStyle="#2c3444";roads.forEach(r=>ctx.fillRect(r.x,r.y,r.w,r.h));
-    ctx.strokeStyle="rgba(255,255,255,.28)";ctx.lineWidth=2;ctx.setLineDash([14,12]);
-    [130,340].forEach(y=>{ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();});
-    [162,432,665].forEach(x=>{ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();});
-    ctx.setLineDash([]);
-
-    buildings.forEach((b,i)=>{
-      ctx.fillStyle=i%2?"#5b4b74":"#40536a";ctx.fillRect(b.x,b.y,b.w,b.h);
-      ctx.fillStyle="rgba(255,255,255,.12)";
-      for(let x=b.x+12;x<b.x+b.w-5;x+=22)for(let y=b.y+12;y<b.y+b.h-5;y+=24)ctx.fillRect(x,y,8,10);
+  function drawRoadMarkings() {
+    ctx.save();
+    ctx.strokeStyle="rgba(255,255,255,.26)";
+    ctx.lineWidth=2;
+    ctx.setLineDash([13,12]);
+    level.roads.forEach(r=>{
+      ctx.beginPath();
+      if(r.axis==="h"){ctx.moveTo(0,r.center);ctx.lineTo(W,r.center);}
+      else{ctx.moveTo(r.center,0);ctx.lineTo(r.center,H);}
+      ctx.stroke();
     });
+    ctx.restore();
+  }
 
-    const cp=checkpointList[index];
+  function drawBuildings() {
+    const p=level.palette;
+    level.buildings.forEach((b,i)=>{
+      ctx.fillStyle=i%2?p[2]:p[3];
+      ctx.fillRect(b.x,b.y,b.w,b.h);
+      ctx.fillStyle="rgba(255,255,255,.11)";
+      for(let x=b.x+10;x<b.x+b.w-5;x+=20)
+        for(let y=b.y+10;y<b.y+b.h-5;y+=22)ctx.fillRect(x,y,7,9);
+    });
+  }
+
+  function drawSlowZones() {
+    level.slowZones.forEach(z=>{
+      ctx.save();
+      ctx.strokeStyle="rgba(250,204,21,.55)";
+      ctx.fillStyle="rgba(250,204,21,.08)";
+      ctx.lineWidth=2;ctx.setLineDash([6,5]);
+      ctx.beginPath();ctx.arc(z.x,z.y,z.r,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.restore();
+    });
+  }
+
+  function draw() {
+    const p=level.palette;
+    ctx.fillStyle=p[0];ctx.fillRect(0,0,W,H);
+    ctx.fillStyle=p[1];level.roads.forEach(r=>ctx.fillRect(r.x,r.y,r.w,r.h));
+    drawRoadMarkings();drawBuildings();drawSlowZones();
+
+    const cp=level.checkpoints[checkpointIndex];
     if(cp){
-      const pulse=18+Math.sin(performance.now()/180)*5;
-      ctx.strokeStyle="#22d3ee";ctx.lineWidth=4;ctx.beginPath();ctx.arc(cp.x,cp.y,pulse,0,Math.PI*2);ctx.stroke();
-      ctx.fillStyle="rgba(34,211,238,.18)";ctx.beginPath();ctx.arc(cp.x,cp.y,pulse-4,0,Math.PI*2);ctx.fill();
+      const pulse=level.checkpointRadius+Math.sin(performance.now()/180)*4;
+      ctx.strokeStyle=p[4];ctx.lineWidth=4;
+      ctx.beginPath();ctx.arc(cp.x,cp.y,pulse,0,Math.PI*2);ctx.stroke();
+      ctx.fillStyle=p[4]+"2b";
+      ctx.beginPath();ctx.arc(cp.x,cp.y,Math.max(8,pulse-5),0,Math.PI*2);ctx.fill();
     }
 
-    traffic.forEach(t=>{
-      ctx.save();ctx.translate(t.x,t.y);ctx.fillStyle=t.c;ctx.fillRect(-12,-7,24,14);ctx.restore();
+    traffic.forEach(v=>{
+      ctx.save();ctx.translate(v.x,v.y);
+      ctx.fillStyle=v.c;ctx.fillRect(-12,-7,24,14);
+      ctx.fillStyle="rgba(255,255,255,.55)";
+      if(v.axis==="h")ctx.fillRect(2,-5,7,10);else ctx.fillRect(-7,1,14,5);
+      ctx.restore();
     });
 
     ctx.save();ctx.translate(car.x,car.y);ctx.rotate(car.a);
-    ctx.fillStyle="#60a5fa";ctx.fillRect(-15,-9,30,18);ctx.fillStyle="#dbeafe";ctx.fillRect(0,-6,9,12);ctx.restore();
+    ctx.fillStyle=p[4];ctx.fillRect(-15,-9,30,18);
+    ctx.fillStyle="#eaf6ff";ctx.fillRect(0,-6,9,12);ctx.restore();
 
-    if(!running&&index>=6){
-      ctx.fillStyle="rgba(3,7,18,.62)";ctx.fillRect(0,0,W,H);
-      ctx.fillStyle="#fff";ctx.font="800 25px Nunito";ctx.textAlign="center";ctx.fillText(tr("cityDone"),W/2,H/2);
+    ctx.fillStyle="rgba(4,8,18,.48)";ctx.fillRect(10,10,220,47);
+    ctx.fillStyle="#fff";ctx.font="800 15px Nunito, sans-serif";ctx.textAlign="left";
+    ctx.fillText(`${currentLevel+1}. ${level.name}`,20,29);
+    ctx.fillStyle="rgba(255,255,255,.72)";ctx.font="700 11px Nunito, sans-serif";
+    ctx.fillText(`${tr("checkpoint")}: ${Math.min(checkpointIndex,level.checkpoints.length)}/${level.checkpoints.length}`,20,45);
+
+    if(completedCurrentRun){
+      ctx.fillStyle="rgba(3,7,18,.66)";ctx.fillRect(0,0,W,H);
+      ctx.fillStyle="#fff";ctx.textAlign="center";ctx.font="800 28px Nunito, sans-serif";
+      ctx.fillText(currentLevel===29?tr("cityFinalComplete"):tr("cityLevelComplete"),W/2,H/2-18);
+      ctx.font="700 15px Nunito, sans-serif";ctx.fillStyle="rgba(255,255,255,.82)";
+      ctx.fillText(tr("cityLevelCompleteText",{level:currentLevel+1,time:elapsed.toFixed(1)}),W/2,H/2+14);
     }
   }
 
-  function loop(now){
+  function loop(now) {
     if(raf)cancelAnimationFrame(raf);
     const dt=Math.min(34,now-last||16);last=now;
-    if(!paused)update(dt);draw();raf=requestAnimationFrame(loop);
+    if(!paused)update(dt);
+    draw();
+    if(running||!paused)raf=requestAnimationFrame(loop);
   }
 
-  function setMove(name,on=true){
-    keys[name]=on;
-  }
+  function setMove(name,on=true){keys[name]=on;}
+
   function keydown(e){
     if(!dialog.open||activeGame!=="city")return false;
     const k=e.key.toLowerCase();
     const m={arrowleft:"left",a:"left",arrowright:"right",d:"right",arrowup:"up",w:"up",arrowdown:"down",s:"down"};
-    if(!m[k])return false;e.preventDefault();setMove(m[k],true);return true;
+    if(!m[k])return false;
+    e.preventDefault();setMove(m[k],true);return true;
   }
+
   function keyup(e){
     const k=e.key.toLowerCase();
     const m={arrowleft:"left",a:"left",arrowright:"right",d:"right",arrowup:"up",w:"up",arrowdown:"down",s:"down"};
@@ -1024,39 +1302,41 @@ modules.city = (() => {
   }
 
   startBtn.addEventListener("click",reset);
-  document.querySelectorAll("[data-city-move]").forEach(btn=>{
-    const dir=btn.dataset.cityMove;
-    btn.addEventListener("pointerdown",e=>{e.preventDefault();setMove(dir,true);});
-    ["pointerup","pointercancel","pointerleave"].forEach(evt=>btn.addEventListener(evt,()=>setMove(dir,false)));
+  nextBtn.addEventListener("click",()=>{
+    if(currentLevel<29&&currentLevel+2<=progress.maxUnlocked){
+      selectLevel(currentLevel+1);reset();
+    }
   });
-  window.addEventListener("keyup", e => {
-    if (!dialog.open) return;
+
+  document.querySelectorAll("[data-city-move]").forEach(btn=>{
+    const d=btn.dataset.cityMove;
+    btn.addEventListener("pointerdown",e=>{e.preventDefault();setMove(d,true);});
+    ["pointerup","pointercancel","pointerleave"].forEach(evt=>btn.addEventListener(evt,()=>setMove(d,false)));
+  });
+
+  window.addEventListener("keyup",e=>{
+    if(!dialog.open)return;
     keyup(e);
-  }, { capture: true });
-  draw();updateHud();
+  },{capture:true});
+
+  renderLevelButtons();updateHud();draw();
 
   return {
     keydown,
     pause(){
-      paused=true;
-      keys={};
+      paused=true;keys={};
+      if(raf){cancelAnimationFrame(raf);raf=null;}
     },
     resume(){
-      paused=false;
-      last=performance.now();
-      draw();
-
-      if (running) {
-        loop(last);
-      }
+      paused=false;last=performance.now();
+      renderLevelButtons();updateHud();draw();
+      if(running)loop(last);
     },
     applyLanguage(){
-      draw();
-      updateHud();
+      renderLevelButtons();updateHud();draw();
     }
   };
 })();
-
 /* Global keyboard routing
  * Capture phase keeps Arrow / WASD controls active after clicking
  * game tabs, Start buttons, or touch controls.
@@ -1116,10 +1396,14 @@ function applyLanguage() {
   document.getElementById("mazeHelp").textContent = tr("mazeHelp");
 
   document.getElementById("cityDescription").textContent = tr("cityDescription");
+  document.getElementById("cityAreaLabel").textContent = tr("cityArea");
+  document.getElementById("cityLevelLabel").textContent = tr("level");
   document.getElementById("cityScoreLabel").textContent = tr("checkpoint");
   document.getElementById("cityTimeLabel").textContent = tr("time");
   document.getElementById("cityBestLabel").textContent = tr("best");
+  document.getElementById("cityLevelSelectLabel").textContent = tr("cityChooseLevel");
   document.getElementById("cityStartBtn").textContent = tr("startRestart");
+  document.getElementById("cityNextBtn").textContent = tr("cityNext");
   document.getElementById("cityHelp").textContent = tr("cityHelp");
 
   Object.values(modules).forEach(m => m?.applyLanguage?.());
