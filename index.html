@@ -155,100 +155,199 @@
     </p>
   </footer>
 
-
   <dialog class="game-dialog" id="miniGameDialog">
     <div class="game-shell">
       <div class="game-head">
         <div>
-          <span class="section-label">MINI GAME</span>
-          <h2 id="gameTitle">Crystal Trail</h2>
-          <p id="gameSubtitle">Kumpulkan semua kristal, hindari jebakan, lalu temukan pintu keluar.</p>
+          <span class="section-label">MINI GAME HUB</span>
+          <h2 id="gameHubTitle">Mini Game</h2>
+          <p id="gameHubSubtitle">Pilih game, lalu mainkan langsung tanpa meninggalkan galeri.</p>
         </div>
         <button class="game-close" id="closeMiniGame" type="button" aria-label="Tutup Mini Game">×</button>
       </div>
 
-      <div class="game-layout">
-        <aside class="game-sidebar">
-          <div class="game-level-heading">
-            <strong id="levelSelectLabel">Pilih Level</strong>
-            <span id="progressLabel">1 / 10 terbuka</span>
-          </div>
-          <div class="game-level-grid" id="gameLevelGrid" aria-label="Pilihan level"></div>
+      <nav class="game-picker" id="gamePicker" aria-label="Pilihan mini game">
+        <button class="game-picker-card active" type="button" data-game-target="crystal">
+          <span class="game-picker-icon crystal-icon">◆</span>
+          <span>
+            <strong>Crystal Trail</strong>
+            <small id="crystalPickerText">Puzzle 30 level</small>
+          </span>
+        </button>
+        <button class="game-picker-card" type="button" data-game-target="blocks">
+          <span class="game-picker-icon blocks-icon">▦</span>
+          <span>
+            <strong>Block Drop</strong>
+            <small id="blocksPickerText">Susun blok</small>
+          </span>
+        </button>
+        <button class="game-picker-card" type="button" data-game-target="maze">
+          <span class="game-picker-icon maze-icon">●</span>
+          <span>
+            <strong>Maze Chaser</strong>
+            <small id="mazePickerText">Kejar skor</small>
+          </span>
+        </button>
+        <button class="game-picker-card" type="button" data-game-target="city">
+          <span class="game-picker-icon city-icon">▰</span>
+          <span>
+            <strong>City Drive</strong>
+            <small id="cityPickerText">Jelajah kota</small>
+          </span>
+        </button>
+      </nav>
 
-          <div class="game-legend">
-            <strong id="legendTitle">Petunjuk</strong>
-            <div><span class="legend-symbol gem-symbol">◆</span><span id="legendGem">Kristal</span></div>
-            <div><span class="legend-symbol player-symbol">✦</span><span id="legendPlayer">Penjelajah</span></div>
-            <div><span class="legend-symbol exit-symbol">⇥</span><span id="legendExit">Pintu keluar</span></div>
-            <div><span class="legend-symbol trap-symbol">▲</span><span id="legendTrap">Jebakan</span></div>
-            <div><span class="legend-symbol key-symbol">⚿</span><span id="legendKey">Kunci</span></div>
-            <div><span class="legend-symbol rock-symbol">●</span><span id="legendRock">Batu dorong</span></div>
-          </div>
-        </aside>
+      <section class="hub-game-view active" data-game-view="crystal">
+        <div class="game-layout">
+          <aside class="game-sidebar">
+            <div class="game-level-heading">
+              <strong id="levelSelectLabel">Pilih Level</strong>
+              <span id="progressLabel">1 / 30 terbuka</span>
+            </div>
+            <div class="game-level-grid level-grid-30" id="gameLevelGrid" aria-label="Pilihan level"></div>
 
-        <section class="game-stage">
-          <div class="game-hud">
-            <div class="hud-item">
-              <span id="hudLevelLabel">Level</span>
-              <strong id="gameLevelValue">1</strong>
+            <div class="game-legend">
+              <strong id="legendTitle">Petunjuk</strong>
+              <div><span class="legend-symbol gem-symbol">◆</span><span id="legendGem">Kristal</span></div>
+              <div><span class="legend-symbol player-symbol">✦</span><span id="legendPlayer">Penjelajah</span></div>
+              <div><span class="legend-symbol exit-symbol">⇥</span><span id="legendExit">Pintu keluar</span></div>
+              <div><span class="legend-symbol trap-symbol">▲</span><span id="legendTrap">Jebakan bergerak</span></div>
+              <div><span class="legend-symbol key-symbol">⚿</span><span id="legendKey">Kunci</span></div>
+              <div><span class="legend-symbol rock-symbol">●</span><span id="legendRock">Batu dorong</span></div>
             </div>
-            <div class="hud-item">
-              <span id="hudGemLabel">Kristal</span>
-              <strong id="gameGemValue">0/0</strong>
-            </div>
-            <div class="hud-item">
-              <span id="hudMoveLabel">Langkah</span>
-              <strong id="gameMoveValue">0</strong>
-            </div>
-            <div class="hud-item">
-              <span id="hudBestLabel">Terbaik</span>
-              <strong id="gameBestValue">—</strong>
-            </div>
-          </div>
+          </aside>
 
-          <div class="game-level-name-wrap">
-            <strong id="gameLevelName">Pemanasan</strong>
-            <span id="gameGoalText">Ambil semua kristal untuk membuka pintu keluar.</span>
-          </div>
+          <section class="game-stage">
+            <div class="game-hud">
+              <div class="hud-item"><span id="hudLevelLabel">Level</span><strong id="gameLevelValue">1</strong></div>
+              <div class="hud-item"><span id="hudGemLabel">Kristal</span><strong id="gameGemValue">0/0</strong></div>
+              <div class="hud-item"><span id="hudMoveLabel">Langkah</span><strong id="gameMoveValue">0</strong></div>
+              <div class="hud-item"><span id="hudBestLabel">Terbaik</span><strong id="gameBestValue">—</strong></div>
+            </div>
 
-          <div class="game-board-wrap">
-            <div class="game-board" id="gameBoard" role="application" aria-label="Papan permainan Crystal Trail"></div>
-            <div class="game-result" id="gameResult" hidden>
-              <div class="game-result-card">
-                <span class="game-result-icon">✦</span>
-                <h3 id="gameResultTitle">Level Selesai</h3>
-                <p id="gameResultText"></p>
-                <div class="game-result-actions">
-                  <button class="secondary-cta game-action-button" id="replayLevelBtn" type="button">Ulangi</button>
-                  <button class="primary-cta game-action-button" id="nextLevelBtn" type="button">Level Berikutnya</button>
+            <div class="game-level-name-wrap">
+              <strong id="gameLevelName">Langkah Pertama</strong>
+              <span id="gameGoalText">Ambil semua kristal dan hindari jebakan yang bergerak.</span>
+            </div>
+
+            <div class="game-board-wrap">
+              <div class="game-board" id="gameBoard" role="application" aria-label="Papan permainan Crystal Trail"></div>
+              <div class="game-result" id="gameResult" hidden>
+                <div class="game-result-card">
+                  <span class="game-result-icon">✦</span>
+                  <h3 id="gameResultTitle">Level Selesai</h3>
+                  <p id="gameResultText"></p>
+                  <div class="game-result-actions">
+                    <button class="secondary-cta game-action-button" id="replayLevelBtn" type="button">Ulangi</button>
+                    <button class="primary-cta game-action-button" id="nextLevelBtn" type="button">Level Berikutnya</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="game-message" id="gameMessage" aria-live="polite"></div>
+            <div class="game-message" id="gameMessage" aria-live="polite"></div>
 
-          <div class="game-controls">
-            <div class="game-dpad" aria-label="Kontrol arah">
-              <button class="dpad-btn dpad-up" type="button" data-move="up" aria-label="Atas">▲</button>
-              <button class="dpad-btn dpad-left" type="button" data-move="left" aria-label="Kiri">◀</button>
-              <button class="dpad-btn dpad-center" type="button" id="resetLevelBtn" aria-label="Ulangi level">↻</button>
-              <button class="dpad-btn dpad-right" type="button" data-move="right" aria-label="Kanan">▶</button>
-              <button class="dpad-btn dpad-down" type="button" data-move="down" aria-label="Bawah">▼</button>
+            <div class="game-controls">
+              <div class="game-dpad" aria-label="Kontrol arah">
+                <button class="dpad-btn dpad-up" type="button" data-crystal-move="up" aria-label="Atas">▲</button>
+                <button class="dpad-btn dpad-left" type="button" data-crystal-move="left" aria-label="Kiri">◀</button>
+                <button class="dpad-btn dpad-center" type="button" id="resetLevelBtn" aria-label="Ulangi level">↻</button>
+                <button class="dpad-btn dpad-right" type="button" data-crystal-move="right" aria-label="Kanan">▶</button>
+                <button class="dpad-btn dpad-down" type="button" data-crystal-move="down" aria-label="Bawah">▼</button>
+              </div>
+              <div class="game-help">
+                <strong id="controlsTitle">Kontrol</strong>
+                <p id="controlsText">Keyboard: Arrow / WASD. Ponsel: gunakan tombol arah.</p>
+                <button class="game-reset-progress" id="resetGameProgressBtn" type="button">Reset progres Crystal Trail</button>
+              </div>
             </div>
+          </section>
+        </div>
+      </section>
 
-            <div class="game-help">
-              <strong id="controlsTitle">Kontrol</strong>
-              <p id="controlsText">Keyboard: Arrow / WASD. Ponsel: gunakan tombol arah.</p>
-              <button class="game-reset-progress" id="resetGameProgressBtn" type="button">Reset progres game</button>
+      <section class="hub-game-view" data-game-view="blocks">
+        <div class="arcade-shell">
+          <div class="arcade-copy">
+            <span class="arcade-kicker">BLOCK PUZZLE</span>
+            <h3>Block Drop</h3>
+            <p id="blockDescription">Susun blok, selesaikan garis, dan kejar skor tertinggi.</p>
+            <div class="arcade-stats">
+              <div><span id="blockScoreLabel">Skor</span><strong id="blockScore">0</strong></div>
+              <div><span id="blockLinesLabel">Garis</span><strong id="blockLines">0</strong></div>
+              <div><span id="blockLevelLabel">Level</span><strong id="blockLevel">1</strong></div>
+              <div><span id="blockBestLabel">Terbaik</span><strong id="blockBest">0</strong></div>
             </div>
+            <button class="primary-cta arcade-start" id="blockStartBtn" type="button">Mulai / Ulangi</button>
+            <p class="arcade-help" id="blockHelp">← → gerak, ↑ putar, ↓ turun, Space jatuhkan.</p>
           </div>
-        </section>
-      </div>
+          <div class="arcade-canvas-wrap block-canvas-wrap">
+            <canvas id="blockCanvas" width="300" height="600" aria-label="Permainan Block Drop"></canvas>
+          </div>
+          <div class="arcade-touch-row block-touch-controls">
+            <button type="button" data-block-action="left">◀</button>
+            <button type="button" data-block-action="rotate">↻</button>
+            <button type="button" data-block-action="right">▶</button>
+            <button type="button" data-block-action="down">▼</button>
+            <button type="button" data-block-action="drop">⇩</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="hub-game-view" data-game-view="maze">
+        <div class="arcade-shell">
+          <div class="arcade-copy">
+            <span class="arcade-kicker">MAZE ARCADE</span>
+            <h3>Maze Chaser</h3>
+            <p id="mazeDescription">Kumpulkan semua cahaya sambil menghindari para pengejar.</p>
+            <div class="arcade-stats">
+              <div><span id="mazeScoreLabel">Skor</span><strong id="mazeScore">0</strong></div>
+              <div><span id="mazeLivesLabel">Nyawa</span><strong id="mazeLives">3</strong></div>
+              <div><span id="mazeDotsLabel">Cahaya</span><strong id="mazeDots">0</strong></div>
+            </div>
+            <button class="primary-cta arcade-start" id="mazeStartBtn" type="button">Mulai / Ulangi</button>
+            <p class="arcade-help" id="mazeHelp">Gunakan Arrow / WASD untuk bergerak.</p>
+          </div>
+          <div class="arcade-canvas-wrap">
+            <canvas id="mazeCanvas" width="600" height="600" aria-label="Permainan Maze Chaser"></canvas>
+          </div>
+          <div class="arcade-touch-row">
+            <button type="button" data-maze-move="left">◀</button>
+            <button type="button" data-maze-move="up">▲</button>
+            <button type="button" data-maze-move="down">▼</button>
+            <button type="button" data-maze-move="right">▶</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="hub-game-view" data-game-view="city">
+        <div class="arcade-shell">
+          <div class="arcade-copy">
+            <span class="arcade-kicker">OPEN CITY DRIVE</span>
+            <h3>City Drive</h3>
+            <p id="cityDescription">Jelajahi kota dari atas, ambil checkpoint, dan selesaikan rute pengantaran.</p>
+            <div class="arcade-stats">
+              <div><span id="cityScoreLabel">Checkpoint</span><strong id="cityScore">0/6</strong></div>
+              <div><span id="cityTimeLabel">Waktu</span><strong id="cityTime">0s</strong></div>
+              <div><span id="cityBestLabel">Terbaik</span><strong id="cityBest">—</strong></div>
+            </div>
+            <button class="primary-cta arcade-start" id="cityStartBtn" type="button">Mulai / Ulangi</button>
+            <p class="arcade-help" id="cityHelp">Arrow / WASD untuk mengemudi. Tidak ada senjata atau aksi kekerasan.</p>
+          </div>
+          <div class="arcade-canvas-wrap city-canvas-wrap">
+            <canvas id="cityCanvas" width="760" height="560" aria-label="Permainan City Drive"></canvas>
+          </div>
+          <div class="arcade-touch-row">
+            <button type="button" data-city-move="left">◀</button>
+            <button type="button" data-city-move="up">▲</button>
+            <button type="button" data-city-move="down">▼</button>
+            <button type="button" data-city-move="right">▶</button>
+          </div>
+        </div>
+      </section>
     </div>
   </dialog>
 
-  <dialog class="theme-dialog" id="themeDialog">
+<dialog class="theme-dialog" id="themeDialog">
     <div class="theme-sheet">
       <div class="theme-sheet-head">
         <div>
