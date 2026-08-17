@@ -92,5 +92,191 @@
 .camera-page{padding:0;background:#09090e}.camera-preview{position:absolute;inset:0 0 83px;background:var(--home-wall) center/cover no-repeat}.camera-back{position:absolute;z-index:4;top:38px;left:10px;width:33px;height:33px;border:0;border-radius:50%;color:#fff;background:rgba(0,0,0,.36);cursor:pointer}.camera-controls{position:absolute;left:0;right:0;bottom:0;height:85px;display:grid;place-items:center;background:#08080d}.camera-shutter{width:52px;height:52px;border:4px solid #fff;border-radius:50%;background:transparent;cursor:pointer}.boot-page{position:absolute;inset:0;display:grid;place-items:center;color:#202124;background:#fff}.boot-mark{width:72px;height:72px;display:grid;place-items:center;border-radius:25px;color:#fff;background:linear-gradient(135deg,#4285f4,#34a853 35%,#fbbc05 65%,#ea4335);font-size:31px;font-weight:900;animation:boot-pulse .8s ease-in-out infinite alternate}@keyframes boot-pulse{to{transform:scale(.93);opacity:.72}}.volume-toast{position:absolute;z-index:95;top:70px;right:8px;width:42px;padding:9px 6px;border-radius:19px;color:#fff;background:rgba(34,31,40,.88);text-align:center;font-size:8px;font-weight:900;backdrop-filter:blur(10px)}.toast{position:absolute;z-index:100;left:50%;bottom:34px;max-width:82%;padding:8px 11px;border-radius:14px;color:#fff;background:rgba(31,27,37,.90);font-size:7px;font-weight:900;text-align:center;transform:translateX(-50%);backdrop-filter:blur(10px)}
 
 @media(max-width:560px){
-  .phone-sim-dialog{width:100%;height:100dvh;max-width:none;max-height:none;margin:0;border-radius:0}.pixel-sim-stage{padding:0;border:0;border-radius:0;background:#09090d}.pixel-sim-toolbar{position:absolute;z-index:120;top:6px;left:7px;right:7px;width:auto;pointer-events:none}.pixel-sim-identity{display:none}.pixel-sim-toolbar-actions{margin-left:auto;pointer-events:auto}.pixel-sim-toolbar-actions button:not(.pixel-sim-close){display:none}.pixel-sim-toolbar-actions .pixel-sim-close{color:#fff;border-color:rgba(255,255,255,.22);background:rgba(0,0,0,.30);backdrop-filter:blur(8px)}.pixel-frame{width:100%;height:100%;aspect-ratio:auto;padding:0;border-radius:0;background:#111;box-shadow:none}.pixel-screen{border-radius:0}.pixel-camera-hole{top:8px}.pixel-sim-help{display:none}.pixel-power,.pixel-volume{display:none}
+ .phone-sim-dialog{width:100%;height:100dvh;max-width:none;max-height:none;margin:0;border-radius:0}.pixel-sim-stage{padding:0;border:0;border-radius:0;background:#09090d}.pixel-sim-toolbar{position:absolute;z-index:120;top:6px;left:7px;right:7px;width:auto;pointer-events:none}.pixel-sim-identity{display:none}.pixel-sim-toolbar-actions{margin-left:auto;pointer-events:auto}.pixel-sim-toolbar-actions button:not(.pixel-sim-close){display:none}.pixel-sim-toolbar-actions .pixel-sim-close{color:#fff;border-color:rgba(255,255,255,.22);background:rgba(0,0,0,.30);backdrop-filter:blur(8px)}.pixel-frame{width:100%;height:100%;aspect-ratio:auto;padding:0;border-radius:0;background:#111;box-shadow:none}.pixel-screen{border-radius:0}.pixel-camera-hole{top:8px}.pixel-sim-help{display:none}.pixel-power,.pixel-volume{display:none}
+}
+
+
+/* =========================================================
+   FIX 7e402af: keep the complete Pixel frame inside desktop viewport
+   ========================================================= */
+@media (min-width:561px){
+  .phone-sim-dialog{
+    width:min(520px,calc(100% - 16px));
+    height:min(940px,calc(100dvh - 16px));
+    max-height:calc(100dvh - 16px);
+    overflow:hidden;
+  }
+
+  .pixel-sim-stage{
+    min-height:0;
+    overflow:hidden;
+    justify-content:flex-start;
+  }
+
+  .pixel-sim-toolbar,
+  .pixel-sim-help{
+    flex:0 0 auto;
+  }
+
+  .pixel-frame{
+    flex:0 1 auto;
+    width:auto;
+    height:min(820px,calc(100dvh - 118px));
+    max-width:100%;
+    max-height:calc(100% - 72px);
+    aspect-ratio:1080/2400;
+    margin-inline:auto;
+  }
+}
+
+/* Short laptop screens, including 1366x768 browsers with toolbars visible. */
+@media (min-width:561px) and (max-height:760px){
+  .phone-sim-dialog{
+    height:calc(100dvh - 10px);
+  }
+  .pixel-sim-stage{
+    gap:6px;
+    padding:8px;
+  }
+  .pixel-frame{
+    height:calc(100dvh - 106px);
+    max-height:calc(100% - 64px);
+  }
+  .pixel-sim-help{
+    font-size:.56rem;
+    line-height:1.25;
+    padding-bottom:0;
+  }
+}
+
+/* =========================================================
+   FIX 47ac3f7 v2: laptop-safe Pixel simulator sizing
+   The previous fix still allowed the flex item to keep a wide
+   auto width, so aspect-ratio made the phone taller than the dialog.
+   This override sizes the frame FROM viewport height instead.
+   ========================================================= */
+
+@media (min-width: 561px) {
+  body:has(.phone-sim-dialog[open]) {
+    overflow: hidden;
+  }
+
+  .phone-sim-dialog {
+    box-sizing: border-box;
+    width: min(460px, calc(100vw - 28px));
+    height: calc(100dvh - 24px);
+    max-height: calc(100dvh - 24px);
+    margin: auto;
+    overflow: hidden;
+    border-radius: 30px;
+  }
+
+  .pixel-sim-stage {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 9px 10px 8px;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    align-items: center;
+    justify-items: center;
+    gap: 7px;
+    overflow: hidden;
+  }
+
+  .pixel-sim-toolbar {
+    width: min(100%, 410px);
+    min-width: 0;
+    align-self: center;
+  }
+
+  .pixel-sim-help {
+    width: min(100%, 410px);
+    margin: 0;
+    padding: 0 4px 1px;
+    line-height: 1.25;
+  }
+
+  .pixel-frame {
+    box-sizing: border-box;
+    flex: none;
+    align-self: center;
+    justify-self: center;
+
+    /* 1080 / 2400 = 0.45.  Width is calculated from the
+       available viewport height so the complete phone always fits. */
+    width: min(
+      360px,
+      calc((100dvh - 130px) * 0.45),
+      calc(100% - 18px)
+    );
+    height: auto;
+    max-width: none;
+    max-height: 100%;
+    aspect-ratio: 1080 / 2400;
+    margin: 0 auto;
+  }
+
+  .pixel-screen {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* Extra safety for common 1366x768 / 1280x720 laptop browser viewports. */
+@media (min-width: 561px) and (max-height: 760px) {
+  .phone-sim-dialog {
+    width: min(430px, calc(100vw - 24px));
+    height: calc(100dvh - 18px);
+    max-height: calc(100dvh - 18px);
+  }
+
+  .pixel-sim-stage {
+    padding: 7px 9px 6px;
+    gap: 5px;
+  }
+
+  .pixel-sim-toolbar {
+    width: min(100%, 390px);
+  }
+
+  .pixel-sim-toolbar-actions button {
+    width: 32px;
+    height: 32px;
+  }
+
+  .pixel-frame {
+    width: min(
+      330px,
+      calc((100dvh - 116px) * 0.45),
+      calc(100% - 20px)
+    );
+  }
+
+  .pixel-sim-help {
+    width: min(100%, 390px);
+    font-size: .54rem;
+    line-height: 1.18;
+  }
+}
+
+/* Very short laptop windows, e.g. browser not maximized. */
+@media (min-width: 561px) and (max-height: 620px) {
+  .pixel-sim-identity small,
+  .pixel-sim-help {
+    display: none;
+  }
+
+  .pixel-sim-stage {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .pixel-frame {
+    width: min(
+      300px,
+      calc((100dvh - 78px) * 0.45),
+      calc(100% - 20px)
+    );
+  }
 }
