@@ -36,6 +36,24 @@
     { id: "ice", accent: "#3e8ab8", soft: "#d9eef8", parts: ["#3e8ab8", "#85bdda", "#d4ecf8", "#255e7b"] }
   ];
 
+  const SIM_APPS = [{"id":"youtube","name":"YouTube","glyph":"▶","tone":"red","category":"media"},{"id":"play-store","name":"Play Store","glyph":"▶","tone":"multi","category":"store"},{"id":"translate","name":"Terjemah","glyph":"文","tone":"blue","category":"utility"},{"id":"digi-bank","name":"DIGI bank bjb","glyph":"D","tone":"blue","category":"finance"},{"id":"dana","name":"DANA","glyph":"D","tone":"blue","category":"finance"},{"id":"bcr","name":"BCR","glyph":"☎","tone":"green","category":"finance"},{"id":"brimo","name":"BRImo","glyph":"B","tone":"blue","category":"finance"},{"id":"canva","name":"Canva","glyph":"C","tone":"purple","category":"creative"},{"id":"capcut","name":"CapCut","glyph":"✂","tone":"dark","category":"creative"},{"id":"chrome","name":"Chrome","glyph":"●","tone":"multi","category":"browser"},{"id":"weather","name":"Cuaca","glyph":"☀","tone":"yellow","category":"utility"},{"id":"dolby","name":"Dolby Atmos","glyph":"D","tone":"blue","category":"utility"},{"id":"drive","name":"Drive","glyph":"▲","tone":"multi","category":"files"},{"id":"facebook","name":"Facebook","glyph":"f","tone":"blue","category":"social"},{"id":"files","name":"Files","glyph":"▤","tone":"blue","category":"files"},{"id":"photos","name":"Foto","glyph":"✿","tone":"multi","category":"files"},{"id":"gamebar","name":"GameBar","glyph":"🎮","tone":"blue","category":"game"},{"id":"gemini","name":"Gemini","glyph":"✦","tone":"multi","category":"ai"},{"id":"gmail","name":"Gmail","glyph":"M","tone":"multi","category":"mail"},{"id":"google","name":"Google","glyph":"G","tone":"multi","category":"search"},{"id":"grab","name":"Grab","glyph":"G","tone":"green","category":"maps"},{"id":"instagram","name":"Instagram","glyph":"◎","tone":"multi","category":"social"},{"id":"clock","name":"Jam","glyph":"◷","tone":"blue","category":"utility"},{"id":"calendar","name":"Kalender","glyph":"18","tone":"blue","category":"utility"},{"id":"calculator","name":"Kalkulator","glyph":"±","tone":"dark","category":"calculator"},{"id":"camera","name":"Kamera","glyph":"◉","tone":"dark","category":"camera"},{"id":"keep","name":"Keep","glyph":"●","tone":"yellow","category":"notes"},{"id":"personal-safety","name":"Keselamatan Pribadi","glyph":"✚","tone":"multi","category":"utility"},{"id":"contacts","name":"Kontak","glyph":"●","tone":"blue","category":"contacts"},{"id":"m365","name":"M365 Copilot","glyph":"M","tone":"multi","category":"ai"},{"id":"maps","name":"Maps","glyph":"⌖","tone":"multi","category":"maps"},{"id":"meet","name":"Meet","glyph":"▰","tone":"yellow","category":"communication"},{"id":"message","name":"Message","glyph":"✉","tone":"blue","category":"communication"},{"id":"messenger","name":"Messenger","glyph":"➤","tone":"blue","category":"communication"},{"id":"nekogram","name":"Nekogram","glyph":"N","tone":"blue","category":"communication"},{"id":"ovo","name":"OVO","glyph":"O","tone":"purple","category":"finance"},{"id":"recorder","name":"Perekam Suara","glyph":"▥","tone":"red","category":"utility"},{"id":"pinterest","name":"Pinterest","glyph":"P","tone":"red","category":"social"},{"id":"game-space-app","name":"Ruang Game","glyph":"🎮","tone":"yellow","category":"game"},{"id":"sandbox","name":"Sandbox","glyph":"◆","tone":"dark","category":"utility"},{"id":"settings-app","name":"Setelan","glyph":"⚙","tone":"blue","category":"settings"},{"id":"sim-toolkit","name":"SIM Toolkit","glyph":"SIM","tone":"slate","category":"utility"},{"id":"spotify","name":"Spotify","glyph":"◉","tone":"green","category":"media"},{"id":"phone","name":"Telepon","glyph":"☎","tone":"blue","category":"phone"},{"id":"threads","name":"Threads","glyph":"@","tone":"dark","category":"social"},{"id":"tiktok","name":"TikTok","glyph":"♪","tone":"dark","category":"social"},{"id":"wa-business","name":"WA Business","glyph":"W","tone":"green","category":"communication"},{"id":"x","name":"X","glyph":"X","tone":"dark","category":"social"}];
+  const SYSTEM_APPS = [{"id":"sys-amplifier-suara","name":"Amplifier Suara","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-accessibility-suite","name":"Android Accessibility Suite","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-auto","name":"Android Auto","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-switch","name":"Android Switch","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-system-key-verifier","name":"Android System Key Verifier","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-system-safetycore","name":"Android System SafetyCore","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-system-webview","name":"Android System WebView","glyph":"◆","tone":"system","category":"system"},{"id":"sys-carrier-services","name":"Carrier Services","glyph":"◆","tone":"system","category":"system"},{"id":"sys-device-health-services","name":"Device Health Services","glyph":"◆","tone":"system","category":"system"},{"id":"sys-digital-wellbeing","name":"Digital Wellbeing","glyph":"◆","tone":"system","category":"system"},{"id":"sys-google-play-services","name":"Google Play services","glyph":"◆","tone":"system","category":"system"},{"id":"sys-pixel-launcher","name":"Pixel Launcher","glyph":"◆","tone":"system","category":"system"},{"id":"sys-private-compute-services","name":"Private Compute Services","glyph":"◆","tone":"system","category":"system"},{"id":"sys-system-ui","name":"System UI","glyph":"◆","tone":"system","category":"system"},{"id":"sys-permission-controller","name":"Permission Controller","glyph":"◆","tone":"system","category":"system"},{"id":"sys-settings-services","name":"Settings Services","glyph":"◆","tone":"system","category":"system"},{"id":"sys-speech-recognition-synthesis","name":"Speech Recognition & Synthesis","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-shared-library","name":"Android Shared Library","glyph":"◆","tone":"system","category":"system"},{"id":"sys-documentsui","name":"DocumentsUI","glyph":"◆","tone":"system","category":"system"},{"id":"sys-package-installer","name":"Package Installer","glyph":"◆","tone":"system","category":"system"},{"id":"sys-captiveportallogin","name":"CaptivePortalLogin","glyph":"◆","tone":"system","category":"system"},{"id":"sys-emergency-information","name":"Emergency Information","glyph":"◆","tone":"system","category":"system"},{"id":"sys-google-one-time-init","name":"Google One Time Init","glyph":"◆","tone":"system","category":"system"},{"id":"sys-google-services-framework","name":"Google Services Framework","glyph":"◆","tone":"system","category":"system"},{"id":"sys-google-partner-setup","name":"Google Partner Setup","glyph":"◆","tone":"system","category":"system"},{"id":"sys-sim-manager","name":"SIM Manager","glyph":"◆","tone":"system","category":"system"},{"id":"sys-storage-manager","name":"Storage Manager","glyph":"◆","tone":"system","category":"system"},{"id":"sys-device-policy","name":"Device Policy","glyph":"◆","tone":"system","category":"system"},{"id":"sys-download-manager","name":"Download Manager","glyph":"◆","tone":"system","category":"system"}];
+  const ALL_APPS = [...SIM_APPS, ...SYSTEM_APPS];
+  const SIM_BALANCE = "Rp1.000.000.000.000.000";
+
+  function appById(id) { return ALL_APPS.find(app => app.id === id) || SIM_APPS[0]; }
+  function makeRandomIndoNumber() {
+    const prefixes = ["812","813","821","822","852","853","855","856","857","858","877","878","895","896","897","898","899"];
+    const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+    const tail = Array.from({ length: 7 }, () => Math.floor(Math.random() * 10)).join("");
+    return `+62${prefix}${tail}`;
+  }
+  function maskSimNumber(value) {
+    const digits = String(value || "").replace(/\D/g, "");
+    const last = digits.slice(-4) || "0000";
+    return `+62 8••• •••• ${last}`;
+  }
+
   const defaultState = {
     view: "home",
     previous: "home",
@@ -77,6 +95,11 @@
     batterySaver: false,
     screenRecord: false,
     screenRecordStart: 0,
+    activeSimApp: "youtube",
+    appInfoId: "youtube",
+    recentSimApps: [],
+    simPhone1: "",
+    simPhone2: "",
     brightness: 78,
     battery: 61,
     volume: 62,
@@ -210,7 +233,41 @@
     securityCheck: true,
     screenLock: "Pola",
     faceUnlock: false,
-    sideKeyConfigured: false
+    sideKeyConfigured: false,
+    /* Simulated application state */
+    bcrCallRecording: false,
+    bcrWriteMetadata: false,
+    bcrTelecomCalls: false,
+    bcrBeforeConnect: false,
+    bcrOpenDirectory: false,
+    bcrShowLauncher: true,
+    bcrAutoRules: "Semua panggilan",
+    bcrOutputFormat: "OGG/Opus, 48 kbps, 16000 Hz, Combined (Mono)",
+    bcrMinimumDuration: "Durasi apa pun",
+    canvaText: "Waifu Gallery",
+    canvaImage: "waifu-31",
+    capcutPlaying: false,
+    capcutPosition: 34,
+    keepNotes: [],
+    recorderActive: false,
+    recorderStartedAt: 0,
+    recorderItems: [],
+    sandboxTab: "apps",
+    sandboxUnlocked: false,
+    sandboxShowSystem: false,
+    spotifyTrack: 0,
+    spotifyPlaying: false,
+    spotifyProgress: 0,
+    spotifyStartedAt: 0,
+    translateDirection: "id-en",
+    translateText: "",
+    translateResult: "",
+    simContacts: [],
+    activeContact: 0,
+    nekogramThread: -1,
+    waThread: -1,
+    pinterestPin: -1,
+    tiktokIndex: 0
   };
 
   const strings = {
@@ -328,6 +385,10 @@
     catch { return { ...defaultState }; }
   }
   let state = loadState();
+  if (!state.simPhone1) state.simPhone1 = makeRandomIndoNumber();
+  if (!state.simPhone2) state.simPhone2 = makeRandomIndoNumber();
+  if (!Array.isArray(state.simContacts) || !state.simContacts.length) state.simContacts = makeSimContacts();
+  localStorage.setItem(STORE, JSON.stringify(state));
   let longPressTimer = null;
   let toastTimer = null;
   let volumeTimer = null;
@@ -474,6 +535,7 @@
     phone.style.setProperty("--home-wall", `url('${wallpaperById(state.homeWallpaper).src}')`);
     phone.style.setProperty("--lock-wall", `url('${wallpaperById(state.lockWallpaper).src}')`);
     phone.style.setProperty("--home-cols", String(state.homeCols));
+    phone.style.setProperty("--drawer-cols", String(state.homeCols));
     phone.classList.toggle("android-dark", !!state.dark);
     phone.classList.toggle("screen-off-active", !!state.screenOff);
     phone.style.opacity = String(0.68 + state.brightness / 312);
@@ -645,7 +707,8 @@
       mediaSettings: "soundSettings", cleanSpeaker: "soundSettings", dolbyAtmos: "soundSettings", equalizer: "dolbyAtmos",
       appAudioProfiles: "dolbyAtmos",
 
-      securityPrivacy: "settings", deviceUnlock: "securityPrivacy"
+      securityPrivacy: "settings", deviceUnlock: "securityPrivacy",
+      appInfo: "allApps", simApp: "apps"
     };
     navigate(parent[state.view] || "home", false);
   }
@@ -667,38 +730,78 @@
   }
 
   function renderHome() {
-    const appIcons = [
-      ["◎", "Instagram", "apps"], ["♪", "TikTok", "apps"], ["◉", "WA Busin...", "apps"], ["✦", "Nekogram", "apps"]
+    const homeApps = [
+      appById("instagram"), appById("tiktok"), appById("wa-business"), appById("nekogram")
     ];
-    root.innerHTML = `<div class="a17-page home-page" id="homePressSurface">
+    const dockApps = [
+      appById("phone"), appById("message"), appById("chrome"), appById("contacts"), appById("camera")
+    ];
+    const now = new Date();
+    const locale = getLanguage() === "en" ? "en-US" : "id-ID";
+    const dayLabel = new Intl.DateTimeFormat(locale, { weekday:"short", day:"numeric", month:"short" }).format(now);
+    const appButton = (app, cls="home-app") => `<button class="${cls}" type="button" data-open-app="${app.id}" aria-label="${escapeHtml(app.name)}"><span class="record-home-icon drawer-app-icon tone-${app.tone}">${app.glyph}</span><small>${escapeHtml(app.name === "WA Business" ? "WA Busin..." : app.name)}</small></button>`;
+
+    root.innerHTML = `<div class="a17-page home-page record-home-page" id="homePressSurface">
       <div class="home-wall"></div>
-      <div class="home-content">
-        <div class="home-weather"><strong>Besok 22°C / 12°C</strong><span>☀ Cerah</span></div>
-        <div class="home-spacer"></div>
-        <div class="home-icons">${appIcons.map(a => `<button class="home-app" type="button" data-nav="${a[2]}"><span class="home-app-icon">${a[0]}</span><small>${a[1]}</small></button>`).join("")}</div>
-        <div class="home-digital-widget"><div><span>Waktu pemakaian<br>perangkat</span><strong>2 j, 18 mnt</strong></div><span>◔</span></div>
-        <div class="home-dock">
-          <button type="button" data-nav="apps"><span>☎</span></button><button type="button" data-nav="apps"><span>●</span></button>
-          <button type="button" data-nav="apps"><span>G</span></button><button type="button" data-nav="apps"><span>♟</span></button>
-          <button type="button" data-nav="camera"><span>◉</span></button>
+      <div class="record-home-scrim"></div>
+      <div class="home-content record-home-content">
+        <div class="record-home-weather">
+          <strong>${escapeHtml(dayLabel)} <span>• 26°C</span></strong>
+          <small>Hari ini 32°C / 24°C • Sebagian cerah</small>
         </div>
-        <button class="home-search" type="button" data-nav="apps"><b>G</b><span>Telusuri</span><i>⌁ &nbsp; ◉</i></button>
+        <div class="record-home-spacer"></div>
+        <div class="record-home-main">
+          <div class="record-home-apps">${homeApps.map(a => appButton(a)).join("")}</div>
+          <button class="record-screen-time" type="button" data-nav="settings" aria-label="Waktu pemakaian perangkat">
+            <span>Waktu pemakaian<br>perangkat</span><i>◔</i><strong>1 j, 34 mnt</strong>
+          </button>
+        </div>
+        <div class="home-dock record-home-dock">${dockApps.map(a => appButton(a,"record-dock-app")).join("")}</div>
+        <button class="home-search record-home-search" type="button" data-open-app="google" aria-label="Google Search"><b>G</b><span>Telusuri</span><i>⌕ &nbsp; 🎙 &nbsp; ◉</i></button>
+        <div class="record-home-gesture-hint"></div>
       </div>
       ${state.longPressMenu ? renderLongPressMenu() : ""}
     </div>`;
 
     if (!state.longPressMenu) {
       const surface = $("#homePressSurface");
+      let startY = null;
+      let startX = null;
+      let moved = false;
       surface?.addEventListener("pointerdown", e => {
         if (e.target.closest("button")) return;
+        startY = e.clientY;
+        startX = e.clientX;
+        moved = false;
         clearTimeout(longPressTimer);
         longPressTimer = setTimeout(() => {
+          if (moved) return;
           state.longPressMenu = true;
           vibrate(12);
           render();
         }, 520);
       });
-      ["pointerup", "pointercancel", "pointerleave"].forEach(ev => surface?.addEventListener(ev, () => clearTimeout(longPressTimer)));
+      surface?.addEventListener("pointermove", e => {
+        if (startY == null) return;
+        if (Math.abs(e.clientY - startY) > 12 || Math.abs(e.clientX - startX) > 12) {
+          moved = true;
+          clearTimeout(longPressTimer);
+        }
+      });
+      surface?.addEventListener("pointerup", e => {
+        clearTimeout(longPressTimer);
+        if (startY == null) return;
+        const dy = e.clientY - startY;
+        startY = null;
+        startX = null;
+        if (dy < -44) {
+          vibrate(5);
+          navigate("apps");
+        }
+      });
+      ["pointercancel", "pointerleave"].forEach(ev => surface?.addEventListener(ev, () => {
+        clearTimeout(longPressTimer); startY = null; startX = null;
+      }));
       surface?.addEventListener("contextmenu", e => {
         e.preventDefault();
         state.longPressMenu = true;
@@ -807,7 +910,15 @@
     return `<span class="layout-dots" style="--layout-cols:${cols}">${"<i></i>".repeat(cols * 4)}</span>`;
   }
   function renderLayout() {
-    root.innerHTML = `<div class="a17-page wallstyle-page">${topbar(t("chooseLayout"), { back: false, close: true, apply: true })}<div class="preview-area" style="height:250px">${previewPhone("lock", false)}${previewPhone("home", true)}</div><div class="choice-grid">${[4,5,6].map(cols => `<button class="choice-card layout-choice ${state.layoutDraft === cols ? "active" : ""}" type="button" data-layout-draft="${cols}"><b>${layoutDots(cols)}</b><small>${cols} × 4</small></button>`).join("")}</div></div>`;
+    const previewApps = Array.from({ length: Math.min(state.layoutDraft * 4, 24) }, (_, i) => `<i style="--preview-i:${i}"></i>`).join("");
+    root.innerHTML = `<div class="a17-page wallstyle-page">${topbar(t("chooseLayout"), { back: false, close: true, apply: true })}
+      <div class="layout-live-preview">
+        <div class="layout-preview-lock"><span>${formatTime().replace(".", "<br>")}</span></div>
+        <div class="layout-preview-home" style="--layout-preview-cols:${state.layoutDraft}"><div class="layout-preview-apps">${previewApps}</div><div class="layout-preview-search"></div></div>
+      </div>
+      <div class="choice-grid">${[4,5,6].map(cols => `<button class="choice-card layout-choice ${state.layoutDraft === cols ? "active" : ""}" type="button" data-layout-draft="${cols}"><b>${layoutDots(cols)}</b><small>${cols} × 4</small></button>`).join("")}</div>
+      <p class="layout-helper">Pilihan ini mengatur jumlah kolom di layar utama dan daftar aplikasi.</p>
+    </div>`;
   }
 
   function renderClock() {
@@ -956,7 +1067,7 @@
   function renderSimSettings() {
     root.innerHTML = `<div class="a17-page system-page">${topbar("SIM")}
       <div class="a17-card system-card">
-        ${switchRow("3", "+62 895-****-5994", "sim1Enabled")}
+        ${switchRow("3", maskSimNumber(state.simPhone1), "sim1Enabled")}
         ${switchRow("Indosat Ooredoo", "+62 857-****-2843", "sim2Enabled")}
       </div>
       ${sectionLabel("Data seluler")}
@@ -1090,7 +1201,7 @@
 
   function renderAppsSettings() {
     root.innerHTML = `<div class="a17-page system-page">${topbar("Aplikasi")}
-      <div class="recent-apps-block"><strong>Aplikasi yang baru dibuka</strong><div class="a17-card system-card">${["Nekogram","Chrome","TikTok","YouTube"].map((n,i)=>plainRow(n, `${[19,29,46,70][i]} menit yang lalu`)).join("")}${navRow("Lihat semua 79 aplikasi", "", "allApps")}</div></div>
+      <div class="recent-apps-block"><strong>Aplikasi yang baru dibuka</strong><div class="a17-card system-card">${["Nekogram","Chrome","TikTok","YouTube"].map((n,i)=>plainRow(n, `${[19,29,46,70][i]} menit yang lalu`)).join("")}${navRow(`Lihat semua ${ALL_APPS.length} aplikasi`, "", "allApps")}</div></div>
       ${sectionLabel("Umum")}<div class="a17-card system-card">
         ${navRow("Aplikasi default", "Chrome, Telepon, dan Message", "defaultApps")}
         ${navRow("Aplikasi Clone", `${state.cloneApps.length} aplikasi di-clone`, "cloneApps")}
@@ -1108,8 +1219,12 @@
   }
 
   function renderAllApps() {
-    const apps = ["Amplifier Suara","Android Accessibility Suite","Android Auto","Android Switch","Android System Key Verifier","Android System SafetyCore","Android System WebView","BCR","BRImo","Canva","CapCut","Chrome","DANA","Drive","Facebook","Gmail","Maps","Nekogram","TikTok","YouTube"];
-    root.innerHTML = `<div class="a17-page system-page">${topbar("Semua aplikasi")}<div class="settings-search">⌕ Telusuri aplikasi</div><div class="a17-card system-card app-list-card">${apps.map(a=>plainRow(a, `${Math.max(1,a.length*3)} MB`)).join("")}</div></div>`;
+    root.innerHTML = `<div class="a17-page system-page all-apps-page">${topbar("Semua aplikasi")}
+      <label class="all-apps-search"><span>⌕</span><input id="allAppsSearch" type="search" placeholder="Telusuri aplikasi" autocomplete="off"><small>${ALL_APPS.length}</small></label>
+      <div class="all-apps-count" id="allAppsCount">${ALL_APPS.length} aplikasi terinstal</div>
+      <div class="a17-card system-card app-list-card">${ALL_APPS.map(app => `<button class="a17-row installed-app-row" type="button" data-app-info="${app.id}" data-app-search="${app.name.toLowerCase()}"><span class="sim-app-icon tone-${app.tone}">${app.glyph}</span><span class="a17-copy"><strong>${app.name}</strong><span>${app.category === "system" ? "Sistem" : "Terinstal"}</span></span><span class="a17-chevron">›</span></button>`).join("")}</div>
+      <div class="all-apps-empty" id="allAppsEmpty" hidden>Tidak ada aplikasi yang cocok.</div>
+    </div>`;
   }
 
   function renderDefaultApps() {
@@ -1490,8 +1605,521 @@
   }
 
   function renderApps() {
-    const apps = [["◉",t("camera"),"camera"],["◎","Chrome","home"],["◷","Clock","home"],["▥","Files","home"],["M","Gmail","home"],["⌖","Maps","home"],["✉","Messages","home"],["✿","Photos","wallpaperPicker"],["▶","Play","home"],["⚙",t("settings"),"settings"],["▷","YouTube","home"],["☀","Weather","home"]];
-    root.innerHTML = `<div class="a17-page wallstyle-page">${topbar(t("appList"))}<div class="settings-search">⌕ ${t("appList")}</div><div class="home-icons" style="grid-template-columns:repeat(4,1fr);margin-top:10px;text-shadow:none">${apps.map(a => `<button class="home-app" style="color:var(--android-text);text-shadow:none" type="button" data-nav="${a[2]}"><span class="home-app-icon">${a[0]}</span><small>${a[1]}</small></button>`).join("")}</div></div>`;
+    root.innerHTML = `<div class="a17-page app-drawer-page launcher-drawer-page" id="launcherDrawer">
+      <div class="launcher-drawer-wall"></div>
+      <div class="launcher-drawer-sheet">
+        <div class="launcher-drawer-handle" aria-hidden="true"></div>
+        <label class="drawer-search launcher-search"><span class="launcher-google-g">G</span><input id="drawerSearch" type="search" placeholder="Telusuri aplikasi" autocomplete="off"><b>🎙 &nbsp; ◉</b></label>
+        <div class="drawer-grid launcher-drawer-grid" id="drawerGrid" data-drawer-cols="${state.homeCols}" style="--drawer-cols:${state.homeCols}">${SIM_APPS.map(app => `<button class="drawer-app" type="button" data-open-app="${app.id}" data-drawer-search="${app.name.toLowerCase()}"><span class="drawer-app-icon tone-${app.tone}">${app.glyph}</span><small>${app.name}</small></button>`).join("")}</div>
+        <div class="drawer-empty" id="drawerEmpty" hidden>Tidak ada aplikasi yang cocok.</div>
+        <div class="launcher-drawer-gesture"></div>
+      </div>
+    </div>`;
+
+    const drawer = $("#launcherDrawer");
+    let startY = null;
+    drawer?.addEventListener("pointerdown", e => {
+      if (e.target.closest("button,input,label")) return;
+      startY = e.clientY;
+    });
+    drawer?.addEventListener("pointerup", e => {
+      if (startY == null) return;
+      const dy = e.clientY - startY;
+      startY = null;
+      if (dy > 46) {
+        vibrate(5);
+        navigate("home");
+      }
+    });
+    drawer?.addEventListener("pointercancel", () => { startY = null; });
+  }
+
+  function renderAppInfo() {
+    const app = appById(state.appInfoId);
+    const isSystem = app.category === "system";
+    root.innerHTML = `<div class="a17-page system-page app-info-page">${topbar("Info aplikasi")}
+      <div class="app-info-hero"><span class="drawer-app-icon tone-${app.tone}">${app.glyph}</span><h3>${app.name}</h3><small>${isSystem ? "Aplikasi sistem" : "Aplikasi terinstal"}</small></div>
+      <div class="app-info-actions">${isSystem ? "" : `<button type="button" data-open-app="${app.id}">Buka</button>`}<button type="button" data-sim-action="app-force-stop">Paksa berhenti</button></div>
+      <div class="a17-card system-card">${plainRow("Notifikasi", "Diizinkan", `<span class="a17-chevron">›</span>`)}${plainRow("Izin", isSystem ? "Izin sistem" : "Tidak ada izin yang digunakan", `<span class="a17-chevron">›</span>`)}${plainRow("Penyimpanan & cache", isSystem ? "36 MB digunakan" : `${20 + app.name.length * 4} MB digunakan`, `<span class="a17-chevron">›</span>`)}${plainRow("Data seluler & Wi‑Fi", "Penggunaan simulasi", `<span class="a17-chevron">›</span>`)}</div>
+    </div>`;
+  }
+
+  function renderFinancialApp(app) {
+    root.innerHTML = `<div class="a17-page sim-app-page finance-app tone-${app.tone}">${simAppTopbar(app)}
+      <div class="finance-sim-badge">SIMULASI • bukan saldo nyata</div>
+      <section class="finance-profile"><div><small>Nama akun</small><strong>Skenakun</strong></div><span>${app.glyph}</span></section>
+      <section class="finance-balance"><small>Saldo tersedia</small><strong>${SIM_BALANCE}</strong><span>IDR • data demo lokal</span></section>
+      <div class="finance-actions"><button data-sim-action="finance-transfer">⇄<small>Transfer</small></button><button data-sim-action="finance-pay">▣<small>Bayar</small></button><button data-sim-action="finance-topup">＋<small>Top Up</small></button><button data-sim-action="finance-history">◷<small>Riwayat</small></button></div>
+      <div class="sim-card"><strong>Aktivitas simulasi</strong><p>Tidak ada transaksi nyata. Semua tombol hanya menampilkan demo antarmuka.</p></div>
+    </div>`;
+  }
+
+  function simAppTopbar(app) {
+    return `<div class="sim-app-top"><button type="button" data-nav="back">‹</button><span class="sim-app-mini-icon tone-${app.tone}">${app.glyph}</span><div><strong>${app.name}</strong><small>Simulasi aplikasi</small></div></div>`;
+  }
+
+
+  const INDONESIAN_TRACKS = [
+    { title: "Hati-Hati di Jalan", artist: "Tulus", duration: 242 },
+    { title: "Secukupnya", artist: "Hindia", duration: 213 },
+    { title: "Sial", artist: "Mahalini", duration: 243 },
+    { title: "Komang", artist: "Raim Laode", duration: 222 },
+    { title: "Satu Bulan", artist: "Bernadya", duration: 201 },
+    { title: "Penjaga Hati", artist: "Nadhif Basalamah", duration: 261 }
+  ];
+
+  const NEKOGRAM_CHATS = [
+    { name: "Genshin Indonesia", avatar: "GI", preview: "Ada event baru malam ini ✨", unread: 12, messages: ["Ada yang sudah update?", "Sudah, map barunya bagus.", "Nanti mabar jam 8 ya."] },
+    { name: "Waifu Gallery Dev", avatar: "WG", preview: "Build GitHub Pages sudah online", unread: 3, messages: ["Build terakhir sudah online.", "Aku cek simulator dulu.", "Oke, bagian aplikasi kelihatan rapi."] },
+    { name: "Android 17 Lab", avatar: "A17", preview: "Dynamic Color sudah sinkron", unread: 0, messages: ["Dynamic Color sudah sinkron.", "Gesture juga sudah berfungsi."] },
+    { name: "Kelas Coding", avatar: "KC", preview: "Besok bahas JavaScript", unread: 5, messages: ["Besok bahas JavaScript ya.", "Siap, jam berapa?", "Jam 10 pagi."] }
+  ];
+
+  const WA_CHATS = [
+    { name: "Alya", avatar: "A", preview: "Nanti kabari kalau sudah selesai ya", time: "06.41", messages: ["Pagi", "Nanti kabari kalau sudah selesai ya", "Siap 👍"] },
+    { name: "Tim Waifu Gallery", avatar: "WG", preview: "Update simulator sudah dicoba", time: "06.33", messages: ["Update simulator sudah dicoba", "Bagian aplikasi lanjut ya", "Oke, aku cek lagi."] },
+    { name: "Raka", avatar: "R", preview: "Mabar nanti malam?", time: "Kemarin", messages: ["Mabar nanti malam?", "Boleh, sekitar jam 8."] },
+    { name: "Toko Komputer", avatar: "TK", preview: "Pesanan sudah siap", time: "Kemarin", messages: ["Pesanan sudah siap", "Baik, terima kasih."] }
+  ];
+
+  const X_POSTS = [
+    { user: "@pixel_lab", name: "Pixel Lab", text: "Menguji simulator Android 17 di browser. Dynamic Color terasa makin konsisten.", stats: "18 balasan · 74 repost · 532 suka" },
+    { user: "@genshin_daily", name: "Genshin Daily", text: "Wallpaper hari ini: nuansa ungu dan biru. Cocok untuk tema Pixel.", stats: "31 balasan · 120 repost · 1,2 rb suka" },
+    { user: "@webdev_id", name: "WebDev ID", text: "Tip: simpan state UI ke localStorage agar prototipe tetap konsisten setelah refresh.", stats: "9 balasan · 42 repost · 301 suka" }
+  ];
+
+  const TRANSLATE_PHRASES = {
+    "halo":"hello","dunia":"world","selamat":"congratulations","pagi":"morning","siang":"afternoon","malam":"night","terima":"thank","kasih":"you",
+    "apa":"what","kabar":"news","saya":"i","aku":"i","kamu":"you","anda":"you","baik":"good","sangat":"very","senang":"happy","belajar":"study",
+    "bahasa":"language","indonesia":"indonesia","inggris":"english","hari":"day","ini":"this","besok":"tomorrow","kemarin":"yesterday","makan":"eat",
+    "minum":"drink","rumah":"home","sekolah":"school","teman":"friend","cinta":"love","cantik":"beautiful","bagus":"good","cepat":"fast","lambat":"slow",
+    "hello":"halo","world":"dunia","good":"baik","morning":"pagi","afternoon":"siang","night":"malam","thank":"terima","you":"kamu","what":"apa",
+    "i":"saya","happy":"senang","study":"belajar","language":"bahasa","today":"hari ini","tomorrow":"besok","yesterday":"kemarin","eat":"makan",
+    "drink":"minum","home":"rumah","school":"sekolah","friend":"teman","love":"cinta","beautiful":"cantik","fast":"cepat","slow":"lambat"
+  };
+
+  function makeSimContacts() {
+    const names = ["Alya Putri","Raka Pratama","Nadia","Dimas","Salsa","Fajar","Maya","Rizky","Naufal","Citra","Dewi","Bagas","Ardi","Nisa","Kevin","Aurel"];
+    return names.map((name, i) => ({
+      name,
+      number: `+62 8${[12,13,21,22,52,53,55,56][i % 8]}-${String(1000 + ((i * 791) % 8999)).padStart(4,"0")}-${String(1000 + ((i * 431) % 8999)).padStart(4,"0")}`,
+      color: ["#5b8def","#11a37f","#8b5cf6","#ef6c63","#f5a623"][i % 5]
+    }));
+  }
+
+  function fmtDuration(sec) {
+    sec = Math.max(0, Math.floor(sec || 0));
+    return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,"0")}`;
+  }
+
+  function weatherCodeLabel(code) {
+    const map = {0:["☀","Cerah"],1:["🌤","Cerah berawan"],2:["⛅","Berawan sebagian"],3:["☁","Berawan"],45:["🌫","Berkabut"],48:["🌫","Kabut beku"],51:["🌦","Gerimis"],53:["🌦","Gerimis"],55:["🌧","Gerimis lebat"],61:["🌧","Hujan ringan"],63:["🌧","Hujan"],65:["🌧","Hujan lebat"],80:["🌦","Hujan lokal"],81:["🌧","Hujan lokal"],82:["⛈","Hujan lebat"],95:["⛈","Badai petir"]};
+    return map[Number(code)] || ["🌤","Cuaca berubah"];
+  }
+
+  function localTranslate(text, direction) {
+    const source = String(text || "").trim();
+    if (!source) return "";
+    const phraseMap = {
+      "halo dunia":"hello world","selamat pagi":"good morning","selamat malam":"good night","apa kabar":"how are you","terima kasih":"thank you",
+      "saya baik":"i am good","aku senang":"i am happy","saya sedang belajar":"i am studying","hari ini cerah":"today is sunny",
+      "kucing":"cat","anjing":"dog","rumah":"house","sekolah":"school","teman":"friend","makanan":"food","minuman":"drink","mobil":"car","buku":"book",
+      "hello world":"halo dunia","good morning":"selamat pagi","good night":"selamat malam","how are you":"apa kabar","thank you":"terima kasih",
+      "i am good":"saya baik","i am happy":"saya senang","i am studying":"saya sedang belajar","today is sunny":"hari ini cerah",
+      "cat":"kucing","dog":"anjing","house":"rumah","school":"sekolah","friend":"teman","food":"makanan","drink":"minuman","car":"mobil","book":"buku"
+    };
+    const low = source.toLowerCase();
+    if (phraseMap[low]) return phraseMap[low];
+    const words = source.split(/(\s+|[,.!?;:]+)/);
+    return words.map(part => {
+      const key = part.toLowerCase();
+      const hit = TRANSLATE_PHRASES[key] || phraseMap[key];
+      if (!hit) return part;
+      return part[0] === part[0]?.toUpperCase() ? hit.charAt(0).toUpperCase()+hit.slice(1) : hit;
+    }).join("");
+  }
+
+  const realtimeTranslateCache = new Map();
+  let realtimeTranslateTimer = 0;
+  let realtimeTranslateAbort = null;
+  let realtimeTranslateRequest = 0;
+
+  function translateLangPair(direction = state.translateDirection) {
+    return direction === "en-id"
+      ? { source: "en", target: "id", sourceLabel: "English", targetLabel: "Indonesia", speech: "id-ID" }
+      : { source: "id", target: "en", sourceLabel: "Indonesia", targetLabel: "English", speech: "en-US" };
+  }
+
+  function splitTranslateText(text, maxBytes = 460) {
+    const input = String(text || "").trim();
+    if (!input) return [];
+    const encoder = new TextEncoder();
+    const paragraphs = input.split(/(\n+)/);
+    const chunks = [];
+    let current = "";
+    const pushCurrent = () => {
+      if (current.trim()) chunks.push(current.trim());
+      current = "";
+    };
+    for (const part of paragraphs) {
+      if (!part) continue;
+      if (/^\n+$/.test(part)) {
+        if (current && encoder.encode(current + part).length <= maxBytes) current += part;
+        else { pushCurrent(); chunks.push(part); }
+        continue;
+      }
+      const sentences = part.match(/[^.!?。！？]+[.!?。！？]*\s*|\S+/g) || [part];
+      for (const sentence of sentences) {
+        const candidate = current + sentence;
+        if (encoder.encode(candidate).length <= maxBytes) { current = candidate; continue; }
+        pushCurrent();
+        if (encoder.encode(sentence).length <= maxBytes) { current = sentence; continue; }
+        let piece = "";
+        for (const char of sentence) {
+          if (encoder.encode(piece + char).length > maxBytes) {
+            if (piece) chunks.push(piece);
+            piece = char;
+          } else piece += char;
+        }
+        current = piece;
+      }
+    }
+    pushCurrent();
+    return chunks;
+  }
+
+  async function translateSegmentOnline(segment, pair, signal) {
+    if (/^\n+$/.test(segment)) return segment;
+    const key = `${pair.source}|${pair.target}|${segment}`;
+    if (realtimeTranslateCache.has(key)) return realtimeTranslateCache.get(key);
+    const url = new URL("https://api.mymemory.translated.net/get");
+    url.searchParams.set("q", segment);
+    url.searchParams.set("langpair", `${pair.source}|${pair.target}`);
+    url.searchParams.set("mt", "1");
+    const response = await fetch(url.toString(), {
+      method: "GET",
+      mode: "cors",
+      cache: "no-store",
+      signal,
+      headers: { "Accept": "application/json" }
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    const translated = String(data?.responseData?.translatedText || "").trim();
+    if (!translated) throw new Error("EMPTY_TRANSLATION");
+    realtimeTranslateCache.set(key, translated);
+    if (realtimeTranslateCache.size > 120) {
+      const first = realtimeTranslateCache.keys().next().value;
+      realtimeTranslateCache.delete(first);
+    }
+    return translated;
+  }
+
+  function setTranslateUi({ text, status = "", busy = false, offline = false } = {}) {
+    const result = $("#translateResult", root);
+    const statusEl = $("#translateStatus", root);
+    const loader = $("#translateLoader", root);
+    if (typeof text === "string" && result) result.textContent = text;
+    if (statusEl) {
+      statusEl.textContent = status;
+      statusEl.classList.toggle("error", offline);
+    }
+    if (loader) loader.hidden = !busy;
+  }
+
+  async function runRealtimeTranslation({ immediate = false } = {}) {
+    window.clearTimeout(realtimeTranslateTimer);
+    const input = $("#translateInput", root);
+    if (!input) return;
+    const sourceText = input.value.trim();
+    state.translateText = input.value;
+    if (!sourceText) {
+      if (realtimeTranslateAbort) realtimeTranslateAbort.abort();
+      state.translateResult = "";
+      save();
+      setTranslateUi({ text: "", status: "Ketik teks untuk menerjemahkan otomatis." });
+      return;
+    }
+    if (!immediate) {
+      setTranslateUi({ status: "Menunggu teks…" });
+      realtimeTranslateTimer = window.setTimeout(() => runRealtimeTranslation({ immediate: true }), 420);
+      return;
+    }
+    const requestId = ++realtimeTranslateRequest;
+    if (realtimeTranslateAbort) realtimeTranslateAbort.abort();
+    realtimeTranslateAbort = new AbortController();
+    const pair = translateLangPair();
+    setTranslateUi({ status: "Menerjemahkan…", busy: true });
+    try {
+      const chunks = splitTranslateText(sourceText);
+      const output = [];
+      for (const chunk of chunks) {
+        if (requestId !== realtimeTranslateRequest) return;
+        output.push(await translateSegmentOnline(chunk, pair, realtimeTranslateAbort.signal));
+      }
+      if (requestId !== realtimeTranslateRequest) return;
+      const translated = output.join("").trim();
+      state.translateResult = translated;
+      save();
+      setTranslateUi({ text: translated, status: "Diterjemahkan secara realtime", busy: false });
+    } catch (error) {
+      if (error?.name === "AbortError") return;
+      const fallback = localTranslate(sourceText, state.translateDirection);
+      state.translateResult = fallback;
+      save();
+      const changed = fallback && fallback.toLowerCase() !== sourceText.toLowerCase();
+      setTranslateUi({
+        text: fallback,
+        status: changed ? "Mode offline. Hasil memakai kamus simulator." : "Terjemahan online tidak tersedia. Periksa koneksi internet.",
+        busy: false,
+        offline: true
+      });
+    }
+  }
+
+  function bcrSwitch(key) {
+    return `<button class="bcr-switch ${state[key] ? "on" : ""}" type="button" data-toggle="${key}"><span>${state[key] ? "✓" : "×"}</span></button>`;
+  }
+
+  function renderBcrApp(app) {
+    const settingRow = (title, desc, right = "", extra = "") => `<div class="bcr-row"><div><strong>${title}</strong>${desc ? `<p>${desc}</p>` : ""}${extra}</div>${right}</div>`;
+    return `<div class="a17-page bcr-app-page">${simAppTopbar(app)}<div class="bcr-title">Basic Call Recorder</div><div class="bcr-section-title">General</div><div class="bcr-card">
+      ${settingRow("Call recording","Record incoming and outgoing phone calls. Microphone and notification permissions are required for recording in the background.", bcrSwitch("bcrCallRecording"))}
+      ${settingRow("Auto-record rules","Configure which calls should be automatically recorded.", `<button class="bcr-value" data-sim-action="bcr-cycle-rules">${state.bcrAutoRules}</button>`)}
+      ${settingRow("Output directory","Pick a directory to store recordings. Long press to open in file manager.", "", `<p class="bcr-path">/storage/emulated/0/Android/data/com.chiller3.bcr/files, Keep all</p>`)}
+      ${settingRow("Output format","Select an encoding format for the recordings.", `<button class="bcr-value" data-sim-action="bcr-cycle-format">›</button>`, `<p>${state.bcrOutputFormat}</p>`)}
+      ${settingRow("Minimum recording duration","Keep recordings of any length.", `<button class="bcr-value" data-sim-action="bcr-cycle-min">›</button>`)}
+      ${settingRow("Write metadata file","Create a JSON file containing details about the call next to the audio file.", bcrSwitch("bcrWriteMetadata"))}
+      ${settingRow("Record telecom-integrated calls","Record calls from third-party apps that use the Android telecom framework. Recordings may contain incomplete or unusable audio.", bcrSwitch("bcrTelecomCalls"))}
+      ${settingRow("Record calls before connection","For outgoing calls, start recording as soon as dialing begins instead of waiting until the call connects.", bcrSwitch("bcrBeforeConnect"))}
+      ${settingRow("Open directory from notification","Open the output directory instead of the recording file when tapping the recording completed notification.", bcrSwitch("bcrOpenDirectory"))}
+      ${settingRow("Show launcher icon","When the launcher icon is hidden, dial *#*#BCR#*#* to open the app.", bcrSwitch("bcrShowLauncher"))}
+    </div><div class="bcr-section-title">About</div><div class="bcr-card">${settingRow("Version","3.5 (release)")}</div><p class="sim-disclaimer">Simulasi saja. Browser tidak merekam panggilan telepon asli.</p></div>`;
+  }
+
+  function renderCanvaApp(app) {
+    const img = wallpaperById(state.canvaImage).src;
+    return `<div class="a17-page canva-app">${simAppTopbar(app)}<div class="canva-head"><b>Desain baru</b><button data-sim-action="canva-save">Bagikan</button></div><div class="canva-stage"><div class="canva-canvas" style="background-image:url('${img}')"><span id="canvaOverlayText">${escapeHtml(state.canvaText)}</span></div></div><div class="canva-editor"><label>Teks<input id="canvaTextInput" value="${escapeHtml(state.canvaText)}" maxlength="40"></label><div class="canva-thumbs">${[3,12,20,31].map(n=>`<button data-sim-action="canva-image-${n}" style="background-image:url('./assets/waifu-${String(n).padStart(2,"0")}.jpg')"></button>`).join("")}</div><div class="canva-tools"><button data-sim-action="canva-apply-text">Teks</button><button data-sim-action="canva-filter">Filter</button><button data-sim-action="canva-save">Simpan</button></div></div></div>`;
+  }
+
+  function renderCapcutApp(app) {
+    const img = wallpaperById(state.canvaImage).src;
+    return `<div class="a17-page capcut-app">${simAppTopbar(app)}<div class="capcut-header"><b>Proyek baru</b><button data-sim-action="capcut-export">Ekspor</button></div><div class="capcut-preview" style="background-image:url('${img}')"><button class="capcut-play" data-sim-action="capcut-play">${state.capcutPlaying ? "Ⅱ" : "▶"}</button></div><div class="capcut-time"><span>${Math.round(state.capcutPosition)}%</span><input type="range" min="0" max="100" value="${state.capcutPosition}" data-setting-range="capcutPosition"><span>00:15</span></div><div class="capcut-timeline">${[31,20,7,12,25,3].map((n,i)=>`<i style="background-image:url('./assets/waifu-${String(n).padStart(2,"0")}.jpg')"></i>`).join("")}</div><div class="capcut-tools"><button data-sim-action="capcut-tool">Edit</button><button data-sim-action="capcut-tool">Audio</button><button data-sim-action="capcut-tool">Teks</button><button data-sim-action="capcut-tool">Efek</button><button data-sim-action="capcut-tool">Filter</button></div><p class="sim-disclaimer">Editor video simulasi. Tidak mengekspor video sungguhan.</p></div>`;
+  }
+
+  function renderWeatherApp(app) {
+    return `<div class="a17-page weather-live-app">${simAppTopbar(app)}<div class="weather-hero-live" id="weatherHero"><span id="weatherIcon">⌖</span><strong id="weatherTemp">--°</strong><small id="weatherLabel">Izinkan lokasi untuk memuat cuaca</small></div><button class="weather-location-btn" data-sim-action="weather-location">⌖ Gunakan lokasi browser</button><div class="weather-live-grid"><div><small>Terasa seperti</small><b id="weatherFeels">--°</b></div><div><small>Kelembapan</small><b id="weatherHumidity">--%</b></div><div><small>Angin</small><b id="weatherWind">-- km/j</b></div></div><div class="sim-card"><strong>Prakiraan hari ini</strong><p id="weatherForecast">Data akan diambil setelah izin lokasi diberikan.</p><small id="weatherCoords"></small></div></div>`;
+  }
+
+  function renderTranslateApp(app) {
+    const pair = translateLangPair();
+    const sourceValue = escapeHtml(state.translateText || "");
+    const resultValue = escapeHtml(state.translateResult || "");
+    return `<div class="a17-page translate-app">${simAppTopbar(app)}
+      <div class="translate-langbar">
+        <button data-sim-action="translate-swap">${pair.sourceLabel}</button>
+        <button class="translate-swap-button" data-sim-action="translate-swap" aria-label="Tukar bahasa">⇄</button>
+        <button data-sim-action="translate-swap">${pair.targetLabel}</button>
+      </div>
+      <div class="translate-panel source">
+        <textarea id="translateInput" maxlength="2000" spellcheck="true" autocomplete="off" placeholder="Masukkan teks">${sourceValue}</textarea>
+        <button data-sim-action="translate-clear" aria-label="Hapus teks">×</button>
+        <small class="translate-count" id="translateCharCount">${String(state.translateText || "").length}/2000</small>
+      </div>
+      <div class="translate-panel result" aria-live="polite">
+        <span id="translateResult">${resultValue}</span>
+        <div class="translate-result-actions">
+          <button data-sim-action="translate-copy">Salin</button>
+          <button data-sim-action="translate-speak">Dengar</button>
+          <i id="translateLoader" class="translate-loader" hidden aria-hidden="true"></i>
+        </div>
+        <small id="translateStatus" class="translate-status">${resultValue ? "Siap" : "Ketik teks untuk menerjemahkan otomatis."}</small>
+      </div>
+      <button class="sim-primary translate-go" data-sim-action="translate">Terjemahkan sekarang</button>
+      <p class="sim-disclaimer">Terjemahan realtime menggunakan layanan terjemahan online. Teks yang diketik dikirim ke layanan tersebut. Jika koneksi gagal, simulator memakai kamus offline terbatas.</p>
+    </div>`;
+  }
+
+  function renderKeepApp(app) {
+    const notes = Array.isArray(state.keepNotes) ? state.keepNotes : [];
+    return `<div class="a17-page keep-app">${simAppTopbar(app)}<div class="keep-search">☰ <span>Telusuri catatan</span> ⟳</div><div class="keep-notes">${notes.length ? notes.map((n,i)=>`<article><b>${escapeHtml(n.title || "Catatan")}</b><p>${escapeHtml(n.body)}</p><small>${escapeHtml(n.time)}</small><button data-sim-action="keep-delete-${i}">×</button></article>`).join("") : `<div class="keep-empty">💡<b>Belum ada catatan</b><span>Tekan + untuk membuat catatan.</span></div>`}</div><div class="keep-compose"><input id="keepTitle" placeholder="Judul"><textarea id="keepBody" placeholder="Tulis catatan..."></textarea><button data-sim-action="keep-add">＋ Simpan catatan</button></div></div>`;
+  }
+
+  function renderContactsApp(app) {
+    const contacts = state.simContacts || [];
+    if (state.activeContact >= 0 && state.activeContact < contacts.length && state.contactDetailOpen) {
+      const c = contacts[state.activeContact];
+      return `<div class="a17-page contacts-app">${simAppTopbar(app)}<button class="contact-back" data-sim-action="contacts-list">‹ Kontak</button><div class="contact-detail"><span style="background:${c.color}">${c.name.split(" ").map(x=>x[0]).join("").slice(0,2)}</span><h2>${c.name}</h2><p>${c.number}</p><div><button data-sim-action="contact-call">☎<small>Telepon</small></button><button data-sim-action="contact-message">✉<small>Pesan</small></button></div></div><p class="sim-disclaimer">Kontak dan nomor dibuat acak khusus simulator.</p></div>`;
+    }
+    return `<div class="a17-page contacts-app">${simAppTopbar(app)}<label class="contacts-search">⌕ <input id="contactSearch" placeholder="Cari kontak"></label><div class="contact-list">${contacts.map((c,i)=>`<button data-sim-action="contact-open-${i}" data-contact-search="${c.name.toLowerCase()}"><span style="background:${c.color}">${c.name[0]}</span><div><b>${c.name}</b><small>${c.number}</small></div></button>`).join("")}</div><p class="sim-disclaimer">Semua kontak adalah data acak simulasi.</p></div>`;
+  }
+
+  function renderNekogramApp(app) {
+    const idx = Number(state.nekogramThread);
+    if (idx >= 0 && NEKOGRAM_CHATS[idx]) {
+      const chat = NEKOGRAM_CHATS[idx];
+      const extra = (state.nekogramExtra?.[idx] || []);
+      return `<div class="a17-page telegram-app">${simAppTopbar(app)}<div class="tg-chat-head"><button data-sim-action="nekogram-list">‹</button><span>${chat.avatar}</span><div><b>${chat.name}</b><small>online</small></div></div><div class="tg-messages">${[...chat.messages,...extra].map((m,i)=>`<p class="${i%2?"out":"in"}">${escapeHtml(m)}<small>${i%2?"06.48 ✓✓":"06.47"}</small></p>`).join("")}</div><label class="tg-compose"><input id="nekogramMessage" placeholder="Pesan"><button data-sim-action="nekogram-send">➤</button></label></div>`;
+    }
+    return `<div class="a17-page telegram-app">${simAppTopbar(app)}<div class="tg-brand">Nekogram <button>⌕</button></div><div class="tg-list">${NEKOGRAM_CHATS.map((c,i)=>`<button data-sim-action="nekogram-chat-${i}"><span>${c.avatar}</span><div><b>${c.name}</b><small>${c.preview}</small></div><i>${c.unread||""}</i></button>`).join("")}</div></div>`;
+  }
+
+  function renderRecorderApp(app) {
+    const items = Array.isArray(state.recorderItems) ? state.recorderItems : [];
+    return `<div class="a17-page recorder-app">${simAppTopbar(app)}<div class="recorder-head"><h2>Perekam</h2><button>⌕</button></div><div class="recorder-wave ${state.recorderActive?"active":""}" id="recorderWave">${Array.from({length:34},(_,i)=>`<i style="--h:${18+(i*17)%70}%"></i>`).join("")}</div><div class="recorder-clock" id="recorderClock">${state.recorderActive?"00:00":"Siap merekam"}</div><button class="recorder-main ${state.recorderActive?"stop":""}" data-sim-action="recorder-toggle">${state.recorderActive?"■":"●"}</button><div class="recorder-tabs"><b>Rekaman</b><span>Transkrip</span></div><div class="recorder-list">${items.length?items.map((r,i)=>`<button data-sim-action="recorder-play-${i}"><span>▶</span><div><b>${r.name}</b><small>${r.duration} • ${r.time}</small></div></button>`).join(""):`<p>Belum ada rekaman simulasi.</p>`}</div><p class="sim-disclaimer">Tidak mengakses mikrofon. Gelombang dan audio hanya simulasi.</p></div>`;
+  }
+
+  function renderPinterestApp(app) {
+    const pin = Number(state.pinterestPin);
+    if (pin >= 0) {
+      const n = (pin % 34) + 1;
+      return `<div class="a17-page pinterest-app">${simAppTopbar(app)}<button class="pin-back" data-sim-action="pinterest-list">‹</button><img class="pin-detail" src="./assets/waifu-${String(n).padStart(2,"0")}.jpg" alt="Wallpaper waifu"><h3>Wallpaper Waifu ${String(n).padStart(2,"0")}</h3><button class="pin-save" data-sim-action="pinterest-save">Simpan</button><p class="sim-disclaimer">Gambar berasal dari koleksi lokal Waifu Gallery.</p></div>`;
+    }
+    const pins = [31,20,7,12,25,3,33,11,23,30,5,18,27,9,15,1];
+    return `<div class="a17-page pinterest-app">${simAppTopbar(app)}<div class="pin-search">⌕ Cari inspirasi</div><div class="pin-masonry">${pins.map((n,i)=>`<button data-sim-action="pinterest-open-${i}"><img src="./assets/waifu-${String(n).padStart(2,"0")}.jpg" alt="Waifu ${n}"><span>Wallpaper ${n}</span></button>`).join("")}</div></div>`;
+  }
+
+  function renderSandboxApp(app) {
+    const tab = state.sandboxTab || "apps";
+    const visibleApps = state.sandboxShowSystem ? ALL_APPS : SIM_APPS;
+    let main = "";
+    if (tab === "apps") {
+      main = `<div class="sandbox-app-title"><h1>Sandbox</h1><div><button>⌕</button><button data-sim-action="sandbox-tab-notifications">♧</button><button>⚙</button></div></div><div class="sandbox-list-head"><b>▦ &nbsp; All Apps <small>(${visibleApps.length})</small></b><button data-sim-action="sandbox-system">${state.sandboxShowSystem?"Hide":"Show"} System Apps</button></div><div class="sandbox-grid">${visibleApps.map(a=>`<button data-open-app="${a.id}"><span class="drawer-app-icon tone-${a.tone}">${a.glyph}</span><small>${a.name}</small></button>`).join("")}</div>`;
+    } else if (!state.sandboxUnlocked) {
+      main = `<div class="sandbox-app-title"><h1>Sandbox</h1><div><button>⌕</button><button>♧</button><button>⚙</button></div></div><div class="sandbox-locked"><span>▣</span><h2>${tab==="vault"?"Vault Locked":"Notifications Locked"}</h2><p>Unlock the private area to ${tab==="vault"?"access your secure vault":"view notifications"}</p><button data-sim-action="sandbox-unlock">▣ &nbsp; Unlock</button></div>`;
+    } else if (tab === "notifications") {
+      main = `<div class="sandbox-app-title"><h1>Notifications</h1></div><div class="sandbox-notifs">${["Nekogram: 3 pesan baru","Spotify: Hati-Hati di Jalan","Waifu Gallery: simulator diperbarui"].map(x=>`<div>${x}<small>simulasi</small></div>`).join("")}</div>`;
+    } else {
+      main = `<div class="sandbox-app-title"><h1>Vault</h1></div><div class="sandbox-vault"><span>▣</span><h2>Private Vault</h2><p>Area lokal simulator. Tidak menyembunyikan file perangkat asli.</p><button data-sim-action="sandbox-lock">Kunci kembali</button></div>`;
+    }
+    return `<div class="a17-page sandbox-app">${simAppTopbar(app)}${main}<nav class="sandbox-nav"><button class="${tab==="apps"?"active":""}" data-sim-action="sandbox-tab-apps">▦<small>Apps</small></button><button class="${tab==="notifications"?"active":""}" data-sim-action="sandbox-tab-notifications">♧<small>Notifications</small></button><button class="${tab==="vault"?"active":""}" data-sim-action="sandbox-tab-vault">▤<small>Vault</small></button></nav></div>`;
+  }
+
+  function renderSpotifyApp(app) {
+    const idx = Math.max(0, Math.min(INDONESIAN_TRACKS.length-1, Number(state.spotifyTrack)||0));
+    const track = INDONESIAN_TRACKS[idx];
+    const progress = Math.min(track.duration, Number(state.spotifyProgress)||0);
+    return `<div class="a17-page spotify-app">${simAppTopbar(app)}<div class="spotify-top"><h2>Selamat pagi</h2><button>⚙</button></div><div class="spotify-section"><h3>Lagu Indonesia pilihan</h3><div class="spotify-list">${INDONESIAN_TRACKS.map((x,i)=>`<button class="${i===idx?"active":""}" data-sim-action="spotify-track-${i}"><span>${i+1}</span><div><b>${x.title}</b><small>${x.artist}</small></div><i>⋮</i></button>`).join("")}</div></div><div class="spotify-player"><div><b id="spotifyTitle">${track.title}</b><small>${track.artist} • audio simulasi</small></div><button data-sim-action="spotify-prev">◀</button><button class="play" data-sim-action="spotify-toggle">${state.spotifyPlaying?"Ⅱ":"▶"}</button><button data-sim-action="spotify-next">▶</button><input id="spotifyProgress" type="range" min="0" max="${track.duration}" value="${progress}" disabled><span id="spotifyTime">${fmtDuration(progress)} / ${fmtDuration(track.duration)}</span></div></div>`;
+  }
+
+  function renderTikTokApp(app) {
+    const imgs = [31,20,7,12,25,3,33,11,23,30];
+    const idx = ((Number(state.tiktokIndex)||0)%imgs.length+imgs.length)%imgs.length;
+    const n = imgs[idx];
+    return `<div class="a17-page tiktok-app">${simAppTopbar(app)}<div class="tiktok-tabs"><b>Mengikuti</b><b>Untuk Anda</b></div><div class="tiktok-video" style="background-image:url('./assets/waifu-${String(n).padStart(2,"0")}.jpg')"><div class="tiktok-copy"><b>@genshin_gallery</b><p>Wallpaper Genshin-style random dari Waifu Gallery ✨ #GenshinImpact #Wallpaper</p><small>♫ Original sound • simulasi</small></div><div class="tiktok-actions"><button data-sim-action="like">♡<small>${1200+idx*147}</small></button><button data-sim-action="comment">◯<small>${40+idx*3}</small></button><button data-sim-action="share">↗</button></div></div><div class="tiktok-nav"><button data-sim-action="tiktok-prev">‹</button><span>${idx+1}/${imgs.length}</span><button data-sim-action="tiktok-next">›</button></div></div>`;
+  }
+
+  function renderWhatsAppApp(app) {
+    const idx = Number(state.waThread);
+    if (idx >= 0 && WA_CHATS[idx]) {
+      const chat = WA_CHATS[idx];
+      const extra = state.waExtra?.[idx] || [];
+      return `<div class="a17-page whatsapp-app">${simAppTopbar(app)}<div class="wa-chat-head"><button data-sim-action="wa-list">‹</button><span>${chat.avatar}</span><div><b>${chat.name}</b><small>online</small></div><button>☎</button></div><div class="wa-wall">${[...chat.messages,...extra].map((m,i)=>`<p class="${i%2?"out":"in"}">${escapeHtml(m)}<small>${i%2?"06.52 ✓✓":"06.51"}</small></p>`).join("")}</div><label class="wa-compose"><span>☺</span><input id="waMessage" placeholder="Pesan"><button data-sim-action="wa-send">➤</button></label></div>`;
+    }
+    return `<div class="a17-page whatsapp-app">${simAppTopbar(app)}<div class="wa-brand"><h2>WhatsApp Business</h2><div>⌕ ⋮</div></div><div class="wa-tabs"><b>Chat</b><span>Pembaruan</span><span>Panggilan</span></div><div class="wa-list">${WA_CHATS.map((c,i)=>`<button data-sim-action="wa-chat-${i}"><span>${c.avatar}</span><div><b>${c.name}</b><small>${c.preview}</small></div><i>${c.time}</i></button>`).join("")}</div></div>`;
+  }
+
+  function renderXApp(app) {
+    return `<div class="a17-page x-app">${simAppTopbar(app)}<div class="x-head"><b>𝕏</b><span>Untuk Anda</span><button>⚙</button></div><div class="x-feed">${X_POSTS.map((p,i)=>`<article><span class="x-avatar">${p.name[0]}</span><div><b>${p.name}</b><small>${p.user} · ${i+1}j</small><p>${p.text}</p>${i===1?`<img src="./assets/waifu-20.jpg" alt="Wallpaper waifu">`:""}<footer><button data-sim-action="x-reply-${i}">◯</button><button data-sim-action="x-repost-${i}">↻</button><button data-sim-action="x-like-${i}">♡</button><button data-sim-action="share">↗</button></footer><small>${p.stats}</small></div></article>`).join("")}</div></div>`;
+  }
+
+  async function loadRealtimeWeather() {
+    const label = $("#weatherLabel", root);
+    if (!navigator.geolocation) { if (label) label.textContent = "Geolocation tidak didukung browser"; return; }
+    if (label) label.textContent = "Meminta izin lokasi…";
+    navigator.geolocation.getCurrentPosition(async pos => {
+      const { latitude, longitude } = pos.coords;
+      try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(latitude)}&longitude=${encodeURIComponent(longitude)}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto&forecast_days=3`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("weather");
+        const data = await res.json();
+        const current = data.current || {};
+        const [icon, desc] = weatherCodeLabel(current.weather_code);
+        const set = (id, value) => { const el=$(id,root); if(el) el.textContent=value; };
+        set("#weatherIcon", icon); set("#weatherTemp", `${Math.round(current.temperature_2m)}°`); set("#weatherLabel", `${desc} • realtime`);
+        set("#weatherFeels", `${Math.round(current.apparent_temperature)}°`); set("#weatherHumidity", `${current.relative_humidity_2m}%`); set("#weatherWind", `${Math.round(current.wind_speed_10m)} km/j`);
+        const daily = data.daily || {};
+        const text = (daily.time || []).map((d,i)=>`${i===0?"Hari ini":i===1?"Besok":"Lusa"}: ${Math.round(daily.temperature_2m_max?.[i])}° / ${Math.round(daily.temperature_2m_min?.[i])}°`).join(" • ");
+        set("#weatherForecast", text || desc); set("#weatherCoords", `Lokasi browser: ${latitude.toFixed(3)}, ${longitude.toFixed(3)}`);
+      } catch { if (label) label.textContent = "Gagal mengambil cuaca. Coba lagi."; }
+    }, err => { if (label) label.textContent = err.code === 1 ? "Izin lokasi ditolak" : "Lokasi tidak tersedia"; }, { enableHighAccuracy:false, timeout:10000, maximumAge:300000 });
+  }
+
+  function updateSpotifyPlayback() {
+    if (!state.spotifyPlaying || state.activeSimApp !== "spotify" || state.view !== "simApp") return;
+    const track = INDONESIAN_TRACKS[state.spotifyTrack] || INDONESIAN_TRACKS[0];
+    const elapsed = state.spotifyStartedAt ? (Date.now()-state.spotifyStartedAt)/1000 : 0;
+    const p = Math.min(track.duration, (state.spotifyProgress||0) + elapsed);
+    const slider = $("#spotifyProgress", root); const label=$("#spotifyTime", root);
+    if (slider) slider.value = p; if (label) label.textContent = `${fmtDuration(p)} / ${fmtDuration(track.duration)}`;
+    if (p >= track.duration) { state.spotifyPlaying=false; state.spotifyProgress=0; state.spotifyStartedAt=0; save(); render(); }
+  }
+
+  function updateRecorderSim() {
+    if (!state.recorderActive || state.activeSimApp !== "recorder" || state.view !== "simApp") return;
+    const sec = Math.max(0,(Date.now()-state.recorderStartedAt)/1000);
+    const el = $("#recorderClock", root); if(el) el.textContent = fmtDuration(sec);
+  }
+
+
+  function renderSimApp() {
+    const app = appById(state.activeSimApp);
+    if (["brimo","digi-bank","dana","ovo"].includes(app.id)) return renderFinancialApp(app);
+    if (app.id === "bcr") { root.innerHTML = renderBcrApp(app); return; }
+    if (app.id === "dolby") { navigate("dolbyAtmos", false); return; }
+    if (app.id === "settings-app") { navigate("settings", false); return; }
+    if (app.id === "game-space-app") { navigate("gameSpace", false); return; }
+    if (app.id === "camera") { navigate("camera", false); return; }
+
+    if (app.id === "canva") { root.innerHTML = renderCanvaApp(app); return; }
+    if (app.id === "capcut") { root.innerHTML = renderCapcutApp(app); return; }
+    if (app.id === "weather") { root.innerHTML = renderWeatherApp(app); return; }
+    if (app.id === "translate") { root.innerHTML = renderTranslateApp(app); return; }
+    if (app.id === "keep") { root.innerHTML = renderKeepApp(app); return; }
+    if (app.id === "contacts") { root.innerHTML = renderContactsApp(app); return; }
+    if (app.id === "nekogram") { root.innerHTML = renderNekogramApp(app); return; }
+    if (app.id === "recorder") { root.innerHTML = renderRecorderApp(app); return; }
+    if (app.id === "pinterest") { root.innerHTML = renderPinterestApp(app); return; }
+    if (app.id === "sandbox") { root.innerHTML = renderSandboxApp(app); return; }
+    if (app.id === "spotify") { root.innerHTML = renderSpotifyApp(app); return; }
+    if (app.id === "tiktok") { root.innerHTML = renderTikTokApp(app); return; }
+    if (app.id === "wa-business") { root.innerHTML = renderWhatsAppApp(app); return; }
+    if (app.id === "x") { root.innerHTML = renderXApp(app); return; }
+
+    const commonTop = simAppTopbar(app);
+    const social = ["facebook","instagram","threads","youtube"].includes(app.id);
+    const communication = ["message","messenger","meet","phone","gmail"].includes(app.id);
+    const files = ["files","drive","photos"].includes(app.id);
+    let body = "";
+
+    if (app.id === "calculator") {
+      body = `<div class="calc-display" id="calcDisplay">0</div><div class="calc-grid">${["7","8","9","÷","4","5","6","×","1","2","3","−","0",".","=","+"].map(k=>`<button type="button" data-calc-key="${k}">${k}</button>`).join("")}</div>`;
+    } else if (app.id === "chrome" || app.id === "google") {
+      body = `<label class="sim-search"><span>G</span><input id="simSearchInput" placeholder="Telusuri atau ketik alamat"><button data-sim-action="search">⌕</button></label><div class="sim-card"><strong>Halaman awal</strong><p>Pencarian berlangsung di dalam simulator dan tidak membuka situs eksternal.</p></div>`;
+    } else if (app.id === "gemini" || app.id === "m365") {
+      body = `<div class="assistant-sim"><div class="assistant-orb">${app.glyph}</div><h3>Apa yang bisa saya bantu?</h3><label class="sim-search"><input id="assistantPrompt" placeholder="Tulis pesan"><button data-sim-action="assistant-send">➤</button></label><div class="sim-result" id="assistantResult">Respons demo akan muncul di sini.</div></div>`;
+    } else if (app.id === "maps" || app.id === "grab") {
+      body = `<label class="sim-search"><input placeholder="Cari lokasi"><button data-sim-action="map-search">⌕</button></label><div class="mock-map"><i></i><i></i><i></i><span>⌖</span></div><div class="sim-card"><strong>Lokasi simulasi</strong><p>Gunakan aplikasi Cuaca untuk contoh geolocation browser.</p></div>`;
+    } else if (app.id === "clock") {
+      body = `<div class="clock-sim"><strong id="appClockLive">${formatTime().replace(".",":")}</strong><span>${formatDate()}</span></div><button class="sim-primary" data-sim-action="add-alarm">＋ Tambah alarm</button>`;
+    } else if (app.id === "calendar") {
+      body = `<div class="calendar-sim"><strong>18</strong><span>Agustus 2026</span></div><div class="sim-card"><strong>Hari ini</strong><p>Belum ada acara simulasi.</p><button class="sim-primary" data-sim-action="add-event">＋ Tambah acara</button></div>`;
+    } else if (app.id === "phone") {
+      body = `<div class="phone-number" id="phoneNumber"> </div><div class="dial-grid">${[1,2,3,4,5,6,7,8,9,"*",0,"#"].map(k=>`<button data-dial-key="${k}">${k}</button>`).join("")}</div><button class="call-button" data-sim-action="call">☎</button>`;
+    } else if (app.id === "play-store") {
+      body = `<div class="sim-card"><strong>Direkomendasikan</strong>${["Editor Foto","Game Puzzle","Pemutar Musik"].map(x=>`<div class="store-row"><span>◆</span><b>${x}</b><button data-sim-action="install">Instal</button></div>`).join("")}</div>`;
+    } else if (files) {
+      body = `<div class="file-grid">${["Foto","Dokumen","Video","Download"].map((x,i)=>`<button data-sim-action="open-file"><span>${["▧","▤","▶","↓"][i]}</span><small>${x}</small></button>`).join("")}</div>`;
+    } else if (communication) {
+      body = `<div class="sim-card"><strong>Percakapan</strong>${["Skenakun","Waifu Gallery","Android 17"].map((x,i)=>`<button class="chat-row" data-sim-action="chat"><span>${x[0]}</span><div><b>${x}</b><small>${["Pesan demo","Terakhir aktif 06.20","Simulasi"][i]}</small></div></button>`).join("")}</div>`;
+    } else if (social) {
+      body = `<div class="sim-feed">${[1,2,3].map(i=>`<article><div class="feed-head"><span>${app.glyph}</span><b>${app.name}</b></div><div class="feed-media" style="background-image:url('./assets/waifu-${String([31,20,7][i-1]).padStart(2,"0")}.jpg')"></div><p>Konten simulasi ${i}. Tidak terhubung ke akun asli.</p><div><button data-sim-action="like">♡</button><button data-sim-action="comment">◯</button><button data-sim-action="share">↗</button></div></article>`).join("")}</div>`;
+    } else {
+      body = `<div class="sim-app-hero"><span class="drawer-app-icon tone-${app.tone}">${app.glyph}</span><h3>${app.name}</h3><p>Simulator aplikasi aktif.</p></div><div class="sim-card"><button class="sim-primary" data-sim-action="generic">Jalankan fitur demo</button></div>`;
+    }
+
+    root.innerHTML = `<div class="a17-page sim-app-page">${commonTop}<div class="sim-app-content">${body}</div></div>`;
   }
 
   function renderCamera() {
@@ -1548,7 +2176,7 @@
         wallpaperPicker: renderWallpaperPicker, homeSettings: renderHomeSettings, settings: renderSettings, system: renderSystem,
         languageRegion: renderLanguageRegion, navigationMode: renderNavigationMode, gestureNavigation: renderGestureNavigation,
         buttonNavigation: renderButtonNavigation, recents: renderRecents, about: renderAbout,
-        apps: renderApps, camera: renderCamera, boot: renderBoot,
+        apps: renderApps, appInfo: renderAppInfo, simApp: renderSimApp, camera: renderCamera, boot: renderBoot,
 
         networkInternet: renderNetworkInternet, internetSettings: renderInternetSettings, simSettings: renderSimSettings,
         hotspotSettings: renderHotspotSettings, dataSaverSettings: renderDataSaverSettings, vpnSettings: renderVpnSettings,
@@ -1603,6 +2231,51 @@
 
   function bindDynamic() {
     $$('[data-nav]', root).forEach(btn => btn.addEventListener("click", () => btn.dataset.nav === "back" ? goBack() : navigate(btn.dataset.nav)));
+    $$('[data-open-app]', root).forEach(btn => btn.addEventListener("click", () => {
+      const id = btn.dataset.openApp;
+      state.activeSimApp = id;
+      state.recentSimApps = [id, ...(state.recentSimApps || []).filter(x => x !== id)].slice(0, 8);
+      save(); vibrate(6); navigate("simApp");
+    }));
+    $$('[data-app-info]', root).forEach(btn => btn.addEventListener("click", () => {
+      state.appInfoId = btn.dataset.appInfo; save(); navigate("appInfo");
+    }));
+    const drawerSearch = $("#drawerSearch", root);
+    drawerSearch?.addEventListener("input", () => {
+      const q = drawerSearch.value.trim().toLowerCase(); let visible = 0;
+      $$("[data-drawer-search]", root).forEach(el => { const show = !q || el.dataset.drawerSearch.includes(q); el.hidden = !show; if (show) visible++; });
+      const empty = $("#drawerEmpty", root); if (empty) empty.hidden = visible !== 0;
+    });
+    const allAppsSearch = $("#allAppsSearch", root);
+    allAppsSearch?.addEventListener("input", () => {
+      const q = allAppsSearch.value.trim().toLowerCase(); let visible = 0;
+      $$("[data-app-search]", root).forEach(el => { const show = !q || el.dataset.appSearch.includes(q); el.hidden = !show; if (show) visible++; });
+      const count = $("#allAppsCount", root); if (count) count.textContent = `${visible} dari ${ALL_APPS.length} aplikasi`;
+      const empty = $("#allAppsEmpty", root); if (empty) empty.hidden = visible !== 0;
+    });
+    $$('[data-sim-action]', root).forEach(btn => btn.addEventListener("click", () => handleSimAppAction(btn.dataset.simAction)));
+    const translateInput = $("#translateInput", root);
+    if (translateInput) {
+      const syncTranslateInput = () => {
+        state.translateText = translateInput.value;
+        const count = $("#translateCharCount", root);
+        if (count) count.textContent = `${translateInput.value.length}/2000`;
+        save();
+        runRealtimeTranslation();
+      };
+      translateInput.addEventListener("input", syncTranslateInput);
+      translateInput.addEventListener("paste", () => window.setTimeout(syncTranslateInput, 0));
+      if (translateInput.value.trim() && !state.translateResult) runRealtimeTranslation();
+    }
+    const contactSearch = $("#contactSearch", root);
+    contactSearch?.addEventListener("input", () => {
+      const q=contactSearch.value.trim().toLowerCase();
+      $$('[data-contact-search]',root).forEach(el=>el.hidden=!!q&&!el.dataset.contactSearch.includes(q));
+    });
+    $$('[data-calc-key]', root).forEach(btn => btn.addEventListener("click", () => handleCalculator(btn.dataset.calcKey)));
+    $$('[data-dial-key]', root).forEach(btn => btn.addEventListener("click", () => {
+      const display = $("#phoneNumber", root); if (display) display.textContent = (display.textContent + btn.dataset.dialKey).slice(0, 18);
+    }));
     $$('[data-toggle]', root).forEach(btn => btn.addEventListener("click", () => {
       const key = btn.dataset.toggle; state[key] = !state[key]; save(); vibrate(); render();
     }));
@@ -1780,12 +2453,138 @@
     save(); vibrate(); render();
   }
 
+  function handleCalculator(key) {
+    const display = $("#calcDisplay", root); if (!display) return;
+    let value = display.textContent === "0" ? "" : display.textContent;
+    if (key === "=") {
+      try {
+        const safe = value.replaceAll("×","*").replaceAll("÷","/").replaceAll("−","-");
+        if (!/^[0-9+\-*/. ()]+$/.test(safe)) throw new Error("invalid");
+        const result = Function(`"use strict"; return (${safe || 0})`)();
+        display.textContent = Number.isFinite(result) ? String(result) : "Error";
+      } catch { display.textContent = "Error"; }
+      return;
+    }
+    if (display.textContent === "Error") value = "";
+    display.textContent = (value + key).slice(0, 22) || "0";
+  }
+
+  function handleSimAppAction(action) {
+    const app = appById(state.activeSimApp);
+    if (action && action.startsWith("finance-")) { toast(`SIMULASI ${app.name}: transaksi tidak dikirim`); vibrate(8); return; }
+
+    if (action === "weather-location") { loadRealtimeWeather(); return; }
+    if (action === "translate-swap") {
+      const input = $("#translateInput", root)?.value || state.translateText || "";
+      const result = $("#translateResult", root)?.textContent || state.translateResult || "";
+      state.translateDirection = state.translateDirection === "id-en" ? "en-id" : "id-en";
+      state.translateText = result || input;
+      state.translateResult = result ? input : "";
+      save(); render();
+      window.setTimeout(() => runRealtimeTranslation({ immediate: true }), 0);
+      return;
+    }
+    if (action === "translate-clear") {
+      if (realtimeTranslateAbort) realtimeTranslateAbort.abort();
+      window.clearTimeout(realtimeTranslateTimer);
+      state.translateText = "";
+      state.translateResult = "";
+      save();
+      const el = $("#translateInput", root); if (el) el.value = "";
+      const count = $("#translateCharCount", root); if (count) count.textContent = "0/2000";
+      setTranslateUi({ text: "", status: "Ketik teks untuk menerjemahkan otomatis.", busy: false });
+      return;
+    }
+    if (action === "translate") { runRealtimeTranslation({ immediate: true }); return; }
+    if (action === "translate-copy") {
+      const txt = $("#translateResult", root)?.textContent || "";
+      if (!txt) { toast("Belum ada hasil terjemahan"); return; }
+      navigator.clipboard?.writeText(txt).then(() => toast("Hasil disalin")).catch(() => toast("Tidak dapat menyalin"));
+      return;
+    }
+    if (action === "translate-speak") {
+      const txt = $("#translateResult", root)?.textContent || "";
+      if (!txt) return;
+      try {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(txt);
+        utterance.lang = translateLangPair().speech;
+        speechSynthesis.speak(utterance);
+      } catch {}
+      return;
+    }
+
+    if (action === "keep-add") { const title=$("#keepTitle",root)?.value.trim()||"Catatan"; const body=$("#keepBody",root)?.value.trim()||""; if(!body){toast("Tulis isi catatan");return;} state.keepNotes=[{title,body,time:new Date().toLocaleString("id-ID")},...(state.keepNotes||[])].slice(0,30); save(); render(); toast("Catatan tersimpan"); return; }
+    if (action?.startsWith("keep-delete-")) { const i=Number(action.split("-").pop()); state.keepNotes=(state.keepNotes||[]).filter((_,x)=>x!==i); save(); render(); return; }
+
+    if (action?.startsWith("contact-open-")) { state.activeContact=Number(action.split("-").pop()); state.contactDetailOpen=true; save(); render(); return; }
+    if (action === "contacts-list") { state.contactDetailOpen=false; save(); render(); return; }
+    if (action === "contact-call") { toast("Panggilan kontak simulasi"); vibrate(10); return; }
+    if (action === "contact-message") { toast("Pesan kontak simulasi"); return; }
+
+    if (action?.startsWith("nekogram-chat-")) { state.nekogramThread=Number(action.split("-").pop()); save(); render(); return; }
+    if (action === "nekogram-list") { state.nekogramThread=-1; save(); render(); return; }
+    if (action === "nekogram-send") { const msg=$("#nekogramMessage",root)?.value.trim(); if(!msg)return; const idx=Number(state.nekogramThread); const extra={...(state.nekogramExtra||{})}; extra[idx]=[...(extra[idx]||[]),msg]; state.nekogramExtra=extra; save(); render(); return; }
+
+    if (action === "recorder-toggle") { if(state.recorderActive){ const sec=Math.max(1,Math.round((Date.now()-state.recorderStartedAt)/1000)); state.recorderItems=[{name:`Rekaman ${new Date().toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"})}`,duration:fmtDuration(sec),time:"Baru saja"},...(state.recorderItems||[])]; state.recorderActive=false; state.recorderStartedAt=0; } else { state.recorderActive=true; state.recorderStartedAt=Date.now(); } save(); render(); return; }
+    if (action?.startsWith("recorder-play-")) { toast("Memutar rekaman simulasi"); return; }
+
+    if (action?.startsWith("pinterest-open-")) { state.pinterestPin=Number(action.split("-").pop()); save(); render(); return; }
+    if (action === "pinterest-list") { state.pinterestPin=-1; save(); render(); return; }
+    if (action === "pinterest-save") { toast("Pin disimpan di simulator"); return; }
+
+    if (action === "sandbox-system") { state.sandboxShowSystem=!state.sandboxShowSystem; save(); render(); return; }
+    if (action?.startsWith("sandbox-tab-")) { state.sandboxTab=action.replace("sandbox-tab-",""); save(); render(); return; }
+    if (action === "sandbox-unlock") { state.sandboxUnlocked=true; save(); vibrate(10); render(); toast("Private area simulator dibuka"); return; }
+    if (action === "sandbox-lock") { state.sandboxUnlocked=false; save(); render(); return; }
+
+    if (action?.startsWith("spotify-track-")) { state.spotifyTrack=Number(action.split("-").pop()); state.spotifyProgress=0; state.spotifyPlaying=true; state.spotifyStartedAt=Date.now(); save(); render(); return; }
+    if (action === "spotify-toggle") { if(state.spotifyPlaying){ const elapsed=state.spotifyStartedAt?(Date.now()-state.spotifyStartedAt)/1000:0; state.spotifyProgress=(state.spotifyProgress||0)+elapsed; state.spotifyPlaying=false; state.spotifyStartedAt=0; } else { state.spotifyPlaying=true; state.spotifyStartedAt=Date.now(); } save(); render(); return; }
+    if (action === "spotify-next" || action === "spotify-prev") { const dir=action.endsWith("next")?1:-1; state.spotifyTrack=(Number(state.spotifyTrack)+dir+INDONESIAN_TRACKS.length)%INDONESIAN_TRACKS.length; state.spotifyProgress=0; state.spotifyStartedAt=state.spotifyPlaying?Date.now():0; save(); render(); return; }
+
+    if (action === "tiktok-next" || action === "tiktok-prev") { state.tiktokIndex=(Number(state.tiktokIndex)||0)+(action.endsWith("next")?1:-1); save(); render(); return; }
+
+    if (action?.startsWith("wa-chat-")) { state.waThread=Number(action.split("-").pop()); save(); render(); return; }
+    if (action === "wa-list") { state.waThread=-1; save(); render(); return; }
+    if (action === "wa-send") { const msg=$("#waMessage",root)?.value.trim(); if(!msg)return; const idx=Number(state.waThread); const extra={...(state.waExtra||{})}; extra[idx]=[...(extra[idx]||[]),msg]; state.waExtra=extra; save(); render(); return; }
+
+    if (action?.startsWith("x-like-") || action?.startsWith("x-repost-") || action?.startsWith("x-reply-")) { toast(action.includes("like")?"Disukai":"Interaksi X simulasi"); return; }
+
+    if (action === "bcr-cycle-rules") { const vals=["Semua panggilan","Hanya kontak","Nomor tertentu","Manual"]; state.bcrAutoRules=vals[(vals.indexOf(state.bcrAutoRules)+1)%vals.length]; save(); render(); return; }
+    if (action === "bcr-cycle-format") { const vals=["OGG/Opus, 48 kbps, 16000 Hz, Combined (Mono)","M4A/AAC, 96 kbps, 44100 Hz, Stereo","WAV/PCM, 44100 Hz, Mono"]; state.bcrOutputFormat=vals[(vals.indexOf(state.bcrOutputFormat)+1)%vals.length]; save(); render(); return; }
+    if (action === "bcr-cycle-min") { state.bcrMinimumDuration=state.bcrMinimumDuration==="Durasi apa pun"?"5 detik":"Durasi apa pun"; save(); render(); return; }
+
+    if (action?.startsWith("canva-image-")) { state.canvaImage=`waifu-${String(Number(action.split("-").pop())).padStart(2,"0")}`; save(); render(); return; }
+    if (action === "canva-apply-text") { state.canvaText=$("#canvaTextInput",root)?.value||"Waifu Gallery"; save(); render(); return; }
+    if (action === "canva-filter") { toast("Filter simulasi diterapkan"); return; }
+    if (action === "canva-save") { state.canvaText=$("#canvaTextInput",root)?.value||state.canvaText; save(); toast("Desain disimpan di simulator"); return; }
+
+    if (action === "capcut-play") { state.capcutPlaying=!state.capcutPlaying; save(); render(); return; }
+    if (action === "capcut-export") { toast("Ekspor simulasi selesai"); return; }
+    if (action === "capcut-tool") { toast("Tool editor simulasi aktif"); return; }
+
+    if (action === "search") { toast("Pencarian simulasi dijalankan"); return; }
+    if (action === "assistant-send") { const prompt=$("#assistantPrompt",root)?.value?.trim()||""; const result=$("#assistantResult",root); if(result) result.textContent=prompt?`Respons simulasi untuk: ${prompt}`:"Tulis pesan terlebih dahulu."; return; }
+    if (action === "call") { toast("Panggilan simulasi • tidak melakukan panggilan nyata"); vibrate(12); return; }
+    if (action === "install") { toast("Aplikasi demo dipasang"); return; }
+    if (action === "app-force-stop") { toast("Aplikasi dihentikan dalam simulator"); return; }
+    const labels={"map-search":"Lokasi simulasi ditemukan","add-alarm":"Alarm simulasi ditambahkan","add-event":"Acara simulasi ditambahkan","open-file":"Membuka item simulasi","chat":"Percakapan simulasi dibuka","like":"Disukai","comment":"Komentar simulasi","share":"Dibagikan secara simulasi","generic":"Fitur simulasi dijalankan"};
+    toast(labels[action]||"Aksi simulasi dijalankan"); vibrate(5);
+  }
+
   function handleAction(action) {
     if (action === "dismissMenu") { state.longPressMenu = false; render(); }
     if (action === "extractSimWallpaperPalette") { applyWallpaperColorBurst(); }
     if (action === "openStyle") { state.styleTab = "home"; state.wallpaperTarget = "home"; navigate("wallpaperStyle"); }
     if (action === "widgetToast") toast(t("widgets"));
-    if (action === "applyLayout") { state.homeCols = state.layoutDraft; save(); navigate("wallpaperStyle", false); }
+    if (action === "applyLayout") {
+      state.homeCols = Math.max(4, Math.min(6, Number(state.layoutDraft) || 5));
+      state.layoutDraft = state.homeCols;
+      save();
+      applyTheme();
+      vibrate(8);
+      navigate("wallpaperStyle", false);
+    }
     if (action === "closeShade") { state.shade = false; render(); }
     if (action === "shutter") toast(t("photoCaptured"));
     if (action === "nowPlayingToast") toast(t("nowPlayingDesc"));
@@ -1970,10 +2769,14 @@
     const lockDate = $("#lockDateLive", root);
     const ambientClock = $("#ambientClockLive", root);
     const ambientDate = $("#ambientDateLive", root);
+    const appClock = $("#appClockLive", root);
     if (lockClock) lockClock.innerHTML = lockClockMarkup();
     if (lockDate) lockDate.textContent = formatDate();
     if (ambientClock) ambientClock.textContent = formatTime().replace(".", ":");
     if (ambientDate) ambientDate.textContent = formatDate();
+    if (appClock) appClock.textContent = formatTime().replace(".", ":");
+    updateSpotifyPlayback();
+    updateRecorderSim();
   }, 1000);
 
   applyTheme();
