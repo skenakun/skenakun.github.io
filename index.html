@@ -91,7 +91,6 @@
           <div class="stat-card">
             <strong>100%</strong>
             <span data-i18n="responsive">Responsif</span>
-      </div>
       <div class="hero-visual" aria-hidden="true">
         <div class="orbit orbit-one"></div>
         <div class="orbit orbit-two"></div>
@@ -373,78 +372,42 @@
 </div>
   </dialog>
 
-
   <dialog class="phone-sim-dialog" id="phoneSimDialog">
-    <div class="phone-sim-shell">
-      <div class="phone-sim-head">
-        <div>
-          <span class="section-label">ANDROID 17 SIMULATOR</span>
-          <h2 id="phoneSimHeading">Google Pixel 10</h2>
-          <p id="phoneSimSubheading">Material 3 Expressive • Model Frankel</p>
+    <div class="pixel-sim-stage">
+      <div class="pixel-sim-toolbar">
+        <div class="pixel-sim-identity">
+          <span class="pixel-g-badge">G</span>
+          <span><strong>Google Pixel 10</strong><small>Android 17 • Model Frankel</small></span>
         </div>
-        <button class="phone-sim-close" id="closePhoneSim" type="button" aria-label="Tutup">×</button>
+        <div class="pixel-sim-toolbar-actions">
+          <button type="button" data-sim-command="home" title="Beranda">⌂</button>
+          <button type="button" data-sim-command="lock" title="Kunci">◉</button>
+          <button type="button" data-sim-command="reboot" title="Mulai ulang">↻</button>
+          <button type="button" id="closePhoneSim" class="pixel-sim-close" title="Tutup">×</button>
+        </div>
       </div>
 
-      <div class="phone-sim-layout">
-        <div class="pixel-device-wrap">
-          <div class="pixel-device">
-            <button class="pixel-side-button pixel-power-button" id="pixelPowerButton" type="button" aria-label="Power"></button>
-            <button class="pixel-side-button pixel-volume-button" id="pixelVolumeButton" type="button" aria-label="Volume"></button>
+      <div class="pixel-frame" id="pixelFrame">
+        <button class="pixel-hardware-button pixel-power" id="pixelPowerButton" type="button" aria-label="Power"></button>
+        <button class="pixel-hardware-button pixel-volume" id="pixelVolumeButton" type="button" aria-label="Volume"></button>
 
-            <div class="pixel-screen" id="pixelScreen">
-              <div class="pixel-camera-cutout"></div>
-
-              <button class="android-statusbar" id="androidStatusbar" type="button" aria-label="Quick Settings">
-                <span id="androidStatusTime">21.47</span>
-                <span class="android-status-icons">
-                  <b id="androidWifiIcon">⌁</b>
-                  <b id="androidSignalIcon">▮▮▮</b>
-                  <i><span id="androidBatteryText">61</span></i>
-                </span>
-              </button>
-
-              <div class="android-screen-root" id="androidScreenRoot"></div>
-              <button class="android-gesture-pill" id="androidGesturePill" type="button" aria-label="Home"></button>
-            </div>
-          </div>
+        <div class="pixel-screen" id="pixelScreen">
+          <div class="pixel-camera-hole" aria-hidden="true"></div>
+          <button class="pixel-statusbar" id="androidStatusbar" type="button" aria-label="Buka Setelan Cepat">
+            <span id="androidStatusTime">21.47</span>
+            <span class="pixel-status-right">
+              <span id="androidRecordPill" class="pixel-record-pill" hidden><b>●</b><em id="androidRecordTime">00.00</em></span>
+              <span id="androidSignalIcon" aria-hidden="true">▮▮▮</span>
+              <span id="androidWifiIcon" aria-hidden="true">⌁</span>
+              <span class="pixel-battery"><span id="androidBatteryText">61</span></span>
+            </span>
+          </button>
+          <div class="android-screen-root" id="androidScreenRoot"></div>
+          <button class="pixel-gesture-pill" id="androidGesturePill" type="button" aria-label="Beranda"></button>
         </div>
-
-        <aside class="phone-sim-controls">
-          <section class="phone-sim-info-card">
-            <span class="phone-device-badge">G</span>
-            <div>
-              <strong>Google Pixel 10</strong>
-              <span>Android 17</span>
-              <small>Model: Frankel</small>
-            </div>
-          </section>
-
-          <section class="phone-sim-control-card">
-            <strong id="phoneQuickTitle">Kontrol cepat</strong>
-            <div class="phone-quick-grid">
-              <button type="button" data-external-action="home"><b>⌂</b><small>Beranda</small></button>
-              <button type="button" data-external-action="lock"><b>◉</b><small>Kunci</small></button>
-              <button type="button" data-external-action="settings"><b>⚙</b><small>Setelan</small></button>
-              <button type="button" data-external-action="style"><b>✦</b><small>Wallpaper</small></button>
-              <button type="button" data-external-action="about"><b>ⓘ</b><small>Tentang</small></button>
-              <button type="button" data-external-action="reboot"><b>↻</b><small>Mulai ulang</small></button>
-            </div>
-          </section>
-
-          <section class="phone-sim-control-card phone-sim-feature-list">
-            <strong>Fitur simulasi</strong>
-            <div>✓ Wallpaper & gaya</div>
-            <div>✓ Dynamic Color + Dark Theme</div>
-            <div>✓ Jam, pintasan, notifikasi layar kunci</div>
-            <div>✓ Quick Settings</div>
-            <div>✓ Google Pixel 10 • Frankel • Android 17</div>
-          </section>
-
-          <p class="phone-sim-note">
-            Simulasi berjalan di browser dan tidak mengubah sistem perangkat asli.
-          </p>
-        </aside>
       </div>
+
+      <p class="pixel-sim-help">Tekan lama area kosong di layar utama untuk membuka <strong>Wallpaper & gaya</strong>. Klik status bar untuk Setelan Cepat.</p>
     </div>
   </dialog>
 

@@ -1,345 +1,640 @@
-
 (() => {
   "use strict";
 
-  const $ = s => document.querySelector(s);
+  const $ = (s, base = document) => base.querySelector(s);
+  const $$ = (s, base = document) => [...base.querySelectorAll(s)];
+
   const dialog = $("#phoneSimDialog");
   const openBtn = $("#phoneSimBtn");
   const closeBtn = $("#closePhoneSim");
   const root = $("#androidScreenRoot");
   const phone = $("#pixelScreen");
-  const status = $("#androidStatusbar");
+  const statusBar = $("#androidStatusbar");
   const gesture = $("#androidGesturePill");
   const power = $("#pixelPowerButton");
   const volume = $("#pixelVolumeButton");
 
   if (!dialog || !openBtn || !root || !phone) return;
 
-  const STORE = "android17Pixel10FrankelSimV1";
-  const walls = [
-    ["violet","Violet Night","./assets/waifu-07.jpg"],
-    ["frost","Frostlight","./assets/waifu-11.jpg"],
-    ["moon","Moon Garden","./assets/waifu-20.jpg"],
-    ["blue","Blue Moon","./assets/waifu-21.jpg"],
-    ["bride","Blooming Bride","./assets/waifu-31.jpg"],
-    ["rose","Purple Rose","./assets/waifu-34.jpg"]
-  ];
+  const STORE = "waifuPixel10Android17VideoMatchV3";
+
+  const wallpapers = Array.from({ length: 34 }, (_, i) => {
+    const n = String(i + 1).padStart(2, "0");
+    return { id: `waifu-${n}`, src: `./assets/waifu-${n}.jpg`, label: `Waifu ${n}` };
+  });
+
   const palettes = [
-    ["p1","#578bf0","#dbe7ff",["#974d5b","#f3b1be","#bc86c0","#ead2da"]],
-    ["p2","#607077","#e1e8ea",["#111","#d5d5d5","#82908d","#cbd0d0"]],
-    ["p3","#8d7771","#eee0dc",["#7e6060","#ead2cb","#bd8aa5","#dfc5d1"]],
-    ["p4","#9066df","#e8dcff",["#ca0043","#ffadc6","#a178ed","#efd4df"]],
-    ["p5","#00a8b8","#d7f3f7",["#b53851","#7dd0d5","#00a8b8","#e5d4d9"]],
-    ["blue","#4389f0","#d8e8ff",["#4389f0","#7aa9f5","#cfe0ff","#a1c4fb"]],
-    ["green","#719b4b","#e3efd7",["#719b4b","#9dbd7f","#d7e8c7","#5c7f3d"]]
+    { id: "rose", accent: "#9d5670", soft: "#f3dce6", parts: ["#9b4e65", "#f0a6bb", "#bd86b5", "#ead4de"] },
+    { id: "mono", accent: "#6f747c", soft: "#e2e4e8", parts: ["#101010", "#d4d4d4", "#777b80", "#b7b9bc"] },
+    { id: "mauve", accent: "#88716f", soft: "#eee0dd", parts: ["#755f5d", "#e4cdc8", "#bd90aa", "#dfc6d1"] },
+    { id: "pink", accent: "#8d66df", soft: "#e7ddff", parts: ["#c80043", "#ffabc6", "#a174eb", "#efd1de"] },
+    { id: "cyan", accent: "#00a9bb", soft: "#d5f2f5", parts: ["#b43750", "#7ad0d7", "#00a9bb", "#e3d4da"] },
+    { id: "blue", accent: "#3f86ef", soft: "#d9e7ff", parts: ["#3f86ef", "#7caaf5", "#cfe0ff", "#a0c4fa"] },
+    { id: "green", accent: "#71994b", soft: "#e2eed7", parts: ["#71994b", "#9dbc7e", "#d7e8c7", "#5d7f3e"] },
+    { id: "slate", accent: "#7b8395", soft: "#e5e7ed", parts: ["#7b8395", "#a4a9b8", "#e2e5eb", "#636a78"] },
+    { id: "violet", accent: "#7757c8", soft: "#e7ddff", parts: ["#7757c8", "#a48bdc", "#d9ceef", "#564096"] },
+    { id: "ice", accent: "#3e8ab8", soft: "#d9eef8", parts: ["#3e8ab8", "#85bdda", "#d4ecf8", "#255e7b"] }
   ];
 
-  const defaults = {
-    view:"home", prev:"home", locked:false, shade:false, sheet:false,
-    styleTab:"home", wallpaper:"violet", palette:"p1", dark:false,
-    icon:"squircle", cols:5, clock:0,
-    left:"flashlight", right:"camera",
-    lockNotif:true, notifMode:"compact", seen:true, silent:false,
-    lockText:"", controls:false, dynamicClock:true, nowPlaying:true,
-    musicArt:false, lift:true, wake:true,
-    wifi:true, bluetooth:true, airplane:false, flashlight:false,
-    saver:false, brightness:76, battery:61, volume:62
+  const defaultState = {
+    view: "home",
+    previous: "home",
+    locked: false,
+    shade: false,
+    longPressMenu: false,
+    styleTab: "home",
+    wallpaperTarget: "home",
+    homeWallpaper: "waifu-31",
+    lockWallpaper: "waifu-25",
+    palette: "pink",
+    colorTab: "wallpaper",
+    dark: false,
+    contrast: "default",
+    iconStyle: "circle",
+    homeCols: 5,
+    layoutDraft: 5,
+    clockStyle: 0,
+    leftShortcut: "flashlight",
+    rightShortcut: "camera",
+    lockNotifications: true,
+    notificationMode: "compact",
+    seenNotificationIcons: true,
+    silentNotifications: false,
+    lockText: "",
+    deviceControls: false,
+    dynamicClock: true,
+    nowPlaying: true,
+    musicArtwork: false,
+    liftToCheck: true,
+    wakeForNotifications: true,
+    wifi: true,
+    bluetooth: true,
+    airplane: false,
+    flashlight: false,
+    batterySaver: false,
+    screenRecord: false,
+    screenRecordStart: 0,
+    brightness: 78,
+    battery: 61,
+    volume: 62
   };
 
-  function load(){
-    try { return {...defaults,...JSON.parse(localStorage.getItem(STORE)||"{}")}; }
-    catch { return {...defaults}; }
-  }
-  let s = load();
-
-  const lang = () => document.documentElement.lang?.startsWith("en") ? "en" : "id";
-  const text = {
-    id:{
-      home:"Beranda",settings:"Setelan",style:"Wallpaper & gaya",lock:"Layar kunci",
-      homeScreen:"Layar utama",theme:"Paket tema",noneTheme:"Tanpa Tema",color:"Warna",
-      contrast:"Kontras warna",icons:"Ikon",layout:"Tata letak",clock:"Jam",shortcuts:"Pintasan",
-      notif:"Notifikasi di layar kunci",notifDesc:"Kelola tampilan notifikasi dan informasi yang ditampilkan",
-      moreLock:"Setelan layar kunci lainnya",moreLockDesc:"Privasi, Now Playing, dan lain-lain",
-      otherWall:"Wallpaper lain",dark:"Tema gelap",apply:"Terapkan",default:"Default",
-      circle:"Lingkaran",minimal:"Minimal",left:"Pintasan kiri",right:"Pintasan kanan",
-      flashlight:"Senter",camera:"Kamera",wallet:"Dompet",nothing:"Tidak ada",
-      showLock:"Tampilkan di layar kunci",compact:"Ringkas",full:"Daftar lengkap",
-      seen:"Tampilkan ikon notifikasi yang telah dilihat",silent:"Tampilkan notifikasi senyap",
-      addText:"Tambahkan teks di layar kunci",deviceControls:"Gunakan kontrol perangkat",
-      dynamic:"Jam dinamis",now:"Now Playing",music:"Penampil musik",lift:"Angkat untuk memeriksa ponsel",
-      wake:"Aktifkan layar untuk notifikasi",search:"Telusuri setelan",about:"Tentang ponsel",
-      device:"Nama perangkat",model:"Model",android:"Versi Android",security:"Pembaruan keamanan",
-      build:"Nomor build simulator",wallpaper:"Wallpaper",apps:"Daftar aplikasi",homeSettings:"Setelan layar utama",
-      widget:"Widget",wifi:"Wi-Fi",bluetooth:"Bluetooth",airplane:"Mode pesawat",saver:"Penghemat baterai",
-      unlock:"Geser ke atas untuk membuka",restarting:"Memulai ulang",volume:"Volume",wallApplied:"Wallpaper diterapkan"
+  const strings = {
+    id: {
+      style: "Wallpaper & gaya", lock: "Layar kunci", home: "Layar utama", wallpaper: "Wallpaper",
+      moreWallpaper: "Wallpaper lain", themePack: "Paket tema", noTheme: "Tanpa Tema", color: "Warna",
+      contrast: "Kontras warna", contrastDefault: "Default", icons: "Ikon", iconDesc: "Default, Lingkaran",
+      layout: "Tata letak", layoutSmall: "Kecil", clock: "Jam", shortcuts: "Pintasan", shortcutDesc: "Senter, Kamera",
+      lockNotif: "Notifikasi di layar kunci", lockNotifDesc: "Kelola tampilan notifikasi dan informasi yang ditampilkan",
+      moreLock: "Setelan layar kunci lainnya", moreLockDesc: "Privasi, Now Playing, dan lain-lain",
+      addLockText: "Tambahkan teks di layar kunci", none: "Tidak ada", deviceControls: "Gunakan kontrol perangkat",
+      deviceControlsDesc: "Tanpa membuka kunci ponsel", dynamicClock: "Jam dinamis",
+      dynamicClockDesc: "Ukuran jam berubah menurut konten layar kunci", nowPlaying: "Now Playing",
+      nowPlayingDesc: "Identifikasi lagu yang diputar di sekitar", appearanceTime: "Waktu kemunculan", musicArtwork: "Penampil musik",
+      musicArtworkDesc: "Tampilkan Tampilan Ambien saat trek musik baru diputar", lift: "Angkat untuk memeriksa ponsel",
+      liftDesc: "Aktif (Bangun sepenuhnya)", wake: "Aktifkan layar untuk notifikasi",
+      wakeDesc: "Layar yang nonaktif akan menyala saat ada notifikasi baru", chooseColor: "Pilih warna untuk ikon, jam, dan lain-lain",
+      wallpaperColor: "Warna wallpaper", otherColor: "Warna lain", darkTheme: "Tema gelap", apply: "Terapkan",
+      iconDefault: "Default", iconCircle: "Lingkaran", iconMinimal: "Minimal", chooseLayout: "Tata letak",
+      settings: "Setelan", searchSettings: "Telusuri setelan", aboutPhone: "Tentang ponsel",
+      deviceName: "Nama perangkat", model: "Model", androidVersion: "Versi Android", build: "Nomor build simulator",
+      securityUpdate: "Pembaruan keamanan", appList: "Daftar aplikasi", homeSettings: "Setelan layar utama", widgets: "Widget",
+      wifi: "Wi-Fi", bluetooth: "Bluetooth", airplane: "Mode pesawat", saver: "Penghemat baterai", screenRecord: "Rekam layar",
+      brightness: "Kecerahan", unlock: "Geser ke atas untuk membuka", rebooting: "Memulai ulang", volume: "Volume",
+      camera: "Kamera", flashlight: "Senter", wallet: "Dompet", noShortcut: "Tidak ada", compact: "Ringkas",
+      fullList: "Daftar lengkap", showOnLock: "Tampilkan di layar kunci", seenIcons: "Tampilkan ikon notifikasi yang telah dilihat",
+      silent: "Tampilkan notifikasi senyap", colorUpdated: "Warna sistem diperbarui", wallpaperUpdated: "Wallpaper diterapkan",
+      photoCaptured: "Foto simulasi diambil", pressHint: "Tekan lama untuk Wallpaper & gaya"
     },
-    en:{
-      home:"Home",settings:"Settings",style:"Wallpaper & style",lock:"Lock screen",
-      homeScreen:"Home screen",theme:"Theme pack",noneTheme:"No theme",color:"Color",
-      contrast:"Color contrast",icons:"Icons",layout:"Layout",clock:"Clock",shortcuts:"Shortcuts",
-      notif:"Lock screen notifications",notifDesc:"Manage notification appearance and lock-screen information",
-      moreLock:"More lock screen settings",moreLockDesc:"Privacy, Now Playing and more",
-      otherWall:"More wallpapers",dark:"Dark theme",apply:"Apply",default:"Default",
-      circle:"Circle",minimal:"Minimal",left:"Left shortcut",right:"Right shortcut",
-      flashlight:"Flashlight",camera:"Camera",wallet:"Wallet",nothing:"None",
-      showLock:"Show on lock screen",compact:"Compact",full:"Full list",
-      seen:"Show icons for viewed notifications",silent:"Show silent notifications",
-      addText:"Add text on lock screen",deviceControls:"Use device controls",
-      dynamic:"Dynamic clock",now:"Now Playing",music:"Music artwork",lift:"Lift to check phone",
-      wake:"Wake screen for notifications",search:"Search settings",about:"About phone",
-      device:"Device name",model:"Model",android:"Android version",security:"Security update",
-      build:"Simulator build number",wallpaper:"Wallpaper",apps:"App list",homeSettings:"Home settings",
-      widget:"Widgets",wifi:"Wi-Fi",bluetooth:"Bluetooth",airplane:"Airplane mode",saver:"Battery Saver",
-      unlock:"Swipe up to unlock",restarting:"Restarting",volume:"Volume",wallApplied:"Wallpaper applied"
+    en: {
+      style: "Wallpaper & style", lock: "Lock screen", home: "Home screen", wallpaper: "Wallpaper",
+      moreWallpaper: "More wallpapers", themePack: "Theme pack", noTheme: "No theme", color: "Color",
+      contrast: "Color contrast", contrastDefault: "Default", icons: "Icons", iconDesc: "Default, Circle",
+      layout: "Layout", layoutSmall: "Small", clock: "Clock", shortcuts: "Shortcuts", shortcutDesc: "Flashlight, Camera",
+      lockNotif: "Lock screen notifications", lockNotifDesc: "Manage notification appearance and information shown",
+      moreLock: "More lock screen settings", moreLockDesc: "Privacy, Now Playing, and more",
+      addLockText: "Add text on lock screen", none: "None", deviceControls: "Use device controls",
+      deviceControlsDesc: "Without unlocking phone", dynamicClock: "Dynamic clock",
+      dynamicClockDesc: "Clock size changes according to lock screen content", nowPlaying: "Now Playing",
+      nowPlayingDesc: "Identify songs playing nearby", appearanceTime: "When to show", musicArtwork: "Music artwork",
+      musicArtworkDesc: "Show Ambient Display when a new music track plays", lift: "Lift to check phone",
+      liftDesc: "Active (Fully wake)", wake: "Wake screen for notifications",
+      wakeDesc: "The inactive screen turns on for a new notification", chooseColor: "Choose a color for icons, clock, and more",
+      wallpaperColor: "Wallpaper colors", otherColor: "Other colors", darkTheme: "Dark theme", apply: "Apply",
+      iconDefault: "Default", iconCircle: "Circle", iconMinimal: "Minimal", chooseLayout: "Layout",
+      settings: "Settings", searchSettings: "Search settings", aboutPhone: "About phone",
+      deviceName: "Device name", model: "Model", androidVersion: "Android version", build: "Simulator build number",
+      securityUpdate: "Security update", appList: "App list", homeSettings: "Home settings", widgets: "Widgets",
+      wifi: "Wi-Fi", bluetooth: "Bluetooth", airplane: "Airplane mode", saver: "Battery Saver", screenRecord: "Screen record",
+      brightness: "Brightness", unlock: "Swipe up to unlock", rebooting: "Restarting", volume: "Volume",
+      camera: "Camera", flashlight: "Flashlight", wallet: "Wallet", noShortcut: "None", compact: "Compact",
+      fullList: "Full list", showOnLock: "Show on lock screen", seenIcons: "Show icons for viewed notifications",
+      silent: "Show silent notifications", colorUpdated: "System color updated", wallpaperUpdated: "Wallpaper applied",
+      photoCaptured: "Simulated photo captured", pressHint: "Long press for Wallpaper & style"
     }
   };
-  const t = k => text[lang()][k] || text.id[k] || k;
 
-  function save(){ localStorage.setItem(STORE,JSON.stringify(s)); }
-  function wall(){ return walls.find(x=>x[0]===s.wallpaper)||walls[0]; }
-  function pal(){ return palettes.find(x=>x[0]===s.palette)||palettes[0]; }
-  function time(){
-    return new Intl.DateTimeFormat(lang()==="en"?"en-US":"id-ID",{hour:"2-digit",minute:"2-digit",hour12:false})
-      .format(new Date()).replace(":",".");
+  function getLanguage() {
+    return document.documentElement.lang?.toLowerCase().startsWith("en") ? "en" : "id";
   }
-  function date(){
-    return new Intl.DateTimeFormat(lang()==="en"?"en-US":"id-ID",{weekday:"short",month:"short",day:"numeric"}).format(new Date());
+  function t(key) { return strings[getLanguage()][key] ?? strings.id[key] ?? key; }
+  function loadState() {
+    try { return { ...defaultState, ...JSON.parse(localStorage.getItem(STORE) || "{}") }; }
+    catch { return { ...defaultState }; }
   }
-  function esc(v=""){ return String(v).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"); }
+  let state = loadState();
+  let longPressTimer = null;
+  let toastTimer = null;
+  let volumeTimer = null;
 
-  function apply(){
-    const p=pal();
-    phone.style.setProperty("--wall",`url("${wall()[2]}")`);
-    phone.style.setProperty("--a",p[1]);
-    phone.style.setProperty("--a2",p[2]);
-    phone.style.setProperty("--cols",String(s.cols));
-    phone.classList.toggle("dark",s.dark);
-    phone.classList.toggle("icons-circle",s.icon==="circle");
-    phone.classList.toggle("icons-minimal",s.icon==="minimal");
-    phone.style.filter=s.flashlight?"brightness(1.12)":"";
-    $("#androidStatusTime").textContent=time();
-    $("#androidBatteryText").textContent=s.battery;
-    $("#androidWifiIcon").style.opacity=s.wifi&&!s.airplane?"1":".25";
-    $("#androidSignalIcon").style.opacity=!s.airplane?"1":".25";
+  function save() { localStorage.setItem(STORE, JSON.stringify(state)); }
+  function vibrate(ms = 5) { try { navigator.vibrate?.(ms); } catch {} }
+  function wallpaperById(id) { return wallpapers.find(w => w.id === id) || wallpapers[0]; }
+  function paletteById(id) { return palettes.find(p => p.id === id) || palettes[0]; }
+  function currentTargetKey() { return state.styleTab === "lock" ? "lockWallpaper" : "homeWallpaper"; }
+  function wallPaletteId(wallId) {
+    const n = Number(wallId.split("-")[1] || 1);
+    return ["violet", "mauve", "pink", "rose", "blue", "ice", "cyan", "slate", "green", "pink"][n % 10];
   }
 
-  const top = title => `<div class="a-top"><button class="a-back" data-nav="back">‹</button><h3>${title}</h3><span class="a-spacer"></span></div>`;
-  const toggle = key => `<button class="a-toggle ${s[key]?"on":""}" data-toggle="${key}" type="button"></button>`;
-  const row = (icon,title,desc="",nav="") => `<button class="a-row" ${nav?`data-nav="${nav}"`:""} type="button"><span class="a-icon">${icon}</span><span class="a-row-copy"><strong>${title}</strong>${desc?`<span>${desc}</span>`:""}</span>${nav?'<b>›</b>':""}</button>`;
+  function formatTime() {
+    return new Intl.DateTimeFormat(getLanguage() === "en" ? "en-US" : "id-ID", {
+      hour: "2-digit", minute: "2-digit", hour12: false
+    }).format(new Date()).replace(":", ".");
+  }
+  function formatDate() {
+    return new Intl.DateTimeFormat(getLanguage() === "en" ? "en-US" : "id-ID", {
+      weekday: "short", day: "numeric", month: "short"
+    }).format(new Date());
+  }
+  function escapeHtml(value = "") {
+    return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+  }
 
-  function shortcutName(v){ return ({flashlight:t("flashlight"),camera:t("camera"),wallet:t("wallet"),none:t("nothing")})[v]; }
-  function shortcutIcon(v){ return ({flashlight:"⌁",camera:"◉",wallet:"▣",none:"·"})[v]; }
+  function applyTheme() {
+    const p = paletteById(state.palette);
+    phone.style.setProperty("--android-blue", p.accent);
+    phone.style.setProperty("--android-blue-soft", p.soft);
+    phone.style.setProperty("--home-wall", `url('${wallpaperById(state.homeWallpaper).src}')`);
+    phone.style.setProperty("--lock-wall", `url('${wallpaperById(state.lockWallpaper).src}')`);
+    phone.style.setProperty("--home-cols", String(state.homeCols));
+    phone.classList.toggle("android-dark", !!state.dark);
+    phone.style.opacity = String(0.68 + state.brightness / 312);
 
-  function home(){
-    const apps=[["◉","Camera","camera"],["✿","Photos","wallpaper"],["✉","Messages","apps"],["◎","Chrome","apps"],["⚙",t("settings"),"settings"]];
-    root.innerHTML=`<div class="a-page home" id="homeSurface"><div class="home-overlay">
-      <div class="home-weather"><strong>Besok 22°C / 12°C</strong><span>☀ Cerah</span></div>
-      <div class="home-space"></div>
-      <div class="app-grid">${apps.map(a=>`<button class="app" data-nav="${a[2]}"><span class="app-icon">${a[0]}</span><small>${a[1]}</small></button>`).join("")}</div>
-      <div class="home-widget"><div><strong>Waktu penggunaan perangkat</strong><span>2 j, 18 mnt</span></div><strong>◔</strong></div>
-      <div class="search-pill"><b>G</b><span>Telusuri</span><strong>⌕</strong></div>
-    </div>${s.sheet?homeSheet():""}</div>`;
+    const timeEl = $("#androidStatusTime");
+    const batteryEl = $("#androidBatteryText");
+    const wifiEl = $("#androidWifiIcon");
+    const signalEl = $("#androidSignalIcon");
+    if (timeEl) timeEl.textContent = formatTime();
+    if (batteryEl) batteryEl.textContent = state.battery;
+    if (wifiEl) wifiEl.style.opacity = state.wifi && !state.airplane ? "1" : ".25";
+    if (signalEl) signalEl.style.opacity = state.airplane ? ".25" : "1";
 
-    const surface=$("#homeSurface");
-    if(surface&&!s.sheet){
-      let timer;
-      surface.addEventListener("pointerdown",e=>{
-        if(e.target.closest("button"))return;
-        timer=setTimeout(()=>{s.sheet=true;render()},520);
+    const recordPill = $("#androidRecordPill");
+    if (recordPill) recordPill.hidden = !state.screenRecord;
+    updateRecordingTime();
+  }
+
+  function updateRecordingTime() {
+    const el = $("#androidRecordTime");
+    if (!el || !state.screenRecord) return;
+    const seconds = Math.max(0, Math.floor((Date.now() - state.screenRecordStart) / 1000));
+    const mm = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const ss = String(seconds % 60).padStart(2, "0");
+    el.textContent = `${mm}.${ss}`;
+  }
+
+  function toast(message) {
+    $(".toast", root)?.remove();
+    const el = document.createElement("div");
+    el.className = "toast";
+    el.textContent = message;
+    root.appendChild(el);
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.remove(), 1300);
+  }
+
+  function showVolume() {
+    $(".volume-toast", root)?.remove();
+    const el = document.createElement("div");
+    el.className = "volume-toast";
+    el.innerHTML = `♫<br>${state.volume}%`;
+    root.appendChild(el);
+    clearTimeout(volumeTimer);
+    volumeTimer = setTimeout(() => el.remove(), 1000);
+  }
+
+  function topbar(title, { back = true, apply = false, close = false } = {}) {
+    return `<div class="a17-topbar ${title === t("style") ? "wallstyle-title" : ""}">
+      ${back ? `<button class="a17-back" type="button" data-nav="back">‹</button>` : ""}
+      ${close ? `<button class="a17-x" type="button" data-nav="back">×</button>` : ""}
+      <h3>${title}</h3>
+      ${apply ? `<button class="a17-apply" type="button" data-action="applyLayout">${t("apply")}</button>` : ""}
+    </div>`;
+  }
+  function toggle(key) {
+    return `<button class="a17-switch ${state[key] ? "on" : ""}" type="button" data-toggle="${key}" aria-label="${key}"></button>`;
+  }
+  function row({ title, desc = "", icon = "", nav = "", trailing = "" }) {
+    return `<button class="a17-row" type="button" ${nav ? `data-nav="${nav}"` : ""}>
+      <span class="a17-copy"><strong>${title}</strong>${desc ? `<span>${desc}</span>` : ""}</span>
+      ${trailing || (icon ? `<span class="a17-trailing">${icon}</span>` : "")}
+      ${nav && !icon && !trailing ? `<span class="a17-chevron">›</span>` : ""}
+    </button>`;
+  }
+
+  function navigate(view, keepPrevious = true) {
+    if (keepPrevious && state.view !== view) state.previous = state.view;
+    state.view = view;
+    state.longPressMenu = false;
+    state.shade = false;
+    save();
+    render();
+  }
+
+  function goBack() {
+    if (state.shade) {
+      state.shade = false;
+      render();
+      return;
+    }
+    const parent = {
+      wallpaperStyle: "home", color: "wallpaperStyle", icons: "wallpaperStyle", layout: "wallpaperStyle",
+      clock: "wallpaperStyle", shortcuts: "wallpaperStyle", notifications: "wallpaperStyle", lockMore: "wallpaperStyle",
+      wallpaperPicker: "wallpaperStyle", settings: "home", about: "settings", apps: "home", camera: "home",
+      homeSettings: "home"
+    };
+    navigate(parent[state.view] || "home", false);
+  }
+
+  function setWallpaper(id) {
+    const key = currentTargetKey();
+    state[key] = id;
+    state.palette = wallPaletteId(id);
+    save();
+    applyTheme();
+    vibrate();
+    toast(t("wallpaperUpdated"));
+    render();
+  }
+
+  function renderHome() {
+    const appIcons = [
+      ["◎", "Instagram", "apps"], ["♪", "TikTok", "apps"], ["◉", "WA Busin...", "apps"], ["✦", "Nekogram", "apps"]
+    ];
+    root.innerHTML = `<div class="a17-page home-page" id="homePressSurface">
+      <div class="home-wall"></div>
+      <div class="home-content">
+        <div class="home-weather"><strong>Besok 22°C / 12°C</strong><span>☀ Cerah</span></div>
+        <div class="home-spacer"></div>
+        <div class="home-icons">${appIcons.map(a => `<button class="home-app" type="button" data-nav="${a[2]}"><span class="home-app-icon">${a[0]}</span><small>${a[1]}</small></button>`).join("")}</div>
+        <div class="home-digital-widget"><div><span>Waktu pemakaian<br>perangkat</span><strong>2 j, 18 mnt</strong></div><span>◔</span></div>
+        <div class="home-dock">
+          <button type="button" data-nav="apps"><span>☎</span></button><button type="button" data-nav="apps"><span>●</span></button>
+          <button type="button" data-nav="apps"><span>G</span></button><button type="button" data-nav="apps"><span>♟</span></button>
+          <button type="button" data-nav="camera"><span>◉</span></button>
+        </div>
+        <button class="home-search" type="button" data-nav="apps"><b>G</b><span>Telusuri</span><i>⌁ &nbsp; ◉</i></button>
+      </div>
+      ${state.longPressMenu ? renderLongPressMenu() : ""}
+    </div>`;
+
+    if (!state.longPressMenu) {
+      const surface = $("#homePressSurface");
+      surface?.addEventListener("pointerdown", e => {
+        if (e.target.closest("button")) return;
+        clearTimeout(longPressTimer);
+        longPressTimer = setTimeout(() => {
+          state.longPressMenu = true;
+          vibrate(12);
+          render();
+        }, 520);
       });
-      ["pointerup","pointerleave","pointercancel"].forEach(n=>surface.addEventListener(n,()=>clearTimeout(timer)));
-      surface.addEventListener("contextmenu",e=>{e.preventDefault();s.sheet=true;render()});
+      ["pointerup", "pointercancel", "pointerleave"].forEach(ev => surface?.addEventListener(ev, () => clearTimeout(longPressTimer)));
+      surface?.addEventListener("contextmenu", e => {
+        e.preventDefault();
+        state.longPressMenu = true;
+        render();
+      });
     }
   }
 
-  function homeSheet(){
-    return `<div class="home-sheet">
-      <div class="wall-strip">${walls.slice(0,4).map(w=>`<button class="wall-thumb" data-wall="${w[0]}" style="background-image:url('${w[2]}')"></button>`).join("")}</div>
-      <button class="sheet-row" data-nav="style">◉ ${t("style")}</button>
-      <button class="sheet-row" data-action="widget">▦ ${t("widget")}</button>
-      <button class="sheet-row" data-nav="apps">▦ ${t("apps")}</button>
-      <button class="sheet-row" data-nav="homeSettings">⌂ ${t("homeSettings")}</button>
+  function renderLongPressMenu() {
+    const picks = [state.homeWallpaper, "waifu-13", "waifu-20", "waifu-26"];
+    return `<div class="home-menu-shade" data-action="dismissMenu"></div>
+      <div class="home-longpress-menu">
+        <div class="home-wall-strip">${picks.map(id => `<button class="home-wall-thumb ${id === state.homeWallpaper ? "active" : ""}" type="button" data-home-quick-wall="${id}" style="background-image:url('${wallpaperById(id).src}')"></button>`).join("")}</div>
+        <button class="home-menu-item" type="button" data-action="openStyle"><span>◉</span><span>${t("style")}</span></button>
+        <button class="home-menu-item" type="button" data-action="widgetToast"><span>▦</span><span>${t("widgets")}</span></button>
+        <button class="home-menu-item" type="button" data-nav="apps"><span>▦</span><span>${t("appList")}</span></button>
+        <button class="home-menu-item" type="button" data-nav="homeSettings"><span>⌂</span><span>${t("homeSettings")}</span></button>
+      </div>`;
+  }
+
+  function previewPhone(kind, active) {
+    if (kind === "lock") {
+      return `<button class="phone-preview lock-preview ${active ? "" : "inactive"}" type="button" data-style-tab="lock"><span class="mini-lock-time">${formatTime().split(".").join("<br>")}</span></button>`;
+    }
+    return `<button class="phone-preview home-preview ${active ? "" : "inactive"}" type="button" data-style-tab="home"><span class="mini-home-ui"><span class="mini-home-spacer"></span><span class="mini-home-icons"><span></span><span></span><span></span><span></span></span><span class="mini-home-widget"></span><span class="mini-home-search"></span></span></button>`;
+  }
+
+  function renderWallpaperCarousel() {
+    const base = state.styleTab === "lock" ? [state.lockWallpaper, "waifu-17", "waifu-08"] : [state.homeWallpaper, "waifu-31", "waifu-20"];
+    return `<div class="wallpaper-carousel"><div class="wallpaper-carousel-track">${base.map(id => `<button class="carousel-thumb" type="button" data-carousel-wall="${id}" style="background-image:url('${wallpaperById(id).src}')"></button>`).join("")}</div>
+      <button class="wallpaper-more" type="button" data-nav="wallpaperPicker">▧ ${t("moreWallpaper")}</button></div>`;
+  }
+
+  function renderWallpaperStyle() {
+    const isHome = state.styleTab === "home";
+    const magic = `<span class="a17-trailing"><span class="magic-wand">✣</span></span>`;
+    const colorTrail = `<span class="a17-trailing"><span class="trailing-dot"></span></span>`;
+    const contrastTrail = `<span class="a17-trailing">◉</span>`;
+    const iconTrail = `<span class="a17-trailing"><span class="trailing-black"></span></span>`;
+    const gridTrail = `<span class="a17-trailing"><span class="grid-nine">${"<i></i>".repeat(16)}</span></span>`;
+
+    root.innerHTML = `<div class="a17-page wallstyle-page">
+      ${topbar(t("style"))}
+      <div class="wall-tabs"><button class="${!isHome ? "active" : ""}" data-style-tab="lock">${t("lock")}</button><button class="${isHome ? "active" : ""}" data-style-tab="home">${t("home")}</button></div>
+      <div class="preview-area">${previewPhone("lock", !isHome)}${previewPhone("home", isHome)}</div>
+      <button class="wallpaper-more" style="margin-top:-19px;margin-bottom:4px" type="button" data-nav="wallpaperPicker">▧ ${t("wallpaper")}</button>
+      ${renderWallpaperCarousel()}
+      <div class="a17-card wallstyle-list">
+        ${row({ title: t("themePack"), desc: t("noTheme"), trailing: magic })}
+        ${isHome ? row({ title: t("color"), nav: "color", trailing: colorTrail }) : row({ title: t("clock"), nav: "clock", trailing: `<span class="a17-trailing">8<br>30</span>` })}
+        ${isHome ? row({ title: t("contrast"), desc: t("contrastDefault"), trailing: contrastTrail }) : row({ title: t("shortcuts"), desc: t("shortcutDesc"), nav: "shortcuts", trailing: `<span class="a17-trailing">▦</span>` })}
+        ${isHome ? row({ title: t("icons"), desc: t("iconDesc"), nav: "icons", trailing: iconTrail }) : row({ title: t("lockNotif"), desc: t("lockNotifDesc"), nav: "notifications" })}
+        ${isHome ? row({ title: t("layout"), desc: t("layoutSmall"), nav: "layout", trailing: gridTrail }) : row({ title: t("moreLock"), desc: t("moreLockDesc"), nav: "lockMore" })}
+      </div>
     </div>`;
   }
 
-  function previews(){
-    return `<div class="preview-tabs">
-      <button data-style-tab="lock" class="${s.styleTab==="lock"?"active":""}">${t("lock")}</button>
-      <button data-style-tab="home" class="${s.styleTab==="home"?"active":""}">${t("homeScreen")}</button>
-    </div>
-    <div class="preview-pair">
-      <button class="preview-phone ${s.styleTab==="home"?"dim":""}" data-style-tab="lock"><span class="preview-clock">${time().replace(".","<br>")}</span></button>
-      <button class="preview-phone ${s.styleTab==="lock"?"dim":""}" data-style-tab="home"><span class="preview-icons"><span></span><span></span><span></span><span></span></span></button>
-    </div>
-    <button class="wall-button" data-nav="wallpaper">▧ ${t("otherWall")}</button>`;
+  function renderColor() {
+    const visible = state.colorTab === "wallpaper" ? palettes.slice(0, 5) : palettes.slice(5);
+    root.innerHTML = `<div class="a17-page color-page">
+      ${topbar(t("color"))}
+      <div class="color-headline">${t("chooseColor")}</div>
+      <div class="color-preview-phone"></div>
+      <div class="color-panel">
+        <div class="palette-row">${visible.map(p => `<button class="palette-choice ${state.palette === p.id ? "active" : ""}" type="button" data-palette="${p.id}" style="--c1:${p.parts[0]};--c2:${p.parts[1]};--c3:${p.parts[2]};--c4:${p.parts[3]}"></button>`).join("")}</div>
+        <div class="color-dark-row"><strong>${t("darkTheme")}</strong>${toggle("dark")}</div>
+      </div>
+      <div class="color-segment"><button type="button" class="${state.colorTab === "wallpaper" ? "active" : ""}" data-color-tab="wallpaper">▧ ${t("wallpaperColor")}</button><button type="button" class="${state.colorTab === "other" ? "active" : ""}" data-color-tab="other">◇ ${t("otherColor")}</button></div>
+    </div>`;
   }
 
-  function style(){
-    const homeRows=`${row("✣",t("theme"),t("noneTheme"))}${row("●",t("color"),"", "color")}${row("◉",t("contrast"),t("default"))}${row("●",t("icons"),s.icon==="circle"?t("circle"):s.icon==="minimal"?t("minimal"):t("default"),"icons")}${row("⠿",t("layout"),s.cols+" kolom","homeSettings")}`;
-    const lockRows=`${row("✣",t("theme"),t("noneTheme"))}${row("8",t("clock"),"", "clock")}${row("◫",t("shortcuts"),`${shortcutName(s.left)}, ${shortcutName(s.right)}`,"shortcuts")}${row("",t("notif"),t("notifDesc"),"notif")}${row("",t("moreLock"),t("moreLockDesc"),"lockmore")}`;
-    root.innerHTML=`<div class="a-page style-page">${top(t("style"))}${previews()}<div class="a-card settings-stack">${s.styleTab==="home"?homeRows:lockRows}</div></div>`;
+  function renderIcons() {
+    const choices = [["squircle", "▣", t("iconDefault")], ["circle", "●", t("iconCircle")], ["minimal", "○", t("iconMinimal")]];
+    root.innerHTML = `<div class="a17-page color-page">${topbar(t("icons"))}<div class="choice-preview"></div><div class="choice-grid">${choices.map(c => `<button class="choice-card ${state.iconStyle === c[0] ? "active" : ""}" type="button" data-icon-style="${c[0]}"><b>${c[1]}</b><small>${c[2]}</small></button>`).join("")}</div></div>`;
   }
 
-  function colors(){
-    root.innerHTML=`<div class="a-page style-page">${top(t("color"))}<div class="color-preview"></div>
-      <div class="a-card color-box"><div class="palette-grid">${palettes.map(p=>`<button class="palette ${s.palette===p[0]?"active":""}" data-palette="${p[0]}" style="--p1:${p[3][0]};--p2:${p[3][1]};--p3:${p[3][2]};--p4:${p[3][3]}"></button>`).join("")}</div>
-      <div class="a-row"><span class="a-row-copy"><strong>${t("dark")}</strong></span>${toggle("dark")}</div></div></div>`;
+  function layoutDots(cols) {
+    return `<span class="layout-dots" style="--layout-cols:${cols}">${"<i></i>".repeat(cols * 4)}</span>`;
+  }
+  function renderLayout() {
+    root.innerHTML = `<div class="a17-page wallstyle-page">${topbar(t("chooseLayout"), { back: false, close: true, apply: true })}<div class="preview-area" style="height:250px">${previewPhone("lock", false)}${previewPhone("home", true)}</div><div class="choice-grid">${[4,5,6].map(cols => `<button class="choice-card layout-choice ${state.layoutDraft === cols ? "active" : ""}" type="button" data-layout-draft="${cols}"><b>${layoutDots(cols)}</b><small>${cols} × 4</small></button>`).join("")}</div></div>`;
   }
 
-  function icons(){
-    const choices=[["squircle","▣",t("default")],["circle","●",t("circle")],["minimal","○",t("minimal")]];
-    root.innerHTML=`<div class="a-page style-page">${top(t("icons"))}<div class="color-preview"></div><div class="choice-grid">${choices.map(c=>`<button class="choice ${s.icon===c[0]?"active":""}" data-icon="${c[0]}"><b>${c[1]}</b><small>${c[2]}</small></button>`).join("")}</div></div>`;
+  function renderClock() {
+    const samples = ["21<br>48", "21:48", "21<br><span style='font-size:13px'>48</span>", "21 48", "21<br>⁴⁸", "21·48"];
+    root.innerHTML = `<div class="a17-page wallstyle-page">${topbar(t("clock"))}<div class="choice-preview" style="background-image:var(--lock-wall)"></div><div class="choice-grid">${samples.map((samp, i) => `<button class="choice-card ${state.clockStyle === i ? "active" : ""}" type="button" data-clock-style="${i}"><b>${samp}</b><small>${t("clock")} ${i + 1}</small></button>`).join("")}</div></div>`;
   }
 
-  function clock(){
-    const samples=["21<br>48","21:48","21<br><small>48</small>","21 48","21<br>⁴⁸","21·48"];
-    root.innerHTML=`<div class="a-page style-page">${top(t("clock"))}<div class="color-preview"></div><div class="choice-grid">${samples.map((x,i)=>`<button class="choice ${s.clock===i?"active":""}" data-clock="${i}"><b>${x}</b><small>${t("clock")} ${i+1}</small></button>`).join("")}</div></div>`;
+  function shortcutName(value) {
+    return { flashlight: t("flashlight"), camera: t("camera"), wallet: t("wallet"), none: t("noShortcut") }[value];
+  }
+  function shortcutIcon(value) {
+    return { flashlight: "⌁", camera: "◉", wallet: "▣", none: "·" }[value];
+  }
+  function shortcutGroup(side, label) {
+    const values = ["flashlight", "camera", "wallet", "none"];
+    return `<div class="a17-section">${label}</div><div class="choice-grid">${values.map(v => `<button class="choice-card ${state[side] === v ? "active" : ""}" type="button" data-shortcut-side="${side}" data-shortcut-value="${v}"><b>${shortcutIcon(v)}</b><small>${shortcutName(v)}</small></button>`).join("")}</div>`;
+  }
+  function renderShortcuts() {
+    root.innerHTML = `<div class="a17-page wallstyle-page">${topbar(t("shortcuts"))}${shortcutGroup("leftShortcut", "Kiri")}${shortcutGroup("rightShortcut", "Kanan")}</div>`;
   }
 
-  function shortcuts(){
-    const vals=["flashlight","camera","wallet","none"];
-    const group=(side,label)=>`<p style="font-size:9px;color:var(--muted);font-weight:900">${label}</p><div class="choice-grid">${vals.map(v=>`<button class="choice ${s[side]===v?"active":""}" data-short="${side}" data-short-val="${v}"><b>${shortcutIcon(v)}</b><small>${shortcutName(v)}</small></button>`).join("")}</div>`;
-    root.innerHTML=`<div class="a-page style-page">${top(t("shortcuts"))}${group("left",t("left"))}${group("right",t("right"))}</div>`;
+  function renderNotifications() {
+    root.innerHTML = `<div class="a17-page wallstyle-page">${topbar(t("lockNotif"))}
+      <div class="a17-row" style="margin-top:4px;border:0;border-radius:18px;background:var(--android-card)"><span class="a17-copy"><strong>${t("showOnLock")}</strong></span>${toggle("lockNotifications")}</div>
+      <div class="notification-preview"><div class="notification-phone"><strong>09:30</strong><div class="notification-bar"></div><div class="notification-bar short"></div></div></div>
+      <div class="choice-grid" style="grid-template-columns:1fr 1fr"><button class="choice-card ${state.notificationMode === "compact" ? "active" : ""}" type="button" data-notification-mode="compact"><b>☰</b><small>${t("compact")}</small></button><button class="choice-card ${state.notificationMode === "full" ? "active" : ""}" type="button" data-notification-mode="full"><b>≡</b><small>${t("fullList")}</small></button></div>
+      <div class="a17-card"><div class="a17-row"><span class="a17-copy"><strong>${t("seenIcons")}</strong></span>${toggle("seenNotificationIcons")}</div><div class="a17-row"><span class="a17-copy"><strong>${t("silent")}</strong></span>${toggle("silentNotifications")}</div></div>
+    </div>`;
   }
 
-  function notif(){
-    root.innerHTML=`<div class="a-page style-page">${top(t("notif"))}
-      <div class="a-row" style="border:0;background:var(--a2);border-radius:18px;margin:6px 0 10px"><span class="a-row-copy"><strong>${t("showLock")}</strong></span>${toggle("lockNotif")}</div>
-      <div class="notif-preview"><div class="notif-phone"><strong>09:30</strong><div class="notif-bar"></div><div class="notif-bar short"></div></div></div>
-      <div class="choice-grid" style="grid-template-columns:1fr 1fr"><button class="choice ${s.notifMode==="compact"?"active":""}" data-notif-mode="compact"><b>☰</b><small>${t("compact")}</small></button><button class="choice ${s.notifMode==="full"?"active":""}" data-notif-mode="full"><b>≡</b><small>${t("full")}</small></button></div>
-      <div class="a-card" style="margin-top:10px"><div class="a-row"><span class="a-row-copy"><strong>${t("seen")}</strong></span>${toggle("seen")}</div><div class="a-row"><span class="a-row-copy"><strong>${t("silent")}</strong></span>${toggle("silent")}</div></div></div>`;
+  function renderLockMore() {
+    root.innerHTML = `<div class="a17-page lock-settings-page wallstyle-page">${topbar(t("lock"))}
+      <div class="a17-card">
+        <label class="a17-row"><span class="a17-copy"><strong>${t("addLockText")}</strong><span>${state.lockText ? escapeHtml(state.lockText) : t("none")}</span><input id="lockTextInput" class="lock-setting-text-input" value="${escapeHtml(state.lockText)}" placeholder="${t("none")}"></span></label>
+        <div class="a17-row"><span class="a17-copy"><strong>${t("deviceControls")}</strong><span>${t("deviceControlsDesc")}</span></span>${toggle("deviceControls")}</div>
+        <button class="a17-row" type="button" data-nav="shortcuts"><span class="a17-copy"><strong>${t("shortcuts")}</strong><span>${shortcutName(state.leftShortcut)}, ${shortcutName(state.rightShortcut)}</span></span><span class="a17-chevron">›</span></button>
+        <div class="a17-row"><span class="a17-copy"><strong>${t("dynamicClock")}</strong><span>${t("dynamicClockDesc")}</span></span>${toggle("dynamicClock")}</div>
+        <button class="a17-row" type="button" data-action="nowPlayingToast"><span class="a17-copy"><strong>${t("nowPlaying")}</strong><span>${t("nowPlayingDesc")}</span></span></button>
+      </div>
+      <div class="a17-section">${t("appearanceTime")}</div>
+      <div class="a17-card">
+        <div class="a17-row"><span class="a17-copy"><strong>${t("musicArtwork")}</strong><span>${t("musicArtworkDesc")}</span></span>${toggle("musicArtwork")}</div>
+        <div class="a17-row"><span class="a17-copy"><strong>${t("lift")}</strong><span>${t("liftDesc")}</span></span><span class="a17-chevron">›</span>${toggle("liftToCheck")}</div>
+        <div class="a17-row"><span class="a17-copy"><strong>${t("wake")}</strong><span>${t("wakeDesc")}</span></span>${toggle("wakeForNotifications")}</div>
+      </div>
+    </div>`;
+
+    $("#lockTextInput")?.addEventListener("input", e => {
+      state.lockText = e.target.value.slice(0, 40);
+      save();
+    });
   }
 
-  function lockMore(){
-    root.innerHTML=`<div class="a-page style-page">${top(t("lock"))}<div class="a-card">
-      <label class="a-row"><span class="a-row-copy"><strong>${t("addText")}</strong><input id="lockText" value="${esc(s.lockText)}" style="width:100%;margin-top:5px;padding:6px;border:1px solid var(--line);border-radius:9px;background:var(--surf);color:var(--txt)"></span></label>
-      <div class="a-row"><span class="a-row-copy"><strong>${t("deviceControls")}</strong></span>${toggle("controls")}</div>
-      ${row("",t("shortcuts"),`${shortcutName(s.left)}, ${shortcutName(s.right)}`,"shortcuts")}
-      <div class="a-row"><span class="a-row-copy"><strong>${t("dynamic")}</strong></span>${toggle("dynamicClock")}</div>
-      <div class="a-row"><span class="a-row-copy"><strong>${t("now")}</strong></span>${toggle("nowPlaying")}</div>
-      <div class="a-row"><span class="a-row-copy"><strong>${t("music")}</strong></span>${toggle("musicArt")}</div>
-      <div class="a-row"><span class="a-row-copy"><strong>${t("lift")}</strong></span>${toggle("lift")}</div>
-      <div class="a-row"><span class="a-row-copy"><strong>${t("wake")}</strong></span>${toggle("wake")}</div>
-    </div></div>`;
-    $("#lockText")?.addEventListener("input",e=>{s.lockText=e.target.value.slice(0,40);save()});
+  function renderWallpaperPicker() {
+    const current = state[currentTargetKey()];
+    root.innerHTML = `<div class="a17-page wallstyle-page">${topbar(t("wallpaper"))}<div class="wallpaper-picker-grid">${wallpapers.map(w => `<button class="wallpaper-pick ${current === w.id ? "active" : ""}" type="button" data-pick-wallpaper="${w.id}" title="${w.label}" style="background-image:url('${w.src}')"></button>`).join("")}</div></div>`;
   }
 
-  function wallpaper(){
-    root.innerHTML=`<div class="a-page style-page">${top(t("wallpaper"))}<div class="wall-gallery">${walls.map(w=>`<button class="wall-choice ${s.wallpaper===w[0]?"active":""}" data-wall="${w[0]}" style="background-image:url('${w[2]}')" title="${w[1]}"></button>`).join("")}</div></div>`;
+  function renderHomeSettings() {
+    root.innerHTML = `<div class="a17-page wallstyle-page">${topbar(t("homeSettings"))}<div class="a17-card">${[4,5,6].map(c => row({ title: `${t("layout")}: ${c} kolom`, desc: state.homeCols === c ? "Aktif" : "", trailing: `<span class="a17-trailing">${state.homeCols === c ? "✓" : layoutDots(Math.min(c,5))}</span>` })).join("")}</div></div>`;
+    const buttons = $$(".a17-row", root);
+    buttons.forEach((b, i) => b.addEventListener("click", () => {
+      state.homeCols = [4,5,6][i]; state.layoutDraft = state.homeCols; save(); render();
+    }));
   }
 
-  function homeSettings(){
-    root.innerHTML=`<div class="a-page style-page">${top(t("homeSettings"))}<div class="a-card">${[4,5,6].map(n=>`<button class="a-row" data-cols="${n}"><span class="a-row-copy"><strong>${t("layout")}: ${n} kolom</strong></span><span class="a-icon">${s.cols===n?"✓":"⠿"}</span></button>`).join("")}</div></div>`;
-  }
-
-  function settings(){
-    const rs=[
-      ["⌁","Jaringan & internet","Wi-Fi","shade"],["◫","Perangkat terhubung","Bluetooth","shade"],
-      ["▦","Aplikasi","Aplikasi default","apps"],["◉","Notifikasi",t("notifDesc"),"notif"],
-      ["▰","Baterai",s.battery+"%","shade"],["▥","Penyimpanan","128 GB","about"],
-      ["✦",t("style"),"Material 3 Expressive","style"],["▣","Layar & sentuhan",t("dark"),"color"],
-      ["♫","Suara & getaran",t("volume")+": "+s.volume+"%","shade"],["◆","Keamanan & privasi","Screen lock","lockmore"],
-      ["⚙","Sistem","Bahasa, gestur","about"],["ⓘ",t("about"),"Google Pixel 10 • Frankel","about"]
+  function renderSettings() {
+    const rows = [
+      ["⌁", "Jaringan & internet", "Wi-Fi", "shade"], ["◫", "Perangkat terhubung", "Bluetooth", "shade"],
+      ["▦", "Aplikasi", "Aplikasi default", "apps"], ["◉", "Notifikasi", t("lockNotifDesc"), "notifications"],
+      ["▰", "Baterai", `${state.battery}%`, "shade"], ["▥", "Penyimpanan", "128 GB", "about"],
+      ["✦", t("style"), "Material 3 Expressive", "wallpaperStyle"], ["▣", "Layar & sentuhan", t("darkTheme"), "color"],
+      ["♫", "Suara & getaran", `${t("volume")}: ${state.volume}%`, "shade"], ["◆", "Keamanan & privasi", "Screen lock", "lockMore"],
+      ["⚙", "Sistem", "Bahasa, gestur", "about"], ["ⓘ", t("aboutPhone"), "Google Pixel 10 • Frankel", "about"]
     ];
-    root.innerHTML=`<div class="a-page style-page"><div class="a-top"><h3>${t("settings")}</h3></div><div class="settings-search">⌕ ${t("search")}</div><div class="a-card">${rs.map(x=>row(x[0],x[1],x[2],x[3])).join("")}</div></div>`;
+    root.innerHTML = `<div class="a17-page wallstyle-page"><div class="a17-topbar"><h3>${t("settings")}</h3></div><div class="settings-search">⌕ ${t("searchSettings")}</div><div class="a17-card">${rows.map(r => row({ title:r[1], desc:r[2], nav:r[3], icon:r[0] })).join("")}</div></div>`;
   }
 
-  function about(){
-    const rs=[[t("device"),"Google Pixel 10"],[t("model"),"Frankel"],[t("android"),"17"],[t("security"),"5 Agustus 2026"],[t("build"),"WG17.260818.1"]];
-    root.innerHTML=`<div class="a-page style-page">${top(t("about"))}<div class="device-hero"><div class="device-glyph">G</div><h4>Google Pixel 10</h4><p>Android 17 • Model Frankel</p></div><div class="a-card">${rs.map(x=>`<div class="a-row"><span class="a-row-copy"><strong>${x[0]}</strong><span>${x[1]}</span></span></div>`).join("")}</div></div>`;
+  function renderAbout() {
+    const details = [[t("deviceName"), "Google Pixel 10"], [t("model"), "Frankel"], [t("androidVersion"), "17"], [t("securityUpdate"), "5 Agustus 2026"], [t("build"), "WG17.260818.2"]];
+    root.innerHTML = `<div class="a17-page wallstyle-page">${topbar(t("aboutPhone"))}<div class="about-hero"><div class="about-glyph">G</div><h4>Google Pixel 10</h4><p>Android 17 • Model Frankel</p></div><div class="a17-card">${details.map(d => `<div class="a17-row"><span class="a17-copy"><strong>${d[0]}</strong><span>${d[1]}</span></span></div>`).join("")}</div></div>`;
   }
 
-  function apps(){
-    const labels=["Camera","Chrome","Clock","Files","Gmail","Maps","Messages","Photos","Play",t("settings"),"YouTube","Weather"];
-    const icons=["◉","◎","◷","▥","M","⌖","✉","✿","▶","⚙","▷","☀"];
-    root.innerHTML=`<div class="a-page style-page">${top(t("apps"))}<div class="settings-search">⌕ ${t("apps")}</div><div class="app-grid" style="--cols:4;margin-top:12px">${labels.map((x,i)=>`<button class="app" style="color:var(--txt);text-shadow:none" data-nav="${x===t("settings")?"settings":x==="Camera"?"camera":"home"}"><span class="app-icon">${icons[i]}</span><small>${x}</small></button>`).join("")}</div></div>`;
+  function renderApps() {
+    const apps = [["◉",t("camera"),"camera"],["◎","Chrome","home"],["◷","Clock","home"],["▥","Files","home"],["M","Gmail","home"],["⌖","Maps","home"],["✉","Messages","home"],["✿","Photos","wallpaperPicker"],["▶","Play","home"],["⚙",t("settings"),"settings"],["▷","YouTube","home"],["☀","Weather","home"]];
+    root.innerHTML = `<div class="a17-page wallstyle-page">${topbar(t("appList"))}<div class="settings-search">⌕ ${t("appList")}</div><div class="home-icons" style="grid-template-columns:repeat(4,1fr);margin-top:10px;text-shadow:none">${apps.map(a => `<button class="home-app" style="color:var(--android-text);text-shadow:none" type="button" data-nav="${a[2]}"><span class="home-app-icon">${a[0]}</span><small>${a[1]}</small></button>`).join("")}</div></div>`;
   }
 
-  function camera(){
-    root.innerHTML=`<div class="a-page camera-page"><div class="camera-preview"></div><button class="camera-close" data-nav="back">‹</button><div class="camera-controls"><button class="shutter" data-action="shutter"></button></div></div>`;
+  function renderCamera() {
+    root.innerHTML = `<div class="a17-page camera-page"><div class="camera-preview"></div><button class="camera-back" type="button" data-nav="back">‹</button><div class="camera-controls"><button class="camera-shutter" type="button" data-action="shutter"></button></div></div>`;
   }
 
-  function lock(){
-    root.innerHTML=`<div class="a-page lock"><div class="lock-overlay"><div class="lock-date">${date()}</div><div class="lock-clock ${s.dynamicClock&&s.lockNotif?"small":""}">${time().replace(".",":")}</div>
-      ${s.lockNotif?`<div class="lock-notifs"><div class="lock-notif"><strong>Waifu Gallery</strong><span>${s.notifMode==="compact"?"Galeri siap dibuka":"Galeri siap dibuka • Mini Game dan Ponsel tersedia"}</span></div>${s.notifMode==="full"?`<div class="lock-notif"><strong>Now Playing</strong><span>${s.nowPlaying?"Ambient track detected":"Off"}</span></div>`:""}</div>`:""}
-      <div class="lock-space"></div><small>${esc(s.lockText)}</small><div class="lock-shortcuts"><button class="lock-shortcut" data-lock="${s.left}">${shortcutIcon(s.left)}</button><button class="lock-shortcut" data-lock="${s.right}">${shortcutIcon(s.right)}</button></div><div class="lock-hint">${t("unlock")}</div>
-    </div></div>`;
+  function lockClockMarkup() {
+    const time = formatTime().replace(".", ":");
+    switch (state.clockStyle) {
+      case 1: return time;
+      case 2: return time.slice(0,2) + `<br><span style="font-size:.45em">${time.slice(3)}</span>`;
+      case 3: return time.replace(":", " ");
+      case 4: return time.slice(0,2) + `<br><span style="font-size:.55em">${time.slice(3)}</span>`;
+      case 5: return time.replace(":", "·");
+      default: return time.slice(0,2) + `<br>${time.slice(3)}`;
+    }
   }
 
-  function shade(){
-    const tiles=[["wifi","⌁",t("wifi"),s.wifi&&!s.airplane],["bluetooth","ᛒ",t("bluetooth"),s.bluetooth],["dark","◐",t("dark"),s.dark],["flashlight","⌁",t("flashlight"),s.flashlight],["airplane","✈",t("airplane"),s.airplane],["saver","▰",t("saver"),s.saver]];
-    return `<div class="quick-shade"><div class="shade-clock">${time().replace(".",":")}</div><div class="shade-date">${date()}</div><div class="quick-grid">${tiles.map(x=>`<button class="quick-tile ${x[3]?"on":""}" data-quick="${x[0]}"><b>${x[1]}</b><span><strong>${x[2]}</strong><span>${x[3]?"On":"Off"}</span></span></button>`).join("")}</div><div class="brightness">☀ <input id="brightness" type="range" min="20" max="100" value="${s.brightness}"></div><button class="wall-button" style="margin-top:12px" data-action="closeShade">⌃</button></div>`;
+  function renderLock() {
+    root.innerHTML = `<div class="a17-page lock-page"><div class="lock-wall"></div><div class="lock-content"><div class="lock-date">${formatDate()}</div><div class="lock-time ${state.dynamicClock && state.lockNotifications ? "compact" : ""}">${lockClockMarkup()}</div>
+      ${state.lockNotifications ? `<div class="lock-notifications"><div class="lock-notification"><strong>Waifu Gallery</strong><span>${state.notificationMode === "compact" ? "Galeri siap dibuka" : "Galeri siap dibuka • Mini Game dan Ponsel tersedia"}</span></div>${state.notificationMode === "full" ? `<div class="lock-notification"><strong>Now Playing</strong><span>${state.nowPlaying ? "Ambient track detected" : "Off"}</span></div>` : ""}</div>` : ""}
+      <div class="lock-spacer"></div><div class="lock-text">${escapeHtml(state.lockText)}</div><div class="lock-shortcuts"><button class="lock-shortcut" type="button" data-lock-shortcut="${state.leftShortcut}">${shortcutIcon(state.leftShortcut)}</button><button class="lock-shortcut" type="button" data-lock-shortcut="${state.rightShortcut}">${shortcutIcon(state.rightShortcut)}</button></div><div class="unlock-hint">${t("unlock")}</div></div></div>`;
   }
 
-  function boot(){ root.innerHTML=`<div class="boot"><div style="text-align:center"><div class="bootmark">G</div><p style="font-size:9px">${t("restarting")}</p></div></div>`; }
+  function renderQuickShade() {
+    const tiles = [
+      ["wifi", "⌁", t("wifi"), state.wifi && !state.airplane], ["bluetooth", "ᛒ", t("bluetooth"), state.bluetooth],
+      ["dark", "◐", t("darkTheme"), state.dark], ["flashlight", "⌁", t("flashlight"), state.flashlight],
+      ["airplane", "✈", t("airplane"), state.airplane], ["batterySaver", "▰", t("saver"), state.batterySaver],
+      ["screenRecord", "●", t("screenRecord"), state.screenRecord]
+    ];
+    return `<div class="quick-shade"><div class="shade-time">${formatTime().replace(".", ":")}</div><div class="shade-date">${formatDate()}</div><div class="quick-grid">${tiles.map(x => `<button class="quick-tile ${x[3] ? "on" : ""}" type="button" data-quick-toggle="${x[0]}"><b>${x[1]}</b><span><strong>${x[2]}</strong><span>${x[3] ? "On" : "Off"}</span></span></button>`).join("")}</div><div class="brightness-row">☀ <input id="brightnessSlider" type="range" min="35" max="100" value="${state.brightness}"></div><button class="a17-apply" style="display:block;margin:11px auto 0" type="button" data-action="closeShade">⌃</button></div>`;
+  }
 
-  function render(){
-    apply();
-    if(s.locked) lock();
+  function renderBoot() {
+    root.innerHTML = `<div class="boot-page"><div style="text-align:center"><div class="boot-mark">G</div><p style="font-size:8px;font-weight:900;color:#5f6368">${t("rebooting")}</p></div></div>`;
+  }
+
+  function render() {
+    applyTheme();
+    if (state.locked) renderLock();
     else {
-      ({home,style,color:colors,icons,clock,shortcuts,notif,lockmore:lockMore,wallpaper,homeSettings,settings,about,apps,camera,boot}[s.view]||home)();
+      const map = {
+        home: renderHome, wallpaperStyle: renderWallpaperStyle, color: renderColor, icons: renderIcons, layout: renderLayout,
+        clock: renderClock, shortcuts: renderShortcuts, notifications: renderNotifications, lockMore: renderLockMore,
+        wallpaperPicker: renderWallpaperPicker, homeSettings: renderHomeSettings, settings: renderSettings, about: renderAbout,
+        apps: renderApps, camera: renderCamera, boot: renderBoot
+      };
+      (map[state.view] || renderHome)();
     }
-    if(s.shade&&s.view!=="boot") root.insertAdjacentHTML("beforeend",shade());
-    bind();
+    if (state.shade && state.view !== "boot") root.insertAdjacentHTML("beforeend", renderQuickShade());
+    bindDynamic();
   }
 
-  function nav(v){
-    if(v==="back"){
-      const p={style:"home",color:"style",icons:"style",clock:"style",shortcuts:"style",notif:"style",lockmore:"style",wallpaper:"style",homeSettings:"home",settings:"home",about:"settings",apps:"home",camera:"home",shade:"home"};
-      v=p[s.view]||"home";
+  function bindDynamic() {
+    $$('[data-nav]', root).forEach(btn => btn.addEventListener("click", () => btn.dataset.nav === "back" ? goBack() : navigate(btn.dataset.nav)));
+    $$('[data-toggle]', root).forEach(btn => btn.addEventListener("click", () => {
+      const key = btn.dataset.toggle; state[key] = !state[key]; save(); vibrate(); render();
+    }));
+    $$('[data-style-tab]', root).forEach(btn => btn.addEventListener("click", () => {
+      state.styleTab = btn.dataset.styleTab; state.wallpaperTarget = state.styleTab; save(); render();
+    }));
+    $$('[data-carousel-wall]', root).forEach(btn => btn.addEventListener("click", () => setWallpaper(btn.dataset.carouselWall)));
+    $$('[data-pick-wallpaper]', root).forEach(btn => btn.addEventListener("click", () => setWallpaper(btn.dataset.pickWallpaper)));
+    $$('[data-home-quick-wall]', root).forEach(btn => btn.addEventListener("click", () => {
+      state.homeWallpaper = btn.dataset.homeQuickWall; state.palette = wallPaletteId(state.homeWallpaper); state.longPressMenu = false; save(); render();
+    }));
+    $$('[data-palette]', root).forEach(btn => btn.addEventListener("click", () => {
+      state.palette = btn.dataset.palette; save(); vibrate(); render(); toast(t("colorUpdated"));
+    }));
+    $$('[data-color-tab]', root).forEach(btn => btn.addEventListener("click", () => { state.colorTab = btn.dataset.colorTab; save(); render(); }));
+    $$('[data-icon-style]', root).forEach(btn => btn.addEventListener("click", () => { state.iconStyle = btn.dataset.iconStyle; save(); render(); }));
+    $$('[data-layout-draft]', root).forEach(btn => btn.addEventListener("click", () => { state.layoutDraft = Number(btn.dataset.layoutDraft); render(); }));
+    $$('[data-clock-style]', root).forEach(btn => btn.addEventListener("click", () => { state.clockStyle = Number(btn.dataset.clockStyle); save(); render(); }));
+    $$('[data-shortcut-side]', root).forEach(btn => btn.addEventListener("click", () => { state[btn.dataset.shortcutSide] = btn.dataset.shortcutValue; save(); render(); }));
+    $$('[data-notification-mode]', root).forEach(btn => btn.addEventListener("click", () => { state.notificationMode = btn.dataset.notificationMode; save(); render(); }));
+    $$('[data-lock-shortcut]', root).forEach(btn => btn.addEventListener("click", () => activateShortcut(btn.dataset.lockShortcut)));
+    $$('[data-quick-toggle]', root).forEach(btn => btn.addEventListener("click", () => toggleQuick(btn.dataset.quickToggle)));
+    $$('[data-action]', root).forEach(btn => btn.addEventListener("click", () => handleAction(btn.dataset.action)));
+
+    $("#brightnessSlider")?.addEventListener("input", e => { state.brightness = Number(e.target.value); save(); applyTheme(); });
+  }
+
+  function toggleQuick(key) {
+    if (key === "airplane") {
+      state.airplane = !state.airplane;
+      if (state.airplane) state.wifi = false;
+    } else if (key === "screenRecord") {
+      state.screenRecord = !state.screenRecord;
+      state.screenRecordStart = state.screenRecord ? Date.now() : 0;
+    } else {
+      state[key] = !state[key];
     }
-    if(v==="shade"){s.shade=true;render();return}
-    s.prev=s.view;s.view=v;s.sheet=false;s.shade=false;save();render();
+    save(); vibrate(); render();
   }
 
-  function activate(v){
-    if(v==="flashlight"){s.flashlight=!s.flashlight;save();render()}
-    else if(v==="camera"){s.locked=false;s.view="camera";save();render()}
+  function handleAction(action) {
+    if (action === "dismissMenu") { state.longPressMenu = false; render(); }
+    if (action === "openStyle") { state.styleTab = "home"; state.wallpaperTarget = "home"; navigate("wallpaperStyle"); }
+    if (action === "widgetToast") toast(t("widgets"));
+    if (action === "applyLayout") { state.homeCols = state.layoutDraft; save(); navigate("wallpaperStyle", false); }
+    if (action === "closeShade") { state.shade = false; render(); }
+    if (action === "shutter") toast(t("photoCaptured"));
+    if (action === "nowPlayingToast") toast(t("nowPlayingDesc"));
   }
 
-  function bind(){
-    root.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>nav(b.dataset.nav));
-    root.querySelectorAll("[data-toggle]").forEach(b=>b.onclick=()=>{s[b.dataset.toggle]=!s[b.dataset.toggle];save();render()});
-    root.querySelectorAll("[data-wall]").forEach(b=>b.onclick=()=>{s.wallpaper=b.dataset.wall;s.sheet=false;save();render()});
-    root.querySelectorAll("[data-style-tab]").forEach(b=>b.onclick=()=>{s.styleTab=b.dataset.styleTab;save();render()});
-    root.querySelectorAll("[data-palette]").forEach(b=>b.onclick=()=>{s.palette=b.dataset.palette;save();render()});
-    root.querySelectorAll("[data-icon]").forEach(b=>b.onclick=()=>{s.icon=b.dataset.icon;save();render()});
-    root.querySelectorAll("[data-clock]").forEach(b=>b.onclick=()=>{s.clock=+b.dataset.clock;save();render()});
-    root.querySelectorAll("[data-short]").forEach(b=>b.onclick=()=>{s[b.dataset.short]=b.dataset.shortVal;save();render()});
-    root.querySelectorAll("[data-notif-mode]").forEach(b=>b.onclick=()=>{s.notifMode=b.dataset.notifMode;save();render()});
-    root.querySelectorAll("[data-cols]").forEach(b=>b.onclick=()=>{s.cols=+b.dataset.cols;save();render()});
-    root.querySelectorAll("[data-lock]").forEach(b=>b.onclick=()=>activate(b.dataset.lock));
-    root.querySelectorAll("[data-quick]").forEach(b=>b.onclick=()=>{const k=b.dataset.quick;if(k==="airplane"){s.airplane=!s.airplane;if(s.airplane)s.wifi=false}else s[k]=!s[k];save();render()});
-    root.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>{const a=b.dataset.action;if(a==="closeShade"){s.shade=false;render()}if(a==="widget")alert(t("widget"));if(a==="shutter")alert("Simulated photo captured")});
-    $("#brightness")?.addEventListener("input",e=>{s.brightness=+e.target.value;save()});
+  function activateShortcut(value) {
+    if (value === "flashlight") {
+      state.flashlight = !state.flashlight; save(); toast(`${t("flashlight")}: ${state.flashlight ? "On" : "Off"}`);
+    } else if (value === "camera") {
+      state.locked = false; navigate("camera");
+    } else if (value === "wallet") {
+      toast(t("wallet"));
+    }
   }
 
-  function open(){ if(!dialog.open)dialog.showModal();render() }
-  function close(){ if(dialog.open)dialog.close() }
-  function lockPhone(){s.locked=true;s.shade=false;save();render()}
-  function unlock(){s.locked=false;s.view="home";save();render()}
-  function reboot(){s.locked=false;s.shade=false;s.view="boot";render();setTimeout(()=>{s.view="home";s.locked=true;save();render()},1500)}
+  function lockPhone() { state.locked = true; state.shade = false; save(); render(); }
+  function unlockPhone() { state.locked = false; state.view = "home"; state.shade = false; save(); render(); }
+  function rebootPhone() {
+    state.locked = false; state.shade = false; state.view = "boot"; render();
+    setTimeout(() => { state.view = "home"; state.locked = true; save(); render(); }, 1450);
+  }
 
-  openBtn.onclick=open; closeBtn.onclick=close;
-  dialog.addEventListener("cancel",e=>{e.preventDefault();close()});
-  status.onclick=()=>{if(s.view!=="boot"){s.shade=!s.shade;render()}};
-  gesture.onclick=()=>s.locked?unlock():nav("home");
-  power.onclick=()=>s.locked?unlock():lockPhone();
-  volume.onclick=()=>{s.volume=s.volume>=100?20:s.volume+10;save();alert(`${t("volume")}: ${s.volume}%`)};
+  openBtn.addEventListener("click", () => {
+    if (!dialog.open) dialog.showModal();
+    render();
+  });
+  closeBtn?.addEventListener("click", () => dialog.open && dialog.close());
+  dialog.addEventListener("cancel", e => { e.preventDefault(); dialog.close(); });
 
-  document.querySelectorAll("[data-external-action]").forEach(b=>b.onclick=()=>{
-    const a=b.dataset.externalAction;
-    if(a==="home"){s.locked=false;nav("home")}
-    if(a==="lock")lockPhone();
-    if(a==="settings"){s.locked=false;nav("settings")}
-    if(a==="style"){s.locked=false;nav("style")}
-    if(a==="about"){s.locked=false;nav("about")}
-    if(a==="reboot")reboot();
+  statusBar?.addEventListener("click", () => {
+    if (state.view === "boot") return;
+    state.shade = !state.shade; render();
+  });
+  gesture?.addEventListener("click", () => state.locked ? unlockPhone() : navigate("home"));
+  power?.addEventListener("click", () => state.locked ? unlockPhone() : lockPhone());
+  volume?.addEventListener("click", () => {
+    state.volume = state.volume >= 100 ? 20 : state.volume + 10; save(); showVolume();
   });
 
-  const obs=new MutationObserver(()=>{if(dialog.open)render()});
-  obs.observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
-  setInterval(()=>{if(dialog.open){apply();if(s.locked||s.shade)render()}},30000);
+  $$('[data-sim-command]').forEach(btn => btn.addEventListener("click", () => {
+    const cmd = btn.dataset.simCommand;
+    if (cmd === "home") { state.locked = false; navigate("home"); }
+    if (cmd === "lock") lockPhone();
+    if (cmd === "reboot") rebootPhone();
+  }));
 
-  apply(); render();
+  const languageObserver = new MutationObserver(() => { if (dialog.open) render(); });
+  languageObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+
+  setInterval(() => {
+    if (!dialog.open) return;
+    applyTheme();
+    if (state.screenRecord) updateRecordingTime();
+    if (state.locked && !state.shade) render();
+  }, 1000);
+
+  applyTheme();
+  render();
 })();
