@@ -143,6 +143,18 @@ const openBtn = document.getElementById("miniGameBtn");
 const closeBtn = document.getElementById("closeMiniGame");
 if (!dialog || !openBtn || !closeBtn) return;
 
+dialog.tabIndex = -1;
+
+function focusGameHub() {
+  window.requestAnimationFrame(() => {
+    try {
+      dialog.focus({ preventScroll: true });
+    } catch {
+      dialog.focus();
+    }
+  });
+}
+
 let activeGame = "crystal";
 let activeModule = null;
 const modules = {};
@@ -160,6 +172,10 @@ function switchGame(name) {
 
   activeModule = modules[name] || null;
   activeModule?.resume?.();
+
+  if (dialog.open) {
+    focusGameHub();
+  }
 }
 
 document.querySelectorAll("[data-game-target]").forEach(btn => {
@@ -168,8 +184,13 @@ document.querySelectorAll("[data-game-target]").forEach(btn => {
 
 openBtn.addEventListener("click", () => {
   applyLanguage();
-  dialog.showModal();
+
+  if (!dialog.open) {
+    dialog.showModal();
+  }
+
   activeModule?.resume?.();
+  focusGameHub();
 });
 
 function closeHub() {
@@ -749,7 +770,7 @@ modules.maze = (() => {
     "###############"
   ];
   const N=15, SIZE=40;
-  let player,chasers,dots,score=0,lives=3,running=false,paused=true,lastMove=0,raf=null;
+  let player=null,chasers=[],dots=new Set(),score=0,lives=3,running=false,paused=true,lastMove=0,raf=null;
   let dir={x:0,y:0};
 
   function cellKey(x,y){return `${x},${y}`;}
@@ -875,16 +896,34 @@ modules.city = (() => {
     {x:15,y:395,w:90,h:145},{x:220,y:395,w:150,h:145},{x:490,y:395,w:115,h:145},{x:715,y:395,w:35,h:145}
   ];
   const checkpointList=[{x:165,y:125},{x:430,y:125},{x:665,y:125},{x:665,y:340},{x:430,y:340},{x:165,y:340}];
-  let car={x:165,y:125,a:0,s:0},keys={},running=false,paused=true,startTime=0,elapsed=0,index=0,raf=null,last=0;
-  let traffic=[];
+  let car={x:165,y:125,a:0,s:0},keys={},running=false,paused=true,startTime=0,elapsed=0,index=0,raf=null,last=performance.now();
+
+  function createTraffic() {
+    return [
+      {x:30,y:115,v:1.5,axis:"h",c:"#fb7185"},
+      {x:720,y:335,v:-1.25,axis:"h",c:"#a78bfa"},
+      {x:430,y:520,v:-1.15,axis:"v",c:"#34d399"},
+      {x:665,y:20,v:1.05,axis:"v",c:"#facc15"}
+    ];
+  }
+
+  let traffic=createTraffic();
 
   function reset(){
-    car={x:165,y:125,a:0,s:0};index=0;running=true;paused=false;startTime=performance.now();elapsed=0;last=startTime;
-    traffic=[
-      {x:30,y:115,v:1.5,axis:"h",c:"#fb7185"},{x:720,y:335,v:-1.25,axis:"h",c:"#a78bfa"},
-      {x:430,y:520,v:-1.15,axis:"v",c:"#34d399"},{x:665,y:20,v:1.05,axis:"v",c:"#facc15"}
-    ];
-    updateHud();loop(last);
+    car={x:165,y:125,a:0,s:0};
+    keys={};
+    index=0;
+    running=true;
+    paused=false;
+    startTime=performance.now();
+    elapsed=0;
+    last=startTime;
+    traffic=createTraffic();
+
+    updateHud();
+    draw();
+    loop(last);
+    focusGameHub();
   }
 
   function onRoad(x,y){
@@ -990,22 +1029,52 @@ modules.city = (() => {
     btn.addEventListener("pointerdown",e=>{e.preventDefault();setMove(dir,true);});
     ["pointerup","pointercancel","pointerleave"].forEach(evt=>btn.addEventListener(evt,()=>setMove(dir,false)));
   });
-  document.addEventListener("keyup",keyup);
+  window.addEventListener("keyup", e => {
+    if (!dialog.open) return;
+    keyup(e);
+  }, { capture: true });
   draw();updateHud();
 
   return {
     keydown,
-    pause(){paused=true;keys={};},
-    resume(){paused=false;last=performance.now();loop(last);},
-    applyLanguage(){}
+    pause(){
+      paused=true;
+      keys={};
+    },
+    resume(){
+      paused=false;
+      last=performance.now();
+      draw();
+
+      if (running) {
+        loop(last);
+      }
+    },
+    applyLanguage(){
+      draw();
+      updateHud();
+    }
   };
 })();
 
-/* Global keyboard routing */
-document.addEventListener("keydown", e => {
+/* Global keyboard routing
+ * Capture phase keeps Arrow / WASD controls active after clicking
+ * game tabs, Start buttons, or touch controls.
+ */
+window.addEventListener("keydown", e => {
   if (!dialog.open) return;
+
+  const target = e.target;
+  const isTyping =
+    target instanceof HTMLInputElement ||
+    target instanceof HTMLTextAreaElement ||
+    target instanceof HTMLSelectElement ||
+    target?.isContentEditable;
+
+  if (isTyping) return;
+
   activeModule?.keydown?.(e);
-});
+}, { capture: true });
 
 /* Language integration */
 function applyLanguage() {
