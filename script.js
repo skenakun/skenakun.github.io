@@ -21,6 +21,7 @@ const photoInput = document.getElementById("photoInput");
 const shuffleBtn = document.getElementById("shuffleBtn");
 const themeBurstBtn = document.getElementById("themeBurstBtn");
 const toast = document.getElementById("toast");
+const languageToggle = document.getElementById("languageToggle");
 
 const lightbox = document.getElementById("lightbox");
 const lightboxImage = document.getElementById("lightboxImage");
@@ -35,6 +36,219 @@ let uploadedPhotos = [];
 let activeFilter = "all";
 let currentList = [];
 let currentIndex = 0;
+
+
+
+/* ===========================
+   LANGUAGE / I18N
+   =========================== */
+
+const translations = {
+  id: {
+    metaDescription: "Waifu Gallery, galeri anime colorful dan responsif untuk GitHub Pages.",
+    languageToggleToEnglish: "Ganti bahasa ke Inggris",
+    languageToggleToIndonesian: "Switch language to Indonesian",
+    languageChanged: "Bahasa diubah ke Indonesia.",
+    themeButtonTitle: "Buka pengaturan tema",
+    addPhoto: "Tambah Foto",
+    heroKicker: "KOLEKSI WAIFU PRIBADI",
+    heroTitle: "Galeri waifu yang",
+    heroAccent: "penuh warna.",
+    heroDescription: "Simpan koleksi favoritmu dalam satu galeri yang bersih, colorful, responsif, dan nyaman dibuka dari ponsel maupun laptop.",
+    viewGallery: "Lihat Galeri",
+    shufflePhotos: "Acak Foto",
+    totalPhotos: "Total Foto",
+    responsive: "Responsif",
+    myCollection: "KOLEKSI SAYA",
+    searchPlaceholder: "Cari foto...",
+    searchAria: "Cari foto",
+    filterAll: "Semua",
+    filterUploaded: "Upload Saya",
+    emptyTitle: "Belum ada foto yang cocok.",
+    emptyDescription: "Coba kata pencarian atau kategori lain.",
+    footerDescription: "Galeri waifu penuh warna untuk koleksi pribadi.",
+    imageCredit: "Kredit gambar:",
+    displaySettings: "Setelan tampilan",
+    displaySettingsDescription: "Atur gaya warna seperti Material U atau gunakan tampilan default website.",
+    closeSettings: "Tutup pengaturan",
+    chooseDisplayStyle: "Pilih gaya tampilan",
+    themeElementsFollow: "Ikon, teks, dan elemen mengikuti warna tema",
+    themeChooseColor: "Pilih warna dari gambar atau gunakan warna lain.",
+    wallpaperColor: "Warna wallpaper",
+    otherColor: "Warna lain",
+    extractFromImage: "Ambil warna dari gambar",
+    extractFromImageHelp: "Pilih gambar dari perangkat. Browser tidak membaca wallpaper sistem secara langsung.",
+    customColor: "Warna khusus",
+    darkTheme: "Tema gelap",
+    darkThemeDescription: "Gunakan palet gelap dengan warna aksen yang sama.",
+    settingsSaved: "Pengaturan tersimpan otomatis di browser ini.",
+    closePhoto: "Tutup foto",
+    previousPhoto: "Foto sebelumnya",
+    nextPhoto: "Foto berikutnya",
+    deleteUpload: "Hapus upload",
+    colorPurple: "Ungu",
+    colorPink: "Pink",
+    colorBlue: "Biru",
+    colorTeal: "Toska",
+    colorGreen: "Hijau",
+    colorYellow: "Kuning",
+    colorOrange: "Oranye",
+    colorRed: "Merah",
+    categoryUploaded: "Upload Saya",
+    openPhoto: "Buka {title}",
+    uploadBadge: "Upload Saya",
+    showingAll: "Menampilkan semua {count} foto",
+    showingFiltered: "Menampilkan {count} dari {total} foto",
+    localUploadMeta: "Upload lokal • tersimpan di browser",
+    storageUnavailable: "Penyimpanan lokal tidak tersedia di browser ini.",
+    shuffled: "Urutan galeri sudah diacak.",
+    storageFull: "Penyimpanan browser penuh atau upload gagal.",
+    photosAdded: "{count} foto berhasil ditambahkan.",
+    uploadDeleted: "Foto upload dihapus.",
+    deleteFailed: "Foto gagal dihapus.",
+    materialActive: "Gaya Material U aktif.",
+    defaultActive: "Gaya default website aktif.",
+    wallpaperApplied: "Warna wallpaper diterapkan.",
+    colorApplied: "Warna tema diterapkan.",
+    darkActive: "Mode gelap aktif.",
+    lightActive: "Mode terang aktif.",
+    paletteExtracted: "Palet berhasil diambil dari gambar.",
+    paletteFailed: "Warna dari gambar gagal dibaca.",
+    paletteNumber: "Palet {number}"
+  },
+  en: {
+    metaDescription: "Waifu Gallery, a colorful and responsive anime gallery for GitHub Pages.",
+    languageToggleToEnglish: "Switch language to English",
+    languageToggleToIndonesian: "Ganti bahasa ke Indonesia",
+    languageChanged: "Language changed to English.",
+    themeButtonTitle: "Open theme settings",
+    addPhoto: "Add Photo",
+    heroKicker: "PERSONAL WAIFU COLLECTION",
+    heroTitle: "A waifu gallery",
+    heroAccent: "full of color.",
+    heroDescription: "Keep your favorite collection in one clean, colorful, responsive gallery that feels great on both phones and laptops.",
+    viewGallery: "View Gallery",
+    shufflePhotos: "Shuffle Photos",
+    totalPhotos: "Total Photos",
+    responsive: "Responsive",
+    myCollection: "MY COLLECTION",
+    searchPlaceholder: "Search photos...",
+    searchAria: "Search photos",
+    filterAll: "All",
+    filterUploaded: "My Uploads",
+    emptyTitle: "No matching photos found.",
+    emptyDescription: "Try another search term or category.",
+    footerDescription: "A colorful waifu gallery for your personal collection.",
+    imageCredit: "Image credit:",
+    displaySettings: "Display settings",
+    displaySettingsDescription: "Use Material U color styling or switch back to the website's default look.",
+    closeSettings: "Close settings",
+    chooseDisplayStyle: "Choose display style",
+    themeElementsFollow: "Icons, text, and interface elements follow the theme colors",
+    themeChooseColor: "Choose colors from an image or use a different color.",
+    wallpaperColor: "Wallpaper colors",
+    otherColor: "Other colors",
+    extractFromImage: "Get colors from an image",
+    extractFromImageHelp: "Choose an image from your device. Browsers cannot directly read your system wallpaper.",
+    customColor: "Custom color",
+    darkTheme: "Dark theme",
+    darkThemeDescription: "Use a dark palette while keeping the same accent colors.",
+    settingsSaved: "Settings are saved automatically in this browser.",
+    closePhoto: "Close photo",
+    previousPhoto: "Previous photo",
+    nextPhoto: "Next photo",
+    deleteUpload: "Delete upload",
+    colorPurple: "Purple",
+    colorPink: "Pink",
+    colorBlue: "Blue",
+    colorTeal: "Teal",
+    colorGreen: "Green",
+    colorYellow: "Yellow",
+    colorOrange: "Orange",
+    colorRed: "Red",
+    categoryUploaded: "My Uploads",
+    openPhoto: "Open {title}",
+    uploadBadge: "My Upload",
+    showingAll: "Showing all {count} photos",
+    showingFiltered: "Showing {count} of {total} photos",
+    localUploadMeta: "Local upload • saved in this browser",
+    storageUnavailable: "Local storage is not available in this browser.",
+    shuffled: "Gallery order has been shuffled.",
+    storageFull: "Browser storage is full or the upload failed.",
+    photosAdded: "{count} photo(s) added successfully.",
+    uploadDeleted: "Uploaded photo deleted.",
+    deleteFailed: "Could not delete the photo.",
+    materialActive: "Material U style is active.",
+    defaultActive: "The website's default style is active.",
+    wallpaperApplied: "Wallpaper colors applied.",
+    colorApplied: "Theme color applied.",
+    darkActive: "Dark mode is on.",
+    lightActive: "Light mode is on.",
+    paletteExtracted: "Palette extracted from the image.",
+    paletteFailed: "Could not extract colors from the image.",
+    paletteNumber: "Palette {number}"
+  }
+};
+
+let currentLanguage = localStorage.getItem("waifuLanguage") === "en" ? "en" : "id";
+
+function t(key, variables = {}) {
+  let text = translations[currentLanguage]?.[key] ?? translations.id[key] ?? key;
+
+  Object.entries(variables).forEach(([name, value]) => {
+    text = text.replaceAll(`{${name}}`, String(value));
+  });
+
+  return text;
+}
+
+function applyLanguage(language, options = {}) {
+  const previousLanguage = currentLanguage;
+  currentLanguage = language === "en" ? "en" : "id";
+  localStorage.setItem("waifuLanguage", currentLanguage);
+
+  document.documentElement.lang = currentLanguage;
+  document.querySelector('meta[name="description"]')?.setAttribute("content", t("metaDescription"));
+
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    element.textContent = t(element.dataset.i18n);
+  });
+
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+    element.setAttribute("placeholder", t(element.dataset.i18nPlaceholder));
+  });
+
+  document.querySelectorAll("[data-i18n-aria]").forEach((element) => {
+    element.setAttribute("aria-label", t(element.dataset.i18nAria));
+  });
+
+  document.querySelectorAll("[data-i18n-title]").forEach((element) => {
+    element.setAttribute("title", t(element.dataset.i18nTitle));
+  });
+
+  languageToggle.classList.toggle("is-en", currentLanguage === "en");
+  const nextLanguageKey = currentLanguage === "en"
+    ? "languageToggleToIndonesian"
+    : "languageToggleToEnglish";
+  languageToggle.dataset.i18nAria = nextLanguageKey;
+  languageToggle.dataset.i18nTitle = nextLanguageKey;
+  languageToggle.setAttribute("aria-label", t(nextLanguageKey));
+  languageToggle.setAttribute("title", t(nextLanguageKey));
+  languageToggle.setAttribute("aria-pressed", String(currentLanguage === "en"));
+
+  if (typeof renderGallery === "function") renderGallery();
+  if (typeof updateLightbox === "function" && lightbox?.open) updateLightbox();
+  if (typeof renderPresetPalettes === "function" && wallpaperPaletteRow) renderPresetPalettes();
+
+  if (options.announce && previousLanguage !== currentLanguage) {
+    showToast(t("languageChanged"));
+  }
+}
+
+languageToggle.addEventListener("click", () => {
+  applyLanguage(currentLanguage === "id" ? "en" : "id", { announce: true });
+});
+
 
 const DB_NAME = "waifuGalleryPagesDB";
 const STORE_NAME = "photos";
@@ -75,7 +289,7 @@ async function loadUploads() {
     db.close();
   } catch {
     uploadedPhotos = [];
-    showToast("Penyimpanan lokal tidak tersedia di browser ini.");
+    showToast(t("storageUnavailable"));
   }
 }
 
@@ -115,7 +329,7 @@ function prettyCategory(category) {
     casual: "Casual",
     wedding: "Wedding",
     classic: "Classic",
-    uploaded: "Upload Saya"
+    uploaded: t("categoryUploaded")
   };
 
   return labels[category] || "Gallery";
@@ -148,7 +362,7 @@ function renderGallery() {
     button.className = "gallery-item";
     button.type = "button";
     button.dataset.id = photo.id;
-    button.setAttribute("aria-label", `Buka ${photo.title}`);
+    button.setAttribute("aria-label", t("openPhoto", { title: photo.title }));
 
     const img = document.createElement("img");
     img.src = photo.src;
@@ -167,7 +381,7 @@ function renderGallery() {
     if (photo.uploaded) {
       const badge = document.createElement("span");
       badge.className = "upload-badge";
-      badge.textContent = "Upload Saya";
+      badge.textContent = t("uploadBadge");
       button.appendChild(badge);
     }
 
@@ -180,9 +394,9 @@ function renderGallery() {
   photoCount.textContent = total;
 
   if (activeFilter === "all" && !searchInput.value.trim()) {
-    resultInfo.textContent = `Menampilkan semua ${currentList.length} foto`;
+    resultInfo.textContent = t("showingAll", { count: currentList.length });
   } else {
-    resultInfo.textContent = `Menampilkan ${currentList.length} dari ${total} foto`;
+    resultInfo.textContent = t("showingFiltered", { count: currentList.length, total });
   }
 
   emptyState.hidden = currentList.length !== 0;
@@ -214,7 +428,7 @@ function updateLightbox() {
   lightboxImage.alt = photo.title;
   lightboxTitle.textContent = photo.title;
   lightboxMeta.textContent = photo.uploaded
-    ? "Upload lokal • tersimpan di browser"
+    ? t("localUploadMeta")
     : prettyCategory(photo.category);
 
   deleteUploadedBtn.hidden = !photo.uploaded;
@@ -253,7 +467,7 @@ function shuffleGallery() {
   }
 
   items.forEach((item) => gallery.appendChild(item));
-  showToast("Urutan galeri sudah diacak.");
+  showToast(t("shuffled"));
 }
 
 function fileToDataURL(file) {
@@ -312,7 +526,7 @@ photoInput.addEventListener("change", async (event) => {
       uploadedPhotos.push(photo);
       saved += 1;
     } catch {
-      showToast("Penyimpanan browser penuh atau upload gagal.");
+      showToast(t("storageFull"));
       break;
     }
   }
@@ -321,7 +535,7 @@ photoInput.addEventListener("change", async (event) => {
   renderGallery();
 
   if (saved) {
-    showToast(`${saved} foto berhasil ditambahkan.`);
+    showToast(t("photosAdded", { count: saved }));
   }
 });
 
@@ -336,9 +550,9 @@ deleteUploadedBtn.addEventListener("click", async () => {
 
     lightbox.close();
     renderGallery();
-    showToast("Foto upload dihapus.");
+    showToast(t("uploadDeleted"));
   } catch {
-    showToast("Foto gagal dihapus.");
+    showToast(t("deleteFailed"));
   }
 });
 
@@ -587,7 +801,7 @@ function renderPresetPalettes() {
     button.className = "palette-swatch";
     button.type = "button";
     button.dataset.index = index;
-    button.setAttribute("aria-label", `Palet ${index + 1}`);
+    button.setAttribute("aria-label", t("paletteNumber", { number: index + 1 }));
 
     button.innerHTML = `
       <span>
@@ -609,7 +823,7 @@ function renderPresetPalettes() {
       });
 
       button.classList.add("active");
-      showToast("Warna wallpaper diterapkan.");
+      showToast(t("wallpaperApplied"));
     });
 
     wallpaperPaletteRow.appendChild(button);
@@ -722,8 +936,8 @@ styleOptions.forEach((button) => {
 
     showToast(
       state.style === "material"
-        ? "Gaya Material U aktif."
-        : "Gaya default website aktif."
+        ? t("materialActive")
+        : t("defaultActive")
     );
   });
 });
@@ -743,7 +957,7 @@ darkModeToggle.addEventListener("change", () => {
   saveThemeState(state);
   applyThemeState(state);
 
-  showToast(state.dark ? "Mode gelap aktif." : "Mode terang aktif.");
+  showToast(state.dark ? t("darkActive") : t("lightActive"));
 });
 
 document.querySelectorAll(".manual-color").forEach((button) => {
@@ -762,7 +976,7 @@ document.querySelectorAll(".manual-color").forEach((button) => {
     });
 
     button.classList.add("active");
-    showToast("Warna tema diterapkan.");
+    showToast(t("colorApplied"));
   });
 });
 
@@ -796,9 +1010,9 @@ wallpaperInput.addEventListener("change", async (event) => {
     const first = wallpaperPaletteRow.querySelector(".palette-swatch");
     if (first) first.classList.add("active");
 
-    showToast("Palet berhasil diambil dari gambar.");
+    showToast(t("paletteExtracted"));
   } catch {
-    showToast("Warna dari gambar gagal dibaca.");
+    showToast(t("paletteFailed"));
   } finally {
     wallpaperInput.value = "";
   }
@@ -806,3 +1020,4 @@ wallpaperInput.addEventListener("change", async (event) => {
 
 renderPresetPalettes();
 applyThemeState(getThemeState());
+applyLanguage(currentLanguage);
