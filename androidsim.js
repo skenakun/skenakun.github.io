@@ -76,7 +76,26 @@
     screenRecordStart: 0,
     brightness: 78,
     battery: 61,
-    volume: 62
+    volume: 62,
+
+    /* Android 17 System settings */
+    deviceLanguage: "auto",
+    installedLanguages: ["id"],
+    region: "Indonesia",
+    temperatureUnit: "default",
+    measurementSystem: "default",
+    firstDayOfWeek: "default",
+
+    navigationMode: "gesture",
+    navigationHint: true,
+    showImeSwitcher: true,
+    backGestureHeight: 100,
+    backAnimation: true,
+    backHaptic: true,
+    assistantGesture: false,
+    leftSensitivity: 52,
+    rightSensitivity: 52,
+    buttonOrder: "back-home-recent"
   };
 
   const strings = {
@@ -104,7 +123,31 @@
       camera: "Kamera", flashlight: "Senter", wallet: "Dompet", noShortcut: "Tidak ada", compact: "Ringkas",
       fullList: "Daftar lengkap", showOnLock: "Tampilkan di layar kunci", seenIcons: "Tampilkan ikon notifikasi yang telah dilihat",
       silent: "Tampilkan notifikasi senyap", colorUpdated: "Warna sistem diperbarui", wallpaperUpdated: "Wallpaper diterapkan",
-      photoCaptured: "Foto simulasi diambil", pressHint: "Tekan lama untuk Wallpaper & gaya"
+      photoCaptured: "Foto simulasi diambil", pressHint: "Tekan lama untuk Wallpaper & gaya",
+
+      system: "Sistem", systemDesc: "Bahasa, gestur", languageRegion: "Bahasa & wilayah",
+      preferredLanguages: "Bahasa Pilihan", addLanguage: "Tambahkan bahasa", otherLanguageSettings: "Setelan bahasa lainnya",
+      appLanguages: "Bahasa aplikasi", appLanguagesDesc: "Pilih bahasa untuk setiap aplikasi",
+      speech: "Ucapan", speechDesc: "Kontrol pengenalan dan output ucapan", regionalPreferences: "Preferensi regional",
+      region: "Wilayah", temperature: "Suhu", measurementSystem: "Sistem pengukuran",
+      firstDayWeek: "Hari pertama dalam seminggu", useDefault: "Gunakan default",
+      navigationMode: "Mode navigasi", gestureNavigation: "Navigasi gestur", threeButtonNavigation: "Navigasi 3 tombol",
+      gestureNavigationDesc: "Geser dari bawah untuk Beranda. Geser dan tahan untuk Terbaru. Geser dari tepi untuk kembali.",
+      threeButtonNavigationDesc: "Gunakan tombol di bagian bawah layar untuk Kembali, Beranda, dan Terbaru.",
+      tryDemo: "Coba demo", navigationHint: "Navigation hint",
+      navigationHintDesc: "Show navigation hint bar at the bottom of the screen",
+      imeSwitcher: "Tampilkan ruang tombol IME",
+      imeSwitcherDesc: "Aktifkan fitur peralihan cepat metode input untuk mengganti metode input atau menyembunyikan keyboard di layar.",
+      backGestureHeight: "Tinggi gestur kembali", backGestureHeightDesc: "Tinggi layar berlaku untuk gestur kembali",
+      full: "Penuh", bottom: "Bawah", backAnimation: "Animasi gestur kembali",
+      backAnimationDesc: "Tampilkan animasi panah untuk gestur kembali", backHaptic: "Haptik gestur kembali",
+      backHapticDesc: "Aktifkan efek getaran pada gestur kembali", digitalAssistant: "Asisten digital",
+      assistantGesture: "Geser untuk memanggil asisten", assistantGestureDesc: "Geser ke atas dari pojok bawah untuk memanggil aplikasi asisten digital",
+      backSensitivity: "Sensitivitas bagian belakang", leftEdge: "Tepi kiri", rightEdge: "Tepi kanan",
+      low: "Rendah", high: "Tinggi", sensitivityNote: "Sensitivitas yang lebih tinggi mungkin memengaruhi fungsi gestur aplikasi di tepi layar.",
+      buttonOrder: "Urutan tombol", backHomeRecent: "Kembali, Beranda, Terbaru", recentHomeBack: "Terbaru, Beranda, Kembali",
+      selected: "Dipilih", languageAdded: "Bahasa ditambahkan", recents: "Terbaru",
+      noRecentApps: "Belum ada aplikasi terbaru", systemInfo: "Setelan utama Android 17"
     },
     en: {
       style: "Wallpaper & style", lock: "Lock screen", home: "Home screen", wallpaper: "Wallpaper",
@@ -130,11 +173,38 @@
       camera: "Camera", flashlight: "Flashlight", wallet: "Wallet", noShortcut: "None", compact: "Compact",
       fullList: "Full list", showOnLock: "Show on lock screen", seenIcons: "Show icons for viewed notifications",
       silent: "Show silent notifications", colorUpdated: "System color updated", wallpaperUpdated: "Wallpaper applied",
-      photoCaptured: "Simulated photo captured", pressHint: "Long press for Wallpaper & style"
+      photoCaptured: "Simulated photo captured", pressHint: "Long press for Wallpaper & style",
+
+      system: "System", systemDesc: "Languages, gestures", languageRegion: "Languages & region",
+      preferredLanguages: "Preferred languages", addLanguage: "Add a language", otherLanguageSettings: "Other language settings",
+      appLanguages: "App languages", appLanguagesDesc: "Choose a language for each app",
+      speech: "Speech", speechDesc: "Control speech recognition and output", regionalPreferences: "Regional preferences",
+      region: "Region", temperature: "Temperature", measurementSystem: "Measurement system",
+      firstDayWeek: "First day of week", useDefault: "Use default",
+      navigationMode: "Navigation mode", gestureNavigation: "Gesture navigation", threeButtonNavigation: "3-button navigation",
+      gestureNavigationDesc: "Swipe up for Home. Swipe up and hold for Recents. Swipe in from either edge to go back.",
+      threeButtonNavigationDesc: "Use buttons at the bottom of the screen for Back, Home, and Recents.",
+      tryDemo: "Try demo", navigationHint: "Navigation hint",
+      navigationHintDesc: "Show navigation hint bar at the bottom of the screen",
+      imeSwitcher: "Show IME switcher button",
+      imeSwitcherDesc: "Enable quick input-method switching while typing.",
+      backGestureHeight: "Back gesture height", backGestureHeightDesc: "Screen height used for the back gesture",
+      full: "Full", bottom: "Bottom", backAnimation: "Back gesture animation",
+      backAnimationDesc: "Show the arrow animation for the back gesture", backHaptic: "Back gesture haptic",
+      backHapticDesc: "Enable vibration feedback for the back gesture", digitalAssistant: "Digital assistant",
+      assistantGesture: "Swipe to invoke assistant", assistantGestureDesc: "Swipe up from a bottom corner to invoke the digital assistant",
+      backSensitivity: "Back sensitivity", leftEdge: "Left edge", rightEdge: "Right edge",
+      low: "Low", high: "High", sensitivityNote: "Higher sensitivity may affect app gestures near the screen edge.",
+      buttonOrder: "Button order", backHomeRecent: "Back, Home, Recents", recentHomeBack: "Recents, Home, Back",
+      selected: "Selected", languageAdded: "Language added", recents: "Recents",
+      noRecentApps: "No recent apps yet", systemInfo: "Android 17 main settings"
     }
   };
 
   function getLanguage() {
+    if (state && state.deviceLanguage && state.deviceLanguage !== "auto") {
+      return state.deviceLanguage;
+    }
     return document.documentElement.lang?.toLowerCase().startsWith("en") ? "en" : "id";
   }
   function t(key) { return strings[getLanguage()][key] ?? strings.id[key] ?? key; }
@@ -193,6 +263,52 @@
     const recordPill = $("#androidRecordPill");
     if (recordPill) recordPill.hidden = !state.screenRecord;
     updateRecordingTime();
+    syncSystemNavigation();
+  }
+
+  function syncSystemNavigation() {
+    let buttonBar = $("#androidButtonNav", phone);
+    if (!buttonBar) {
+      buttonBar = document.createElement("div");
+      buttonBar.id = "androidButtonNav";
+      buttonBar.className = "pixel-three-button-nav";
+      phone.appendChild(buttonBar);
+    }
+
+    const useButtons = state.navigationMode === "buttons";
+    phone.classList.toggle("three-button-mode", useButtons);
+
+    if (gesture) {
+      gesture.hidden = useButtons || !state.navigationHint;
+      gesture.setAttribute("aria-hidden", gesture.hidden ? "true" : "false");
+    }
+
+    buttonBar.hidden = !useButtons;
+    if (!useButtons) return;
+
+    const order = state.buttonOrder === "recent-home-back"
+      ? ["recent", "home", "back"]
+      : ["back", "home", "recent"];
+
+    const icons = { back: "◀", home: "●", recent: "■" };
+    buttonBar.innerHTML = order.map(action =>
+      `<button type="button" data-system-nav="${action}" aria-label="${action}">${icons[action]}</button>`
+    ).join("");
+
+    $$("[data-system-nav]", buttonBar).forEach(btn => {
+      btn.addEventListener("click", () => {
+        const action = btn.dataset.systemNav;
+        if (action === "back") goBack();
+        if (action === "home") {
+          state.locked = false;
+          navigate("home");
+        }
+        if (action === "recent") {
+          state.locked = false;
+          navigate("recents");
+        }
+      });
+    });
   }
 
   function updateRecordingTime() {
@@ -262,7 +378,8 @@
       wallpaperStyle: "home", color: "wallpaperStyle", icons: "wallpaperStyle", layout: "wallpaperStyle",
       clock: "wallpaperStyle", shortcuts: "wallpaperStyle", notifications: "wallpaperStyle", lockMore: "wallpaperStyle",
       wallpaperPicker: "wallpaperStyle", settings: "home", about: "settings", apps: "home", camera: "home",
-      homeSettings: "home"
+      homeSettings: "home", system: "settings", languageRegion: "system", navigationMode: "system",
+      gestureNavigation: "navigationMode", buttonNavigation: "navigationMode", recents: "home"
     };
     navigate(parent[state.view] || "home", false);
   }
@@ -465,9 +582,186 @@
       ["▰", "Baterai", `${state.battery}%`, "shade"], ["▥", "Penyimpanan", "128 GB", "about"],
       ["✦", t("style"), "Material 3 Expressive", "wallpaperStyle"], ["▣", "Layar & sentuhan", t("darkTheme"), "color"],
       ["♫", "Suara & getaran", `${t("volume")}: ${state.volume}%`, "shade"], ["◆", "Keamanan & privasi", "Screen lock", "lockMore"],
-      ["⚙", "Sistem", "Bahasa, gestur", "about"], ["ⓘ", t("aboutPhone"), "Google Pixel 10 • Frankel", "about"]
+      ["⚙", t("system"), t("systemDesc"), "system"], ["ⓘ", t("aboutPhone"), "Google Pixel 10 • Frankel", "about"]
     ];
     root.innerHTML = `<div class="a17-page wallstyle-page"><div class="a17-topbar"><h3>${t("settings")}</h3></div><div class="settings-search">⌕ ${t("searchSettings")}</div><div class="a17-card">${rows.map(r => row({ title:r[1], desc:r[2], nav:r[3], icon:r[0] })).join("")}</div></div>`;
+  }
+
+
+  function systemRadio(active) {
+    return `<span class="system-radio ${active ? "active" : ""}" aria-hidden="true"><i></i></span>`;
+  }
+
+  function systemNavPreview(mode, order = state.buttonOrder) {
+    if (mode === "gesture") {
+      return `<div class="nav-preview-phone">
+        <div class="nav-preview-content"><i></i><i></i><i></i><b></b><i></i><i></i><i></i></div>
+        <span class="nav-preview-gesture"></span>
+      </div>`;
+    }
+    const actions = order === "recent-home-back"
+      ? ["recent", "home", "back"]
+      : ["back", "home", "recent"];
+    const icons = { back: "◀", home: "●", recent: "■" };
+    return `<div class="nav-preview-phone">
+      <div class="nav-preview-content"><i></i><i></i><i></i><b></b><i></i><i></i><i></i></div>
+      <span class="nav-preview-buttons">${actions.map(a => `<em>${icons[a]}</em>`).join("")}</span>
+    </div>`;
+  }
+
+  function renderSystem() {
+    root.innerHTML = `<div class="a17-page system-page">
+      ${topbar(t("system"))}
+      <div class="system-intro">${t("systemInfo")}</div>
+
+      <div class="a17-card system-card">
+        ${row({ title: t("languageRegion"), desc: state.region, nav: "languageRegion", trailing: `<span class="a17-trailing system-icon">A</span>` })}
+        ${row({ title: t("navigationMode"), desc: state.navigationMode === "gesture" ? t("gestureNavigation") : t("threeButtonNavigation"), nav: "navigationMode", trailing: `<span class="a17-trailing system-icon">◁</span>` })}
+      </div>
+
+      <div class="a17-section">${t("aboutPhone")}</div>
+      <div class="a17-card system-card">
+        ${row({ title: t("aboutPhone"), desc: "Google Pixel 10 • Frankel", nav: "about", trailing: `<span class="a17-trailing system-icon">ⓘ</span>` })}
+      </div>
+    </div>`;
+  }
+
+  function renderLanguageRegion() {
+    const installed = Array.isArray(state.installedLanguages) ? state.installedLanguages : ["id"];
+    const langName = code => code === "en" ? "English (United States)" : "Indonesia (Indonesia)";
+    const langSub = code => code === getLanguage() ? (getLanguage() === "en" ? "System language" : "Bahasa sistem") : "";
+
+    root.innerHTML = `<div class="a17-page system-page language-region-page">
+      ${topbar(t("languageRegion"))}
+
+      <p class="system-description">${getLanguage() === "en"
+        ? "The device, apps, and websites use the first supported language in your preferred-language list."
+        : "Perangkat, aplikasi, dan situs menggunakan bahasa pertama yang didukung dari daftar bahasa pilihan Anda."}</p>
+
+      <div class="a17-section">${t("preferredLanguages")}</div>
+      <div class="a17-card system-card language-list">
+        ${installed.map((code, index) => `<button class="a17-row language-choice" type="button" data-device-language="${code}">
+          <span class="language-index">${index + 1}</span>
+          <span class="a17-copy"><strong>${langName(code)}</strong>${langSub(code) ? `<span>${langSub(code)}</span>` : ""}</span>
+          ${code === getLanguage() ? `<span class="language-check">✓</span>` : ""}
+        </button>`).join("")}
+      </div>
+
+      <button class="system-add-button" type="button" data-action="addLanguage"><b>＋</b>${t("addLanguage")}</button>
+
+      <div class="a17-section">${t("otherLanguageSettings")}</div>
+      <div class="a17-card system-card">
+        <button class="a17-row" type="button" data-action="appLanguageToast"><span class="a17-copy"><strong>${t("appLanguages")}</strong><span>${t("appLanguagesDesc")}</span></span></button>
+        <button class="a17-row" type="button" data-action="speechToast"><span class="a17-copy"><strong>${t("speech")}</strong><span>${t("speechDesc")}</span></span></button>
+      </div>
+
+      <div class="a17-section">${t("regionalPreferences")}</div>
+      <div class="a17-card system-card regional-card">
+        <button class="a17-row" type="button" data-cycle-setting="region"><span class="a17-copy"><strong>${t("region")}</strong><span>${state.region}</span></span></button>
+        <button class="a17-row" type="button" data-cycle-setting="temperatureUnit"><span class="a17-copy"><strong>${t("temperature")}</strong><span>${state.temperatureUnit === "default" ? t("useDefault") : state.temperatureUnit}</span></span></button>
+        <button class="a17-row" type="button" data-cycle-setting="measurementSystem"><span class="a17-copy"><strong>${t("measurementSystem")}</strong><span>${state.measurementSystem === "default" ? t("useDefault") : state.measurementSystem}</span></span></button>
+        <button class="a17-row" type="button" data-cycle-setting="firstDayOfWeek"><span class="a17-copy"><strong>${t("firstDayWeek")}</strong><span>${state.firstDayOfWeek === "default" ? t("useDefault") : state.firstDayOfWeek}</span></span></button>
+      </div>
+
+      <div class="system-note">ⓘ <span>${getLanguage() === "en"
+        ? "Apps that do not support regional preferences use their default locale settings."
+        : "Jika tidak mendukung preferensi regional, aplikasi akan menggunakan setelan lokalitas defaultnya."}</span></div>
+    </div>`;
+  }
+
+  function renderNavigationMode() {
+    root.innerHTML = `<div class="a17-page system-page navigation-mode-page">
+      ${topbar(t("navigationMode"))}
+
+      <div class="navigation-hero">
+        ${systemNavPreview(state.navigationMode)}
+      </div>
+
+      <div class="navigation-choice-stack">
+        <div class="navigation-choice-card ${state.navigationMode === "gesture" ? "selected" : ""}">
+          <button class="navigation-choice-main" type="button" data-nav-mode="gesture">
+            ${systemRadio(state.navigationMode === "gesture")}
+            <span class="navigation-choice-copy"><strong>${t("gestureNavigation")}</strong><span>${t("gestureNavigationDesc")}</span></span>
+            <span class="navigation-chevron">›</span>
+          </button>
+          <button class="navigation-gear" type="button" data-nav="gestureNavigation" aria-label="${t("gestureNavigation")}">⚙</button>
+        </div>
+
+        <div class="navigation-choice-card ${state.navigationMode === "buttons" ? "selected" : ""}">
+          <button class="navigation-choice-main" type="button" data-nav-mode="buttons">
+            ${systemRadio(state.navigationMode === "buttons")}
+            <span class="navigation-choice-copy"><strong>${t("threeButtonNavigation")}</strong><span>${t("threeButtonNavigationDesc")}</span></span>
+            <span class="navigation-chevron">›</span>
+          </button>
+          <button class="navigation-gear" type="button" data-nav="buttonNavigation" aria-label="${t("threeButtonNavigation")}">⚙</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function renderGestureNavigation() {
+    root.innerHTML = `<div class="a17-page system-page gesture-settings-page">
+      ${topbar(t("gestureNavigation"))}
+
+      <button class="gesture-demo-button" type="button" data-action="gestureDemo">☝ ${t("tryDemo")}</button>
+
+      <div class="a17-card system-card">
+        <div class="a17-row"><span class="a17-copy"><strong>${t("navigationHint")}</strong><span>${t("navigationHintDesc")}</span></span>${toggle("navigationHint")}</div>
+        <div class="a17-row"><span class="a17-copy"><strong>${t("imeSwitcher")}</strong><span>${t("imeSwitcherDesc")}</span></span>${toggle("showImeSwitcher")}</div>
+        <div class="a17-row slider-row">
+          <span class="a17-copy"><strong>${t("backGestureHeight")}</strong><span>${t("backGestureHeightDesc")}</span></span>
+          <div class="system-slider-wrap"><input type="range" min="45" max="100" value="${state.backGestureHeight}" data-system-slider="backGestureHeight"><div><span>${t("full")}</span><span>${t("bottom")}</span></div></div>
+        </div>
+        <div class="a17-row"><span class="a17-copy"><strong>${t("backAnimation")}</strong><span>${t("backAnimationDesc")}</span></span>${toggle("backAnimation")}</div>
+        <div class="a17-row"><span class="a17-copy"><strong>${t("backHaptic")}</strong><span>${t("backHapticDesc")}</span></span>${toggle("backHaptic")}</div>
+      </div>
+
+      <div class="a17-section">${t("digitalAssistant")}</div>
+      <div class="a17-card system-card">
+        <div class="a17-row"><span class="a17-copy"><strong>${t("assistantGesture")}</strong><span>${t("assistantGestureDesc")}</span></span>${toggle("assistantGesture")}</div>
+      </div>
+
+      <div class="a17-section">${t("backSensitivity")}</div>
+      <div class="a17-card system-card">
+        <div class="a17-row slider-row"><span class="a17-copy"><strong>${t("leftEdge")}</strong></span><div class="system-slider-wrap"><input type="range" min="20" max="100" value="${state.leftSensitivity}" data-system-slider="leftSensitivity"><div><span>${t("low")}</span><span>${t("high")}</span></div></div></div>
+        <div class="a17-row slider-row"><span class="a17-copy"><strong>${t("rightEdge")}</strong></span><div class="system-slider-wrap"><input type="range" min="20" max="100" value="${state.rightSensitivity}" data-system-slider="rightSensitivity"><div><span>${t("low")}</span><span>${t("high")}</span></div></div></div>
+      </div>
+
+      <div class="system-note">ⓘ <span>${t("sensitivityNote")}</span></div>
+    </div>`;
+  }
+
+  function renderButtonNavigation() {
+    const orders = [
+      ["back-home-recent", t("backHomeRecent")],
+      ["recent-home-back", t("recentHomeBack")]
+    ];
+    root.innerHTML = `<div class="a17-page system-page button-navigation-page">
+      ${topbar(t("threeButtonNavigation"))}
+      <div class="a17-section">${t("buttonOrder")}</div>
+      <div class="button-order-stack">
+        ${orders.map(([value,label]) => `<button class="button-order-card ${state.buttonOrder === value ? "selected" : ""}" type="button" data-button-order="${value}">
+          <span class="button-order-title">${systemRadio(state.buttonOrder === value)}<strong>${label}</strong></span>
+          <span class="button-order-preview">${systemNavPreview("buttons", value)}</span>
+        </button>`).join("")}
+      </div>
+    </div>`;
+  }
+
+  function renderRecents() {
+    root.innerHTML = `<div class="a17-page system-page recents-page">
+      <div class="recents-header"><strong>${t("recents")}</strong></div>
+      <div class="recent-card">
+        <div class="recent-app-head"><span>⚙</span><strong>${t("settings")}</strong></div>
+        <div class="recent-preview">${t("system")} • Android 17</div>
+        <button type="button" data-nav="settings">${t("settings")}</button>
+      </div>
+      <div class="recent-card">
+        <div class="recent-app-head"><span>⌂</span><strong>${t("home")}</strong></div>
+        <div class="recent-preview">Waifu Gallery</div>
+        <button type="button" data-nav="home">${t("home")}</button>
+      </div>
+    </div>`;
   }
 
   function renderAbout() {
@@ -523,7 +817,9 @@
       const map = {
         home: renderHome, wallpaperStyle: renderWallpaperStyle, color: renderColor, icons: renderIcons, layout: renderLayout,
         clock: renderClock, shortcuts: renderShortcuts, notifications: renderNotifications, lockMore: renderLockMore,
-        wallpaperPicker: renderWallpaperPicker, homeSettings: renderHomeSettings, settings: renderSettings, about: renderAbout,
+        wallpaperPicker: renderWallpaperPicker, homeSettings: renderHomeSettings, settings: renderSettings, system: renderSystem,
+        languageRegion: renderLanguageRegion, navigationMode: renderNavigationMode, gestureNavigation: renderGestureNavigation,
+        buttonNavigation: renderButtonNavigation, recents: renderRecents, about: renderAbout,
         apps: renderApps, camera: renderCamera, boot: renderBoot
       };
       (map[state.view] || renderHome)();
@@ -556,9 +852,43 @@
     $$('[data-notification-mode]', root).forEach(btn => btn.addEventListener("click", () => { state.notificationMode = btn.dataset.notificationMode; save(); render(); }));
     $$('[data-lock-shortcut]', root).forEach(btn => btn.addEventListener("click", () => activateShortcut(btn.dataset.lockShortcut)));
     $$('[data-quick-toggle]', root).forEach(btn => btn.addEventListener("click", () => toggleQuick(btn.dataset.quickToggle)));
+    $$('[data-nav-mode]', root).forEach(btn => btn.addEventListener("click", () => {
+      state.navigationMode = btn.dataset.navMode;
+      save(); vibrate(8); render();
+    }));
+    $$('[data-button-order]', root).forEach(btn => btn.addEventListener("click", () => {
+      state.buttonOrder = btn.dataset.buttonOrder;
+      state.navigationMode = "buttons";
+      save(); vibrate(8); render();
+    }));
+    $$('[data-system-slider]', root).forEach(input => input.addEventListener("input", () => {
+      state[input.dataset.systemSlider] = Number(input.value);
+      save();
+    }));
+    $$('[data-device-language]', root).forEach(btn => btn.addEventListener("click", () => {
+      state.deviceLanguage = btn.dataset.deviceLanguage;
+      save(); vibrate(8); render();
+    }));
+    $$('[data-cycle-setting]', root).forEach(btn => btn.addEventListener("click", () => {
+      cycleSystemSetting(btn.dataset.cycleSetting);
+    }));
     $$('[data-action]', root).forEach(btn => btn.addEventListener("click", () => handleAction(btn.dataset.action)));
 
     $("#brightnessSlider")?.addEventListener("input", e => { state.brightness = Number(e.target.value); save(); applyTheme(); });
+  }
+
+  function cycleSystemSetting(key) {
+    const options = {
+      region: ["Indonesia", "United States", "Japan"],
+      temperatureUnit: ["default", "Celsius", "Fahrenheit"],
+      measurementSystem: ["default", "Metric", "Imperial"],
+      firstDayOfWeek: ["default", "Monday", "Sunday"]
+    };
+    const list = options[key];
+    if (!list) return;
+    const current = list.indexOf(state[key]);
+    state[key] = list[(current + 1) % list.length];
+    save(); vibrate(5); render();
   }
 
   function toggleQuick(key) {
@@ -582,6 +912,28 @@
     if (action === "closeShade") { state.shade = false; render(); }
     if (action === "shutter") toast(t("photoCaptured"));
     if (action === "nowPlayingToast") toast(t("nowPlayingDesc"));
+    if (action === "addLanguage") {
+      const installed = Array.isArray(state.installedLanguages) ? state.installedLanguages : ["id"];
+      if (!installed.includes("en")) {
+        state.installedLanguages = [...installed, "en"];
+        save(); vibrate(8); render(); toast(t("languageAdded"));
+      } else {
+        state.deviceLanguage = state.deviceLanguage === "en" ? "id" : "en";
+        save(); render();
+      }
+    }
+    if (action === "appLanguageToast") toast(t("appLanguagesDesc"));
+    if (action === "speechToast") toast(t("speechDesc"));
+    if (action === "gestureDemo") showGestureDemo();
+  }
+
+  function showGestureDemo() {
+    $(".gesture-demo-overlay", root)?.remove();
+    const el = document.createElement("div");
+    el.className = "gesture-demo-overlay";
+    el.innerHTML = `<div class="gesture-demo-phone"><span class="gesture-demo-arrow">‹</span><span class="gesture-demo-line"></span></div><strong>${t("gestureNavigation")}</strong><small>${t("gestureNavigationDesc")}</small>`;
+    root.appendChild(el);
+    setTimeout(() => el.remove(), 2100);
   }
 
   function activateShortcut(value) {
@@ -612,7 +964,76 @@
     if (state.view === "boot") return;
     state.shade = !state.shade; render();
   });
-  gesture?.addEventListener("click", () => state.locked ? unlockPhone() : navigate("home"));
+  gesture?.addEventListener("click", () => {
+    if (state.navigationMode !== "gesture") return;
+    state.locked ? unlockPhone() : navigate("home");
+  });
+
+  let systemGestureStart = null;
+  phone.addEventListener("pointerdown", e => {
+    if (state.navigationMode !== "gesture" || state.locked) return;
+    if (e.target.closest("button,input,label")) return;
+    const rect = phone.getBoundingClientRect();
+    systemGestureStart = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+      width: rect.width,
+      height: rect.height,
+      time: performance.now()
+    };
+  });
+
+  phone.addEventListener("pointerup", e => {
+    if (!systemGestureStart || state.navigationMode !== "gesture" || state.locked) {
+      systemGestureStart = null;
+      return;
+    }
+    const rect = phone.getBoundingClientRect();
+    const endX = e.clientX - rect.left;
+    const endY = e.clientY - rect.top;
+    const dx = endX - systemGestureStart.x;
+    const dy = endY - systemGestureStart.y;
+    const elapsed = performance.now() - systemGestureStart.time;
+    const fromBottom = systemGestureStart.y > systemGestureStart.height - 56;
+
+    if (fromBottom && dy < -58) {
+      const fromCorner = systemGestureStart.x < 55 || systemGestureStart.x > systemGestureStart.width - 55;
+      if (fromCorner && state.assistantGesture) {
+        toast(t("digitalAssistant"));
+      } else if (elapsed > 360) {
+        navigate("recents");
+      } else {
+        navigate("home");
+      }
+      systemGestureStart = null;
+      return;
+    }
+
+    const activeHeight = systemGestureStart.height * (state.backGestureHeight / 100);
+    const minY = systemGestureStart.height - activeHeight;
+    const leftZone = 10 + state.leftSensitivity * 0.32;
+    const rightZone = 10 + state.rightSensitivity * 0.32;
+
+    const leftBack = systemGestureStart.x <= leftZone && dx > 42;
+    const rightBack = systemGestureStart.x >= systemGestureStart.width - rightZone && dx < -42;
+
+    if (systemGestureStart.y >= minY && (leftBack || rightBack)) {
+      if (state.backHaptic) vibrate(10);
+      if (state.backAnimation) {
+        const indicator = document.createElement("div");
+        indicator.className = `gesture-back-indicator ${leftBack ? "left" : "right"}`;
+        indicator.textContent = leftBack ? "›" : "‹";
+        phone.appendChild(indicator);
+        setTimeout(() => indicator.remove(), 180);
+      }
+      goBack();
+    }
+
+    systemGestureStart = null;
+  });
+
+  phone.addEventListener("pointercancel", () => { systemGestureStart = null; });
+
   power?.addEventListener("click", () => state.locked ? unlockPhone() : lockPhone());
   volume?.addEventListener("click", () => {
     state.volume = state.volume >= 100 ? 20 : state.volume + 10; save(); showVolume();
