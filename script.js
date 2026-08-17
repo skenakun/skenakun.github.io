@@ -1,0 +1,808 @@
+const seedPhotos = [
+  { id: "seed-1", src: "./assets/waifu-01.jpg", title: "Purple Serenity", category: "classic", uploaded: false },
+  { id: "seed-2", src: "./assets/waifu-02.jpg", title: "Quiet Garden", category: "classic", uploaded: false },
+  { id: "seed-3", src: "./assets/waifu-03.jpg", title: "Soft Smile", category: "portrait", uploaded: false },
+  { id: "seed-4", src: "./assets/waifu-04.jpg", title: "Lavender Casual", category: "casual", uploaded: false },
+  { id: "seed-5", src: "./assets/waifu-05.jpg", title: "Elegant Violet", category: "portrait", uploaded: false },
+  { id: "seed-6", src: "./assets/waifu-06.jpg", title: "Wisteria Day", category: "casual", uploaded: false },
+  { id: "seed-7", src: "./assets/waifu-07.jpg", title: "Sakura Bride", category: "wedding", uploaded: false },
+  { id: "seed-8", src: "./assets/waifu-08.jpg", title: "Violet Bride", category: "wedding", uploaded: false },
+  { id: "seed-9", src: "./assets/waifu-09.jpg", title: "Moonlight Bride", category: "wedding", uploaded: false },
+  { id: "seed-10", src: "./assets/waifu-10.jpg", title: "Sunny Street", category: "casual", uploaded: false }
+];
+
+const gallery = document.getElementById("gallery");
+const searchInput = document.getElementById("searchInput");
+const filterChips = document.getElementById("filterChips");
+const emptyState = document.getElementById("emptyState");
+const resultInfo = document.getElementById("resultInfo");
+const photoCount = document.getElementById("photoCount");
+const photoInput = document.getElementById("photoInput");
+const shuffleBtn = document.getElementById("shuffleBtn");
+const themeBurstBtn = document.getElementById("themeBurstBtn");
+const toast = document.getElementById("toast");
+
+const lightbox = document.getElementById("lightbox");
+const lightboxImage = document.getElementById("lightboxImage");
+const lightboxTitle = document.getElementById("lightboxTitle");
+const lightboxMeta = document.getElementById("lightboxMeta");
+const closeLightbox = document.getElementById("closeLightbox");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const deleteUploadedBtn = document.getElementById("deleteUploadedBtn");
+
+let uploadedPhotos = [];
+let activeFilter = "all";
+let currentList = [];
+let currentIndex = 0;
+
+const DB_NAME = "waifuGalleryPagesDB";
+const STORE_NAME = "photos";
+const DB_VERSION = 1;
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    if (!("indexedDB" in window)) {
+      reject(new Error("IndexedDB tidak tersedia"));
+      return;
+    }
+
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME, { keyPath: "id" });
+      }
+    };
+
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function loadUploads() {
+  try {
+    const db = await openDB();
+
+    uploadedPhotos = await new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, "readonly");
+      const request = tx.objectStore(STORE_NAME).getAll();
+      request.onsuccess = () => resolve(request.result || []);
+      request.onerror = () => reject(request.error);
+    });
+
+    db.close();
+  } catch {
+    uploadedPhotos = [];
+    showToast("Penyimpanan lokal tidak tersedia di browser ini.");
+  }
+}
+
+async function saveUpload(photo) {
+  const db = await openDB();
+
+  await new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    tx.objectStore(STORE_NAME).put(photo);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+
+  db.close();
+}
+
+async function deleteUpload(id) {
+  const db = await openDB();
+
+  await new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    tx.objectStore(STORE_NAME).delete(id);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+
+  db.close();
+}
+
+function getAllPhotos() {
+  return [...seedPhotos, ...uploadedPhotos];
+}
+
+function prettyCategory(category) {
+  const labels = {
+    portrait: "Portrait",
+    casual: "Casual",
+    wedding: "Wedding",
+    classic: "Classic",
+    uploaded: "Upload Saya"
+  };
+
+  return labels[category] || "Gallery";
+}
+
+function getFilteredPhotos() {
+  const term = searchInput.value.trim().toLowerCase();
+
+  return getAllPhotos().filter((photo) => {
+    const categoryMatch =
+      activeFilter === "all" ||
+      (activeFilter === "uploaded" && photo.uploaded) ||
+      photo.category === activeFilter;
+
+    const searchMatch =
+      !term ||
+      photo.title.toLowerCase().includes(term) ||
+      prettyCategory(photo.category).toLowerCase().includes(term);
+
+    return categoryMatch && searchMatch;
+  });
+}
+
+function renderGallery() {
+  currentList = getFilteredPhotos();
+  gallery.innerHTML = "";
+
+  currentList.forEach((photo, index) => {
+    const button = document.createElement("button");
+    button.className = "gallery-item";
+    button.type = "button";
+    button.dataset.id = photo.id;
+    button.setAttribute("aria-label", `Buka ${photo.title}`);
+
+    const img = document.createElement("img");
+    img.src = photo.src;
+    img.alt = photo.title;
+    img.loading = "lazy";
+    img.decoding = "async";
+
+    const overlay = document.createElement("span");
+    overlay.className = "gallery-overlay";
+    overlay.innerHTML =
+      `<strong>${escapeHTML(photo.title)}</strong>` +
+      `<span>${escapeHTML(prettyCategory(photo.category))}</span>`;
+
+    button.appendChild(img);
+
+    if (photo.uploaded) {
+      const badge = document.createElement("span");
+      badge.className = "upload-badge";
+      badge.textContent = "Upload Saya";
+      button.appendChild(badge);
+    }
+
+    button.appendChild(overlay);
+    button.addEventListener("click", () => openPhoto(index));
+    gallery.appendChild(button);
+  });
+
+  const total = getAllPhotos().length;
+  photoCount.textContent = total;
+
+  if (activeFilter === "all" && !searchInput.value.trim()) {
+    resultInfo.textContent = `Menampilkan semua ${currentList.length} foto`;
+  } else {
+    resultInfo.textContent = `Menampilkan ${currentList.length} dari ${total} foto`;
+  }
+
+  emptyState.hidden = currentList.length !== 0;
+}
+
+function escapeHTML(value) {
+  return value.replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
+}
+
+function openPhoto(index) {
+  if (!currentList.length) return;
+
+  currentIndex = index;
+  updateLightbox();
+  lightbox.showModal();
+}
+
+function updateLightbox() {
+  const photo = currentList[currentIndex];
+  if (!photo) return;
+
+  lightboxImage.src = photo.src;
+  lightboxImage.alt = photo.title;
+  lightboxTitle.textContent = photo.title;
+  lightboxMeta.textContent = photo.uploaded
+    ? "Upload lokal • tersimpan di browser"
+    : prettyCategory(photo.category);
+
+  deleteUploadedBtn.hidden = !photo.uploaded;
+
+  const hideNav = currentList.length <= 1;
+  prevBtn.hidden = hideNav;
+  nextBtn.hidden = hideNav;
+}
+
+function moveLightbox(direction) {
+  if (!currentList.length) return;
+
+  currentIndex =
+    (currentIndex + direction + currentList.length) % currentList.length;
+
+  updateLightbox();
+}
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  clearTimeout(showToast.timer);
+
+  showToast.timer = setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2300);
+}
+
+function shuffleGallery() {
+  const items = [...gallery.children];
+
+  for (let i = items.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [items[i], items[j]] = [items[j], items[i]];
+  }
+
+  items.forEach((item) => gallery.appendChild(item));
+  showToast("Urutan galeri sudah diacak.");
+}
+
+function fileToDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+filterChips.addEventListener("click", (event) => {
+  const chip = event.target.closest(".chip");
+  if (!chip) return;
+
+  filterChips.querySelectorAll(".chip").forEach((item) => {
+    item.classList.remove("active");
+  });
+
+  chip.classList.add("active");
+  activeFilter = chip.dataset.filter;
+  renderGallery();
+});
+
+searchInput.addEventListener("input", renderGallery);
+
+shuffleBtn.addEventListener("click", shuffleGallery);
+
+
+photoInput.addEventListener("change", async (event) => {
+  const files = [...event.target.files].filter((file) =>
+    file.type.startsWith("image/")
+  );
+
+  if (!files.length) return;
+
+  let saved = 0;
+
+  for (const file of files) {
+    const uniqueId =
+      typeof crypto !== "undefined" && crypto.randomUUID
+        ? crypto.randomUUID()
+        : Math.random().toString(36).slice(2);
+
+    const photo = {
+      id: `upload-${Date.now()}-${uniqueId}`,
+      src: await fileToDataURL(file),
+      title: file.name.replace(/\.[^.]+$/, "") || "My Waifu",
+      category: "uploaded",
+      uploaded: true,
+      createdAt: Date.now()
+    };
+
+    try {
+      await saveUpload(photo);
+      uploadedPhotos.push(photo);
+      saved += 1;
+    } catch {
+      showToast("Penyimpanan browser penuh atau upload gagal.");
+      break;
+    }
+  }
+
+  event.target.value = "";
+  renderGallery();
+
+  if (saved) {
+    showToast(`${saved} foto berhasil ditambahkan.`);
+  }
+});
+
+deleteUploadedBtn.addEventListener("click", async () => {
+  const photo = currentList[currentIndex];
+
+  if (!photo?.uploaded) return;
+
+  try {
+    await deleteUpload(photo.id);
+    uploadedPhotos = uploadedPhotos.filter((item) => item.id !== photo.id);
+
+    lightbox.close();
+    renderGallery();
+    showToast("Foto upload dihapus.");
+  } catch {
+    showToast("Foto gagal dihapus.");
+  }
+});
+
+closeLightbox.addEventListener("click", () => lightbox.close());
+prevBtn.addEventListener("click", () => moveLightbox(-1));
+nextBtn.addEventListener("click", () => moveLightbox(1));
+
+lightbox.addEventListener("click", (event) => {
+  if (event.target === lightbox) {
+    lightbox.close();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (!lightbox.open) return;
+
+  if (event.key === "ArrowLeft") {
+    moveLightbox(-1);
+  }
+
+  if (event.key === "ArrowRight") {
+    moveLightbox(1);
+  }
+});
+
+(async function init() {
+  await loadUploads();
+  renderGallery();
+})();
+
+
+/* ===========================
+   COLOR BURST / MATERIAL U
+   =========================== */
+
+const themeDialog = document.getElementById("themeDialog");
+const closeThemeDialog = document.getElementById("closeThemeDialog");
+const darkModeToggle = document.getElementById("darkModeToggle");
+const wallpaperInput = document.getElementById("wallpaperInput");
+const wallpaperPaletteRow = document.getElementById("wallpaperPaletteRow");
+const customColor = document.getElementById("customColor");
+
+const styleOptions = [...document.querySelectorAll(".style-option")];
+const paletteModes = [...document.querySelectorAll(".palette-mode")];
+const palettePanels = {
+  wallpaper: document.getElementById("wallpaperPalettePanel"),
+  manual: document.getElementById("manualPalettePanel")
+};
+
+const defaultThemeState = {
+  style: "material",
+  dark: false,
+  source: "wallpaper",
+  palette: {
+    primary: "#7c3aed",
+    secondary: "#ec4899",
+    tertiary: "#22d3ee"
+  }
+};
+
+const presetPalettes = [
+  { primary: "#9f4f5d", secondary: "#f7b2ba", tertiary: "#c58bb8" },
+  { primary: "#111111", secondary: "#bcbcbc", tertiary: "#6f6f6f" },
+  { primary: "#7d6969", secondary: "#e7d6d2", tertiary: "#c78fad" },
+  { primary: "#cc004b", secondary: "#ffb3cb", tertiary: "#a77df2" },
+  { primary: "#b53651", secondary: "#8bd5df", tertiary: "#00b8c4" },
+  { primary: "#7350a7", secondary: "#d69ac2", tertiary: "#8c7ae6" },
+  { primary: "#5a5d9d", secondary: "#b7bdf8", tertiary: "#92d5d6" },
+  { primary: "#6f7f4b", secondary: "#c4d7aa", tertiary: "#9b8dbd" }
+];
+
+function getThemeState() {
+  try {
+    return {
+      ...defaultThemeState,
+      ...JSON.parse(localStorage.getItem("waifuThemeState") || "{}")
+    };
+  } catch {
+    return { ...defaultThemeState };
+  }
+}
+
+function saveThemeState(state) {
+  localStorage.setItem("waifuThemeState", JSON.stringify(state));
+}
+
+function hexToRgb(hex) {
+  const clean = hex.replace("#", "");
+  const full = clean.length === 3
+    ? clean.split("").map((c) => c + c).join("")
+    : clean;
+
+  const number = parseInt(full, 16);
+
+  return {
+    r: (number >> 16) & 255,
+    g: (number >> 8) & 255,
+    b: number & 255
+  };
+}
+
+function rgbToHex(r, g, b) {
+  const toHex = (v) => Math.max(0, Math.min(255, Math.round(v)))
+    .toString(16)
+    .padStart(2, "0");
+
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function mix(hexA, hexB, weight = 0.5) {
+  const a = hexToRgb(hexA);
+  const b = hexToRgb(hexB);
+
+  return rgbToHex(
+    a.r * (1 - weight) + b.r * weight,
+    a.g * (1 - weight) + b.g * weight,
+    a.b * (1 - weight) + b.b * weight
+  );
+}
+
+function rotateHue(hex, degrees) {
+  const { r, g, b } = hexToRgb(hex);
+  let rr = r / 255;
+  let gg = g / 255;
+  let bb = b / 255;
+
+  const max = Math.max(rr, gg, bb);
+  const min = Math.min(rr, gg, bb);
+  let h = 0;
+  let s = 0;
+  const l = (max + min) / 2;
+
+  if (max !== min) {
+    const d = max - min;
+    s = l > .5 ? d / (2 - max - min) : d / (max + min);
+
+    switch (max) {
+      case rr: h = (gg - bb) / d + (gg < bb ? 6 : 0); break;
+      case gg: h = (bb - rr) / d + 2; break;
+      default: h = (rr - gg) / d + 4;
+    }
+
+    h /= 6;
+  }
+
+  h = (h * 360 + degrees) % 360;
+  if (h < 0) h += 360;
+
+  const hue2rgb = (p, q, t) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  };
+
+  let r2;
+  let g2;
+  let b2;
+
+  if (s === 0) {
+    r2 = g2 = b2 = l;
+  } else {
+    const q = l < .5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    const hn = h / 360;
+
+    r2 = hue2rgb(p, q, hn + 1 / 3);
+    g2 = hue2rgb(p, q, hn);
+    b2 = hue2rgb(p, q, hn - 1 / 3);
+  }
+
+  return rgbToHex(r2 * 255, g2 * 255, b2 * 255);
+}
+
+function createPaletteFromPrimary(primary) {
+  return {
+    primary,
+    secondary: rotateHue(primary, 48),
+    tertiary: rotateHue(primary, 112)
+  };
+}
+
+function applyPalette(palette, darkMode) {
+  const root = document.documentElement;
+
+  const primaryContainer = darkMode
+    ? mix(palette.primary, "#111015", .58)
+    : mix(palette.primary, "#ffffff", .83);
+
+  const secondaryContainer = darkMode
+    ? mix(palette.secondary, "#111015", .6)
+    : mix(palette.secondary, "#ffffff", .84);
+
+  const tertiaryContainer = darkMode
+    ? mix(palette.tertiary, "#111015", .6)
+    : mix(palette.tertiary, "#ffffff", .84);
+
+  const primaryOnContainer = darkMode
+    ? mix(palette.primary, "#ffffff", .78)
+    : mix(palette.primary, "#000000", .55);
+
+  root.style.setProperty("--mu-primary", palette.primary);
+  root.style.setProperty("--mu-secondary", palette.secondary);
+  root.style.setProperty("--mu-tertiary", palette.tertiary);
+  root.style.setProperty("--mu-primary-container", primaryContainer);
+  root.style.setProperty("--mu-secondary-container", secondaryContainer);
+  root.style.setProperty("--mu-tertiary-container", tertiaryContainer);
+  root.style.setProperty("--mu-on-primary-container", primaryOnContainer);
+
+  root.style.setProperty("--purple", palette.primary);
+  root.style.setProperty("--violet", palette.primary);
+  root.style.setProperty("--pink", palette.secondary);
+  root.style.setProperty("--cyan", palette.tertiary);
+}
+
+function applyThemeState(state) {
+  document.body.classList.toggle("material-u", state.style === "material");
+  document.body.classList.toggle("default-style", state.style === "default");
+  document.body.classList.toggle("dark-mode", !!state.dark);
+
+  applyPalette(state.palette, !!state.dark);
+  darkModeToggle.checked = !!state.dark;
+
+  styleOptions.forEach((button) => {
+    button.classList.toggle("active", button.dataset.style === state.style);
+  });
+
+  paletteModes.forEach((button) => {
+    button.classList.toggle("active", button.dataset.paletteMode === state.source);
+  });
+
+  Object.entries(palettePanels).forEach(([key, panel]) => {
+    panel.classList.toggle("active", key === state.source);
+  });
+
+  customColor.value = state.palette.primary;
+}
+
+function renderPresetPalettes() {
+  wallpaperPaletteRow.innerHTML = "";
+
+  presetPalettes.forEach((palette, index) => {
+    const button = document.createElement("button");
+    button.className = "palette-swatch";
+    button.type = "button";
+    button.dataset.index = index;
+    button.setAttribute("aria-label", `Palet ${index + 1}`);
+
+    button.innerHTML = `
+      <span>
+        <i style="background:${palette.primary}"></i>
+        <i style="background:${palette.secondary}"></i>
+        <i style="background:${palette.tertiary}"></i>
+      </span>
+    `;
+
+    button.addEventListener("click", () => {
+      const state = getThemeState();
+      state.source = "wallpaper";
+      state.palette = palette;
+      saveThemeState(state);
+      applyThemeState(state);
+
+      wallpaperPaletteRow.querySelectorAll(".palette-swatch").forEach((item) => {
+        item.classList.remove("active");
+      });
+
+      button.classList.add("active");
+      showToast("Warna wallpaper diterapkan.");
+    });
+
+    wallpaperPaletteRow.appendChild(button);
+  });
+}
+
+async function extractPaletteFromImage(file) {
+  const imageURL = URL.createObjectURL(file);
+
+  try {
+    const image = new Image();
+
+    await new Promise((resolve, reject) => {
+      image.onload = resolve;
+      image.onerror = reject;
+      image.src = imageURL;
+    });
+
+    const canvas = document.createElement("canvas");
+    const size = 72;
+    canvas.width = size;
+    canvas.height = size;
+
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    ctx.drawImage(image, 0, 0, size, size);
+
+    const { data } = ctx.getImageData(0, 0, size, size);
+    const buckets = new Map();
+
+    for (let i = 0; i < data.length; i += 16) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      const a = data[i + 3];
+
+      if (a < 200) continue;
+
+      const max = Math.max(r, g, b);
+      const min = Math.min(r, g, b);
+      const saturation = max - min;
+      const brightness = (r + g + b) / 3;
+
+      if (brightness < 30 || brightness > 235) continue;
+      if (saturation < 18) continue;
+
+      const qr = Math.round(r / 32) * 32;
+      const qg = Math.round(g / 32) * 32;
+      const qb = Math.round(b / 32) * 32;
+      const key = `${qr},${qg},${qb}`;
+
+      buckets.set(key, (buckets.get(key) || 0) + 1);
+    }
+
+    const ranked = [...buckets.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 12)
+      .map(([key]) => key.split(",").map(Number));
+
+    if (!ranked.length) {
+      return createPaletteFromPrimary("#7c3aed");
+    }
+
+    const colors = ranked.map(([r, g, b]) => rgbToHex(r, g, b));
+
+    const primary = colors[0];
+    const secondary = colors.find((color) => {
+      const a = hexToRgb(primary);
+      const b = hexToRgb(color);
+      return Math.abs(a.r - b.r) + Math.abs(a.g - b.g) + Math.abs(a.b - b.b) > 100;
+    }) || rotateHue(primary, 50);
+
+    const tertiary = colors.find((color) => {
+      const a = hexToRgb(primary);
+      const b = hexToRgb(color);
+      const c = hexToRgb(secondary);
+
+      const d1 = Math.abs(a.r - b.r) + Math.abs(a.g - b.g) + Math.abs(a.b - b.b);
+      const d2 = Math.abs(c.r - b.r) + Math.abs(c.g - b.g) + Math.abs(c.b - b.b);
+
+      return d1 > 90 && d2 > 90;
+    }) || rotateHue(primary, 112);
+
+    return { primary, secondary, tertiary };
+  } finally {
+    URL.revokeObjectURL(imageURL);
+  }
+}
+
+themeBurstBtn.addEventListener("click", () => {
+  applyThemeState(getThemeState());
+  themeDialog.showModal();
+});
+
+closeThemeDialog.addEventListener("click", () => {
+  themeDialog.close();
+});
+
+themeDialog.addEventListener("click", (event) => {
+  if (event.target === themeDialog) {
+    themeDialog.close();
+  }
+});
+
+styleOptions.forEach((button) => {
+  button.addEventListener("click", () => {
+    const state = getThemeState();
+    state.style = button.dataset.style;
+    saveThemeState(state);
+    applyThemeState(state);
+
+    showToast(
+      state.style === "material"
+        ? "Gaya Material U aktif."
+        : "Gaya default website aktif."
+    );
+  });
+});
+
+paletteModes.forEach((button) => {
+  button.addEventListener("click", () => {
+    const state = getThemeState();
+    state.source = button.dataset.paletteMode;
+    saveThemeState(state);
+    applyThemeState(state);
+  });
+});
+
+darkModeToggle.addEventListener("change", () => {
+  const state = getThemeState();
+  state.dark = darkModeToggle.checked;
+  saveThemeState(state);
+  applyThemeState(state);
+
+  showToast(state.dark ? "Mode gelap aktif." : "Mode terang aktif.");
+});
+
+document.querySelectorAll(".manual-color").forEach((button) => {
+  button.addEventListener("click", () => {
+    const color = button.dataset.color;
+    const state = getThemeState();
+
+    state.source = "manual";
+    state.palette = createPaletteFromPrimary(color);
+
+    saveThemeState(state);
+    applyThemeState(state);
+
+    document.querySelectorAll(".manual-color").forEach((item) => {
+      item.classList.remove("active");
+    });
+
+    button.classList.add("active");
+    showToast("Warna tema diterapkan.");
+  });
+});
+
+customColor.addEventListener("input", () => {
+  const state = getThemeState();
+
+  state.source = "manual";
+  state.palette = createPaletteFromPrimary(customColor.value);
+
+  saveThemeState(state);
+  applyThemeState(state);
+});
+
+wallpaperInput.addEventListener("change", async (event) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  try {
+    const palette = await extractPaletteFromImage(file);
+    const state = getThemeState();
+
+    state.source = "wallpaper";
+    state.palette = palette;
+
+    saveThemeState(state);
+    applyThemeState(state);
+
+    presetPalettes.unshift(palette);
+    renderPresetPalettes();
+
+    const first = wallpaperPaletteRow.querySelector(".palette-swatch");
+    if (first) first.classList.add("active");
+
+    showToast("Palet berhasil diambil dari gambar.");
+  } catch {
+    showToast("Warna dari gambar gagal dibaca.");
+  } finally {
+    wallpaperInput.value = "";
+  }
+});
+
+renderPresetPalettes();
+applyThemeState(getThemeState());

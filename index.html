@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#7c3aed">
+  <meta name="description" content="Waifu Gallery, galeri anime colorful dan responsif untuk GitHub Pages.">
+  <title>Waifu Gallery</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+  <div class="background-layer" aria-hidden="true">
+    <div class="blob blob-a"></div>
+    <div class="blob blob-b"></div>
+    <div class="blob blob-c"></div>
+    <div class="grid-glow"></div>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="Waifu Gallery">
+      <span class="brand-icon">✦</span>
+      <span class="brand-text">
+        <strong>Waifu</strong>
+        <small>Gallery</small>
+      </span>
+    </a>
+
+    <div class="top-actions">
+      <button class="icon-button" id="themeBurstBtn" type="button" title="Buka pengaturan tema">
+        <span>✧</span>
+        <span class="desktop-only">Color Burst</span>
+      </button>
+
+      <label class="add-button" for="photoInput">
+        <span>＋</span>
+        <span>Tambah Foto</span>
+      </label>
+      <input id="photoInput" type="file" accept="image/*" multiple hidden>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-copy">
+        <div class="kicker">
+          <span class="dot"></span>
+          PERSONAL WAIFU COLLECTION
+        </div>
+
+        <h1>
+          Galeri waifu yang
+          <span class="gradient-text">penuh warna.</span>
+        </h1>
+
+        <p>
+          Simpan koleksi favoritmu dalam satu galeri yang bersih, colorful,
+          responsif, dan nyaman dibuka dari ponsel maupun laptop.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="#gallerySection" class="primary-cta">
+            Lihat Galeri
+            <span>↓</span>
+          </a>
+          <button class="secondary-cta" id="shuffleBtn" type="button">
+            Acak Foto
+          </button>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card">
+            <strong id="photoCount">10</strong>
+            <span>Total Foto</span>
+          </div>
+          <div class="stat-card">
+            <strong>100%</strong>
+            <span>Responsive</span>
+          </div>
+          <div class="stat-card">
+            <strong>GitHub</strong>
+            <span>Pages Ready</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+
+        <article class="floating-card card-one">
+          <img src="./assets/waifu-01.jpg" alt="">
+        </article>
+        <article class="floating-card card-two">
+          <img src="./assets/waifu-08.jpg" alt="">
+        </article>
+        <article class="floating-card card-three">
+          <img src="./assets/waifu-06.jpg" alt="">
+        </article>
+
+        <span class="sparkle sparkle-1">✦</span>
+        <span class="sparkle sparkle-2">✧</span>
+        <span class="sparkle sparkle-3">✦</span>
+        <span class="sparkle sparkle-4">✧</span>
+      </div>
+    </section>
+
+    <section class="gallery-shell" id="gallerySection">
+      <div class="gallery-head">
+        <div>
+          <span class="section-label">MY COLLECTION</span>
+          <h2>Waifu Gallery</h2>
+          <p id="resultInfo">Menampilkan semua foto</p>
+        </div>
+
+        <div class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input id="searchInput" type="search" placeholder="Cari foto..." aria-label="Cari foto">
+        </div>
+      </div>
+
+      <div class="filter-row" id="filterChips">
+        <button class="chip active" data-filter="all" type="button">Semua</button>
+        <button class="chip" data-filter="portrait" type="button">Portrait</button>
+        <button class="chip" data-filter="casual" type="button">Casual</button>
+        <button class="chip" data-filter="wedding" type="button">Wedding</button>
+        <button class="chip" data-filter="classic" type="button">Classic</button>
+        <button class="chip" data-filter="uploaded" type="button">Upload Saya</button>
+      </div>
+
+      <div class="gallery" id="gallery" aria-live="polite"></div>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <div class="empty-symbol">✦</div>
+        <h3>Belum ada foto yang cocok.</h3>
+        <p>Coba kata pencarian atau kategori lain.</p>
+      </div>
+    </section>
+
+  <footer>
+    <div class="footer-brand">
+      <span class="footer-logo">✦</span>
+      <div>
+        <strong>Waifu Gallery</strong>
+        <p>Colorful waifu gallery for personal collection.</p>
+      </div>
+    </div>
+
+    <p class="credit">
+      Image credit:
+      <a href="https://www.pinterest.com/" target="_blank" rel="noopener noreferrer">
+        Pinterest
+      </a>
+    </p>
+  </footer>
+
+
+  <dialog class="theme-dialog" id="themeDialog">
+    <div class="theme-sheet">
+      <div class="theme-sheet-head">
+        <div>
+          <span class="section-label">COLOR BURST</span>
+          <h2>Setelan tampilan</h2>
+          <p>Atur gaya warna seperti Material U atau gunakan tampilan default website.</p>
+        </div>
+        <button class="theme-close" id="closeThemeDialog" type="button" aria-label="Tutup pengaturan">×</button>
+      </div>
+
+      <div class="style-switcher" role="tablist" aria-label="Pilih gaya tampilan">
+        <button class="style-option active" data-style="material" type="button">
+          <span>◉</span>
+          Material U
+        </button>
+        <button class="style-option" data-style="default" type="button">
+          <span>◌</span>
+          Default
+        </button>
+      </div>
+
+      <section class="theme-card">
+        <div class="theme-card-copy">
+          <strong>Ikon, teks, dan elemen mengikuti warna tema</strong>
+          <p>Pilih warna dari gambar atau gunakan warna lain.</p>
+        </div>
+
+        <div class="palette-mode-switcher">
+          <button class="palette-mode active" data-palette-mode="wallpaper" type="button">
+            <span>▣</span>
+            Warna wallpaper
+          </button>
+          <button class="palette-mode" data-palette-mode="manual" type="button">
+            <span>◆</span>
+            Warna lain
+          </button>
+        </div>
+
+        <div class="palette-panel active" id="wallpaperPalettePanel">
+          <div class="palette-row" id="wallpaperPaletteRow"></div>
+
+          <label class="wallpaper-picker" for="wallpaperInput">
+            <span class="wallpaper-picker-icon">▣</span>
+            <span>
+              <strong>Ambil warna dari gambar</strong>
+              <small>Pilih gambar dari perangkat. Browser tidak membaca wallpaper sistem secara langsung.</small>
+            </span>
+          </label>
+          <input id="wallpaperInput" type="file" accept="image/*" hidden>
+        </div>
+
+        <div class="palette-panel" id="manualPalettePanel">
+          <div class="manual-color-grid" id="manualColorGrid">
+            <button class="manual-color" type="button" data-color="#7c3aed" style="--swatch:#7c3aed" aria-label="Ungu"></button>
+            <button class="manual-color" type="button" data-color="#ec4899" style="--swatch:#ec4899" aria-label="Pink"></button>
+            <button class="manual-color" type="button" data-color="#0ea5e9" style="--swatch:#0ea5e9" aria-label="Biru"></button>
+            <button class="manual-color" type="button" data-color="#14b8a6" style="--swatch:#14b8a6" aria-label="Toska"></button>
+            <button class="manual-color" type="button" data-color="#22c55e" style="--swatch:#22c55e" aria-label="Hijau"></button>
+            <button class="manual-color" type="button" data-color="#f59e0b" style="--swatch:#f59e0b" aria-label="Kuning"></button>
+            <button class="manual-color" type="button" data-color="#f97316" style="--swatch:#f97316" aria-label="Oranye"></button>
+            <button class="manual-color" type="button" data-color="#ef4444" style="--swatch:#ef4444" aria-label="Merah"></button>
+          </div>
+
+          <div class="custom-color-row">
+            <label for="customColor">Warna khusus</label>
+            <input id="customColor" type="color" value="#7c3aed">
+          </div>
+        </div>
+
+        <div class="theme-toggle-row">
+          <div>
+            <strong>Tema gelap</strong>
+            <span>Gunakan palet gelap dengan warna aksen yang sama.</span>
+          </div>
+
+          <label class="switch" aria-label="Tema gelap">
+            <input id="darkModeToggle" type="checkbox">
+            <span class="switch-track">
+              <span class="switch-thumb">×</span>
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <section class="theme-card compact-card">
+        <div class="theme-preview">
+          <div class="preview-chip">Primary</div>
+          <div class="preview-chip soft">Surface</div>
+          <div class="preview-chip outline">Outline</div>
+        </div>
+        <p>Pengaturan tersimpan otomatis di browser ini.</p>
+      </section>
+    </div>
+  </dialog>
+
+  <dialog class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="closeLightbox" type="button" aria-label="Tutup foto">×</button>
+
+    <button class="lightbox-nav prev" id="prevBtn" type="button" aria-label="Foto sebelumnya">‹</button>
+
+    <figure>
+      <img id="lightboxImage" src="" alt="">
+      <figcaption>
+        <div>
+          <strong id="lightboxTitle"></strong>
+          <span id="lightboxMeta"></span>
+        </div>
+
+        <button class="delete-button" id="deleteUploadedBtn" type="button" hidden>
+          Hapus upload
+        </button>
+      </figcaption>
+    </figure>
+
+    <button class="lightbox-nav next" id="nextBtn" type="button" aria-label="Foto berikutnya">›</button>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
