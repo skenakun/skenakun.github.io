@@ -1734,3 +1734,51 @@ body.default-style .language-slider {
     padding: 0;
   }
 }
+
+
+/* ===========================
+   LIGHTBOX CONTROL FIX
+   Commit baseline: a0fe7b6
+   =========================== */
+
+.lightbox {
+  position: relative;
+  isolation: isolate;
+}
+
+.lightbox figure {
+  position: relative;
+  z-index: 1;
+}
+
+.lightbox-close,
+.lightbox-nav {
+  z-index: 100 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.lightbox-close {
+  display: grid;
+  place-items: center;
+}
+
+.lightbox-nav {
+  display: grid;
+  place-items: center;
+}
+
+.lightbox-close:focus-visible,
+.lightbox-nav:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) {
+  .lightbox-close:hover,
+  .lightbox-nav:hover {
+    background: rgba(44, 29, 65, 0.94);
+  }
+}

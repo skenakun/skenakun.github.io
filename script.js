@@ -563,26 +563,54 @@ photoInput.addEventListener("change", async (event) => {
   }
 });
 
-deleteUploadedBtn.addEventListener("click", async () => {
-  const photo = currentList[currentIndex];
+if (deleteUploadedBtn) {
+  deleteUploadedBtn.addEventListener("click", async () => {
+    const photo = currentList[currentIndex];
 
-  if (!photo?.uploaded) return;
+    if (!photo?.uploaded) return;
 
-  try {
-    await deleteUpload(photo.id);
-    uploadedPhotos = uploadedPhotos.filter((item) => item.id !== photo.id);
+    try {
+      await deleteUpload(photo.id);
+      uploadedPhotos = uploadedPhotos.filter((item) => item.id !== photo.id);
 
-    lightbox.close();
-    renderGallery();
-    showToast(t("uploadDeleted"));
-  } catch {
-    showToast(t("deleteFailed"));
+      lightbox.close();
+      renderGallery();
+      showToast(t("uploadDeleted"));
+    } catch {
+      showToast(t("deleteFailed"));
+    }
+  });
+}
+
+/*
+ * Lightbox controls use event delegation.
+ * This keeps Close / Previous / Next working even if optional
+ * lightbox elements change or an upload-only control is missing.
+ */
+function handleLightboxControl(event) {
+  const control = event.target.closest("#closeLightbox, #prevBtn, #nextBtn");
+
+  if (!control || !lightbox.contains(control)) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  if (control.id === "closeLightbox") {
+    if (lightbox.open) lightbox.close();
+    return;
   }
-});
 
-closeLightbox.addEventListener("click", () => lightbox.close());
-prevBtn.addEventListener("click", () => moveLightbox(-1));
-nextBtn.addEventListener("click", () => moveLightbox(1));
+  if (control.id === "prevBtn") {
+    moveLightbox(-1);
+    return;
+  }
+
+  if (control.id === "nextBtn") {
+    moveLightbox(1);
+  }
+}
+
+lightbox.addEventListener("click", handleLightboxControl, true);
 
 lightbox.addEventListener("click", (event) => {
   if (event.target === lightbox) {
@@ -590,14 +618,27 @@ lightbox.addEventListener("click", (event) => {
   }
 });
 
+lightbox.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  lightbox.close();
+});
+
 document.addEventListener("keydown", (event) => {
   if (!lightbox.open) return;
 
+  if (event.key === "Escape") {
+    event.preventDefault();
+    lightbox.close();
+    return;
+  }
+
   if (event.key === "ArrowLeft") {
+    event.preventDefault();
     moveLightbox(-1);
   }
 
   if (event.key === "ArrowRight") {
+    event.preventDefault();
     moveLightbox(1);
   }
 });
