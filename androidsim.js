@@ -59,6 +59,9 @@
     previous: "home",
     locked: false,
     shade: false,
+    shadePanel: "quick",
+    separateQs: true,
+    shadeNotificationsCleared: false,
     longPressMenu: false,
     styleTab: "home",
     wallpaperTarget: "home",
@@ -93,6 +96,10 @@
     airplane: false,
     flashlight: false,
     batterySaver: false,
+    alarmEnabled: false,
+    caffeine: false,
+    locationEnabled: true,
+    doNotDisturb: false,
     screenRecord: false,
     screenRecordStart: 0,
     activeSimApp: "youtube",
@@ -232,6 +239,11 @@
 
     securityCheck: true,
     screenLock: "Pola",
+    screenLockPin: "2580",
+    screenLockPattern: [0, 1, 2, 5],
+    fingerprintEnrolled: false,
+    fingerprintName: "Sidik jari 1",
+    fingerprintEnrollProgress: 0,
     faceUnlock: false,
     sideKeyConfigured: false,
     /* Simulated application state */
@@ -396,6 +408,9 @@
   let state = loadState();
   if (!state.simPhone1) state.simPhone1 = makeRandomIndoNumber();
   if (!state.simPhone2) state.simPhone2 = makeRandomIndoNumber();
+  if (state.sideKeyConfigured && !state.fingerprintEnrolled) state.fingerprintEnrolled = true;
+  if (!Array.isArray(state.screenLockPattern) || state.screenLockPattern.length < 4) state.screenLockPattern = [0, 1, 2, 5];
+  if (!state.screenLockPin || String(state.screenLockPin).length < 4) state.screenLockPin = "2580";
   if (!Array.isArray(state.simContacts) || !state.simContacts.length) state.simContacts = makeSimContacts();
   localStorage.setItem(STORE, JSON.stringify(state));
   let longPressTimer = null;
@@ -403,6 +418,27 @@
   let volumeTimer = null;
 
   function save() { localStorage.setItem(STORE, JSON.stringify(state)); }
+
+  const simulatorUsageFallbackStart = Date.now();
+  function currentUsageSeconds() {
+    try {
+      const external = window.WaifuUsageTracker?.getSeconds?.();
+      if (Number.isFinite(Number(external))) return Math.max(0, Number(external));
+    } catch {}
+    return Math.max(0, Math.floor((Date.now() - simulatorUsageFallbackStart) / 1000));
+  }
+  function formatUsageDuration(seconds = currentUsageSeconds()) {
+    const total = Math.max(0, Math.floor(Number(seconds) || 0));
+    const hours = Math.floor(total / 3600);
+    const minutes = Math.floor((total % 3600) / 60);
+    if (getLanguage() === "en") {
+      if (hours > 0) return `${hours} h, ${minutes} min`;
+      return `${minutes} min`;
+    }
+    if (hours > 0) return `${hours} j, ${minutes} mnt`;
+    return `${minutes} mnt`;
+  }
+
   function vibrate(ms = 5) { try { navigator.vibrate?.(ms); } catch {} }
   function wallpaperById(id) { return wallpapers.find(w => w.id === id) || wallpapers[0]; }
   function paletteById(id) { return palettes.find(p => p.id === id) || palettes[0]; }
@@ -618,6 +654,18 @@
     el.textContent = `${mm}.${ss}`;
   }
 
+  let lockAuthVisible = false;
+  let lockPinAttempt = "";
+  let pinEnrollStage = "new";
+  let pinEnrollBuffer = "";
+  let pinEnrollFirst = "";
+  let patternEnrollStage = "new";
+  let patternEnrollFirst = [];
+  let activePattern = [];
+  let easterLoopToken = 0;
+  let spaceGameLoopToken = 0;
+  let android16AutoPilot = false;
+
   function toast(message) {
     $(".toast", root)?.remove();
     const el = document.createElement("div");
@@ -716,7 +764,9 @@
       mediaSettings: "soundSettings", cleanSpeaker: "soundSettings", dolbyAtmos: "soundSettings", equalizer: "dolbyAtmos",
       appAudioProfiles: "dolbyAtmos",
 
-      securityPrivacy: "settings", deviceUnlock: "securityPrivacy",
+      securityPrivacy: "settings", deviceUnlock: "securityPrivacy", fingerprintSettings: "deviceUnlock", fingerprintEnroll: "fingerprintSettings",
+      screenLockSettings: "deviceUnlock", pinEnroll: "screenLockSettings", patternEnroll: "screenLockSettings",
+      androidEasterEgg: "about", android16Game: "androidEasterEgg",
       appInfo: "allApps", simApp: "apps"
     };
     navigate(parent[state.view] || "home", false);
@@ -761,8 +811,8 @@
         <div class="record-home-spacer"></div>
         <div class="record-home-main">
           <div class="record-home-apps">${homeApps.map(a => appButton(a)).join("")}</div>
-          <button class="record-screen-time" type="button" data-nav="settings" aria-label="Waktu pemakaian perangkat">
-            <span>Waktu pemakaian<br>perangkat</span><i>◔</i><strong>1 j, 34 mnt</strong>
+          <button class="record-screen-time" type="button" data-nav="digitalWellbeing" aria-label="Waktu pemakaian perangkat">
+            <span>Waktu pemakaian<br>perangkat</span><i>◔</i><strong id="homeUsageTime">${formatUsageDuration()}</strong>
           </button>
         </div>
         <div class="home-dock record-home-dock">${dockApps.map(a => appButton(a,"record-dock-app")).join("")}</div>
@@ -1216,7 +1266,7 @@
         ${navRow("Aplikasi Clone", `${state.cloneApps.length} aplikasi di-clone`, "cloneApps")}
         ${navRow("Ruang Game", "Tingkatkan pengalaman bermain game Anda", "gameSpace")}
         ${navRow("Asisten", "OK Google dan setelan Asisten lainnya", "assistantSettings")}
-        ${navRow("Waktu pemakaian perangkat", "1 j, 17 mnt hari ini", "digitalWellbeing")}
+        ${navRow("Waktu pemakaian perangkat", `${formatUsageDuration()} hari ini`, "digitalWellbeing")}
         ${navRow("Setelan media cloud", state.mediaCloud === "google" ? "Google Foto" : "Tidak ada", "mediaCloudSettings")}
         ${navRow("Bilah Sisi", state.sideBar ? "Aktif" : "Tidak aktif", "sideBarSettings")}
         ${navRow("Penyimpanan kontak", state.contactStorage === "google" ? "Perangkat & Google" : "Perangkat saja", "contactStorageSettings")}
@@ -1255,7 +1305,7 @@
   }
 
   function renderDigitalWellbeing() {
-    root.innerHTML=`<div class="a17-page system-page">${topbar("Detail aktivitas aplikasi")}<div class="wellbeing-summary"><strong>1 j, 17 mnt</strong><span>Hari ini</span><div class="wellbeing-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="a17-card system-card">${plainRow("TikTok","50 menit")}${plainRow("Nekogram","10 menit")}${plainRow("Setelan","1 menit")}</div></div>`;
+    root.innerHTML=`<div class="a17-page system-page">${topbar("Detail aktivitas aplikasi")}<div class="wellbeing-summary"><strong id="wellbeingUsageTime">${formatUsageDuration()}</strong><span>Hari ini</span><div class="wellbeing-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="a17-card system-card">${plainRow("TikTok","50 menit")}${plainRow("Nekogram","10 menit")}${plainRow("Setelan","1 menit")}</div></div>`;
   }
 
   function renderMediaCloudSettings() {
@@ -1429,7 +1479,53 @@
   }
 
   function renderDeviceUnlock() {
-    root.innerHTML=`<div class="a17-page system-page">${topbar("Buka kunci perangkat")}<div class="unlock-hero">🔒</div><div class="a17-card system-card">${plainRow("Kunci layar",state.screenLock,`<span class="a17-chevron">›</span>`)}${switchRow("Sidik jari","Sidik jari ditambahkan", "sideKeyConfigured")}${switchRow("Wajah","Tambahkan wajah", "faceUnlock")}</div></div>`;
+    const fpDesc = state.fingerprintEnrolled ? state.fingerprintName : "Belum ada sidik jari";
+    root.innerHTML=`<div class="a17-page system-page">${topbar("Buka kunci perangkat")}<div class="unlock-hero">🔒</div><div class="a17-card system-card">${navRow("Kunci layar",state.screenLock,"screenLockSettings")}${navRow("Sidik jari",fpDesc,"fingerprintSettings")}${switchRow("Wajah",state.faceUnlock?"Wajah ditambahkan":"Tambahkan wajah", "faceUnlock")}</div><p class="system-description">Semua metode biometrik dan kredensial di halaman ini hanya simulasi lokal di browser.</p></div>`;
+  }
+
+  function renderFingerprintSettings() {
+    const enrolled = !!state.fingerprintEnrolled;
+    root.innerHTML=`<div class="a17-page system-page biometric-page">${topbar("Sidik jari")}<div class="fingerprint-settings-hero"><span class="fingerprint-symbol">◉</span><h4>${enrolled?"Sidik jari siap digunakan":"Siapkan buka kunci sidik jari"}</h4><p>${enrolled?"Gunakan sensor sidik jari dalam layar untuk membuka simulator.":"Daftarkan sidik jari simulasi dengan menyentuh sensor beberapa kali."}</p></div><div class="a17-card system-card">${enrolled?plainRow(state.fingerprintName,"Terdaftar"):plainRow("Belum ada sidik jari","Tambahkan satu untuk mulai")}</div><button class="system-add-button" type="button" data-action="startFingerprintEnroll">${enrolled?"Daftarkan ulang sidik jari":"Tambahkan sidik jari"}</button>${enrolled?`<button class="system-add-button danger-lite" type="button" data-action="removeFingerprint">Hapus sidik jari</button>`:""}</div>`;
+  }
+
+  function renderFingerprintEnroll() {
+    const p=Math.max(0,Math.min(100,Number(state.fingerprintEnrollProgress)||0));
+    root.innerHTML=`<div class="a17-page system-page fingerprint-enroll-page">${topbar("Tambahkan sidik jari")}<div class="finger-enroll-copy"><h3>${p>=100?"Selesai":"Sentuh dan tahan sensor"}</h3><p>${p>=100?"Sidik jari simulasi berhasil didaftarkan.":"Letakkan jari pada area sensor. Angkat lalu sentuh lagi hingga lingkaran penuh."}</p></div><div class="finger-enroll-ring" style="--fp-progress:${p*3.6}deg"><button class="finger-enroll-sensor" type="button" aria-label="Sensor sidik jari"><span>◉</span></button></div><strong class="finger-progress-label">${p}%</strong>${p>=100?`<button class="system-add-button" type="button" data-action="finishFingerprintEnroll">Selesai</button>`:`<small class="finger-enroll-hint">Tekan dan tahan beberapa kali</small>`}</div>`;
+  }
+
+  function renderScreenLockSettings() {
+    const options=[
+      ["PIN","Kode angka 4–6 digit"],
+      ["Pola","Hubungkan minimal 4 titik"],
+      ["Geser","Tanpa kredensial"],
+      ["Tidak ada","Langsung ke layar utama"]
+    ];
+    root.innerHTML=`<div class="a17-page system-page">${topbar("Kunci layar")}<p class="system-description">Pilih cara membuka Google Pixel 10 simulator.</p><div class="a17-card system-card">${options.map(([name,desc])=>`<button class="a17-row" type="button" data-set-lock-type="${name}"><span class="a17-copy"><strong>${name}</strong><span>${desc}</span></span>${systemRadio(state.screenLock===name)}</button>`).join("")}</div></div>`;
+  }
+
+  function pinDots(value) {
+    const len=String(value||"").length;
+    return `<div class="pin-dots">${Array.from({length:6},(_,i)=>`<i class="${i<len?"filled":""}"></i>`).join("")}</div>`;
+  }
+
+  function pinPadMarkup(prefix="pin-enroll") {
+    const digits=[1,2,3,4,5,6,7,8,9,"",0,"⌫"];
+    return `<div class="pin-pad">${digits.map(d=>d===""?`<span></span>`:`<button type="button" data-${prefix}-key="${d}">${d}</button>`).join("")}</div>`;
+  }
+
+  function renderPinEnroll() {
+    const confirm=pinEnrollStage==="confirm";
+    root.innerHTML=`<div class="a17-page system-page credential-enroll-page">${topbar("Siapkan PIN")}<div class="credential-copy"><h3>${confirm?"Konfirmasi PIN":"Buat PIN"}</h3><p>${confirm?"Masukkan PIN yang sama sekali lagi.":"Masukkan 4–6 angka. PIN hanya disimpan di browser untuk simulasi ini."}</p>${pinDots(pinEnrollBuffer)}</div>${pinPadMarkup("pin-enroll")}<button class="system-add-button" type="button" data-action="pinEnrollContinue" ${pinEnrollBuffer.length<4?"disabled":""}>${confirm?"Konfirmasi":"Lanjutkan"}</button></div>`;
+  }
+
+  function patternMarkup(idPrefix="pattern", selected=[]) {
+    return `<div class="pattern-board" data-pattern-board="${idPrefix}"><svg class="pattern-lines" aria-hidden="true"></svg>${Array.from({length:9},(_,i)=>`<button type="button" class="pattern-dot ${selected.includes(i)?"selected":""}" data-pattern-dot="${i}" aria-label="Titik ${i+1}"><span></span></button>`).join("")}</div>`;
+  }
+
+  function renderPatternEnroll() {
+    const confirm=patternEnrollStage==="confirm";
+    activePattern=[];
+    root.innerHTML=`<div class="a17-page system-page credential-enroll-page">${topbar("Siapkan pola")}<div class="credential-copy"><h3>${confirm?"Konfirmasi pola":"Gambar pola"}</h3><p>${confirm?"Gambar pola yang sama sekali lagi.":"Hubungkan minimal 4 titik tanpa mengangkat jari."}</p></div>${patternMarkup("enroll")}<div class="pattern-status" id="patternEnrollStatus">${confirm?"Konfirmasi pola":"Sentuh titik pertama"}</div></div>`;
   }
 
   function systemRadio(active) {
@@ -1463,10 +1559,7 @@
         ${row({ title: t("navigationMode"), desc: state.navigationMode === "gesture" ? t("gestureNavigation") : t("threeButtonNavigation"), nav: "navigationMode", trailing: `<span class="a17-trailing system-icon">◁</span>` })}
       </div>
 
-      <div class="a17-section">${t("aboutPhone")}</div>
-      <div class="a17-card system-card">
-        ${row({ title: t("aboutPhone"), desc: "Google Pixel 10 • Frankel", nav: "about", trailing: `<span class="a17-trailing system-icon">ⓘ</span>` })}
-      </div>
+
     </div>`;
   }
 
@@ -1609,8 +1702,88 @@
   }
 
   function renderAbout() {
-    const details = [[t("deviceName"), "Google Pixel 10"], [t("model"), "Frankel"], [t("androidVersion"), "17"], [t("securityUpdate"), "5 Agustus 2026"], [t("build"), "WG17.260818.2"]];
-    root.innerHTML = `<div class="a17-page wallstyle-page">${topbar(t("aboutPhone"))}<div class="about-hero"><div class="about-glyph">G</div><h4>Google Pixel 10</h4><p>Android 17 • Model Frankel</p></div><div class="a17-card">${details.map(d => `<div class="a17-row"><span class="a17-copy"><strong>${d[0]}</strong><span>${d[1]}</span></span></div>`).join("")}</div></div>`;
+    const normal = [[t("deviceName"), "Google Pixel 10"], [t("model"), "Frankel"]];
+    const tail = [[t("securityUpdate"), "5 Agustus 2026"], [t("build"), "WG17.260818.2"]];
+    root.innerHTML = `<div class="a17-page wallstyle-page">${topbar(t("aboutPhone"))}<div class="about-hero"><div class="about-glyph">G</div><h4>Google Pixel 10</h4><p>Android 17 • Model Frankel</p></div><div class="a17-card">${normal.map(d => `<div class="a17-row"><span class="a17-copy"><strong>${d[0]}</strong><span>${d[1]}</span></span></div>`).join("")}<button class="a17-row android-version-entry" type="button" data-nav="androidEasterEgg"><span class="a17-copy"><strong>${t("androidVersion")}</strong><span>17</span></span><span class="a17-chevron">›</span></button>${tail.map(d => `<div class="a17-row"><span class="a17-copy"><strong>${d[0]}</strong><span>${d[1]}</span></span></div>`).join("")}</div></div>`;
+  }
+
+  function renderAndroidEasterEgg() {
+    easterLoopToken += 1;
+    const token=easterLoopToken;
+    root.innerHTML=`<div class="a17-page android17-easter-page"><canvas id="android17EasterCanvas" aria-label="Android 17 easter egg"></canvas><button class="android17-badge" id="android17Badge" type="button" aria-label="Android 17"><span>ANDROID</span><b>17</b><i></i></button><button class="easter-back" type="button" data-nav="about">‹</button><div class="easter-hint">Tekan lama logo Android 17 untuk membuka mini game</div></div>`;
+    requestAnimationFrame(()=>startAndroid17EasterAnimation(token));
+  }
+
+  function startAndroid17EasterAnimation(token) {
+    const canvas=$("#android17EasterCanvas",root); if(!canvas||state.view!=="androidEasterEgg") return;
+    const ctx=canvas.getContext("2d");
+    const rect=canvas.getBoundingClientRect(); const dpr=Math.min(2,window.devicePixelRatio||1);
+    canvas.width=Math.max(1,Math.floor(rect.width*dpr)); canvas.height=Math.max(1,Math.floor(rect.height*dpr)); ctx.scale(dpr,dpr);
+    const w=rect.width,h=rect.height,cx=w/2,cy=h/2;
+    const rand=(seed)=>{const x=Math.sin(seed*91.17)*43758.5453;return x-Math.floor(x)};
+    const stars=Array.from({length:72},(_,i)=>({x:rand(i+2)*w,y:rand(i+90)*h,s:rand(i+190)*1.5+.45}));
+    const ring=Array.from({length:20},(_,i)=>{const a=i/20*Math.PI*2-.7;return{x:cx+Math.cos(a)*Math.min(w,h)*.28,y:cy+Math.sin(a)*Math.min(w,h)*.28}});
+    const started=performance.now();
+    const draw=(now)=>{
+      if(token!==easterLoopToken||state.view!=="androidEasterEgg"||!canvas.isConnected)return;
+      const t=Math.min(1,(now-started)/2600);
+      ctx.fillStyle="#020306";ctx.fillRect(0,0,w,h);
+      ctx.fillStyle="#fff";stars.forEach((s,i)=>{const pulse=.45+.55*Math.sin(now/620+i);ctx.globalAlpha=.35+pulse*.6;ctx.fillRect(s.x,s.y,s.s,s.s)});ctx.globalAlpha=1;
+      ring.forEach((p,i)=>{ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(p.x,p.y,2.1,0,Math.PI*2);ctx.fill();});
+      const shown=Math.floor(t*(ring.length-1));
+      ctx.strokeStyle="#ef5bd5";ctx.lineWidth=2.2;ctx.beginPath();
+      ring.slice(0,shown+1).forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();
+      if(t<1) requestAnimationFrame(draw); else $("#android17Badge",root)?.classList.add("show");
+    };
+    requestAnimationFrame(draw);
+    const badge=$("#android17Badge",root); if(badge){
+      let timer=null;
+      const start=()=>{badge.classList.add("pressing"); timer=setTimeout(()=>{timer=null; vibrate(35); badge.classList.add("launch"); setTimeout(()=>navigate("android16Game"),380)},650)};
+      const stop=()=>{badge.classList.remove("pressing"); if(timer){clearTimeout(timer);timer=null;}};
+      badge.addEventListener("pointerdown",start); badge.addEventListener("pointerup",stop); badge.addEventListener("pointercancel",stop); badge.addEventListener("pointerleave",stop);
+    }
+  }
+
+  function renderAndroid16Game() {
+    spaceGameLoopToken += 1;
+    const token=spaceGameLoopToken;
+    root.innerHTML=`<div class="a17-page android16-space-page"><canvas id="android16SpaceCanvas" aria-label="Android 16 space mini game"></canvas><button class="easter-back space-back" type="button" data-nav="androidEasterEgg">‹</button><div class="space-hud" id="spaceHud"><b>STAR</b><span>RADIUS 3475</span><span>BODIES 3</span><span>THR 100%</span><span>POS 0, 0</span><span>VEL 0</span></div><button class="space-auto ${android16AutoPilot?"on":""}" id="spaceAuto" type="button">AUTO</button><div class="space-help">Sentuh untuk mengarahkan • WASD / Arrow untuk dorongan</div></div>`;
+    requestAnimationFrame(()=>startAndroid16SpaceGame(token));
+  }
+
+  function startAndroid16SpaceGame(token) {
+    const canvas=$("#android16SpaceCanvas",root); if(!canvas||state.view!=="android16Game")return;
+    const ctx=canvas.getContext("2d"); const rect=canvas.getBoundingClientRect(); const dpr=Math.min(2,window.devicePixelRatio||1);
+    canvas.width=Math.floor(rect.width*dpr);canvas.height=Math.floor(rect.height*dpr);ctx.scale(dpr,dpr);
+    const w=rect.width,h=rect.height;
+    let ship={x:0,y:0,vx:0,vy:0,angle:-Math.PI/2};
+    let target={x:180,y:-220};
+    const bodies=[{x:145,y:-180,r:9},{x:-210,y:120,r:13},{x:260,y:210,r:7}];
+    const keys=new Set();
+    const rand=(seed)=>{const x=Math.sin(seed*71.31)*31911.73;return x-Math.floor(x)};
+    const stars=Array.from({length:115},(_,i)=>({x:rand(i+3)*w,y:rand(i+130)*h,a:.25+rand(i+300)*.7}));
+    const keyDown=e=>{if(state.view!=="android16Game"||/INPUT|TEXTAREA/.test(e.target?.tagName||""))return; if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","w","a","s","d","W","A","S","D"].includes(e.key)){e.preventDefault();keys.add(e.key.toLowerCase())}};
+    const keyUp=e=>keys.delete(String(e.key).toLowerCase()); window.addEventListener("keydown",keyDown);window.addEventListener("keyup",keyUp);
+    canvas.addEventListener("pointerdown",e=>{const r=canvas.getBoundingClientRect(); target={x:ship.x+(e.clientX-r.left-w/2)*2,y:ship.y+(e.clientY-r.top-h/2)*2};android16AutoPilot=false;$("#spaceAuto",root)?.classList.remove("on")});
+    $("#spaceAuto",root)?.addEventListener("click",()=>{android16AutoPilot=!android16AutoPilot;$("#spaceAuto",root)?.classList.toggle("on",android16AutoPilot)});
+    let last=performance.now();
+    const frame=now=>{
+      if(token!==spaceGameLoopToken||state.view!=="android16Game"||!canvas.isConnected){window.removeEventListener("keydown",keyDown);window.removeEventListener("keyup",keyUp);return;}
+      const dt=Math.min(.035,(now-last)/1000||.016);last=now;
+      let ax=0,ay=0;
+      if(keys.has("w")||keys.has("arrowup"))ay-=1;if(keys.has("s")||keys.has("arrowdown"))ay+=1;if(keys.has("a")||keys.has("arrowleft"))ax-=1;if(keys.has("d")||keys.has("arrowright"))ax+=1;
+      if(android16AutoPilot||(!ax&&!ay)){const dx=target.x-ship.x,dy=target.y-ship.y,d=Math.hypot(dx,dy)||1;if(android16AutoPilot&&d>10){ax=dx/d;ay=dy/d}}
+      const mag=Math.hypot(ax,ay)||1;if(ax||ay){ax/=mag;ay/=mag;ship.vx+=ax*78*dt;ship.vy+=ay*78*dt;ship.angle=Math.atan2(ay,ax)+Math.PI/2}
+      ship.vx*=.995;ship.vy*=.995;ship.x+=ship.vx*dt;ship.y+=ship.vy*dt;
+      ctx.fillStyle="#101014";ctx.fillRect(0,0,w,h);ctx.fillStyle="#d9d9df";stars.forEach(s=>{ctx.globalAlpha=s.a;ctx.fillRect(s.x,s.y,1,1)});ctx.globalAlpha=1;
+      const sx=w/2,sy=h/2;
+      ctx.strokeStyle="#1bc74f";ctx.lineWidth=1;ctx.beginPath();ctx.arc(sx,sy,Math.min(w,h)*.25,0,Math.PI*2);ctx.stroke();
+      bodies.forEach((b,i)=>{const x=sx+(b.x-ship.x)*.22,y=sy+(b.y-ship.y)*.22;ctx.fillStyle=i?"#9aa0a6":"#e2e6eb";ctx.beginPath();ctx.arc(x,y,b.r,0,Math.PI*2);ctx.fill();ctx.strokeStyle="#46505b";ctx.stroke()});
+      const tx=sx+(target.x-ship.x)*.22,ty=sy+(target.y-ship.y)*.22;ctx.strokeStyle="#174f2a";ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(tx,ty);ctx.stroke();ctx.setLineDash([]);
+      ctx.save();ctx.translate(sx,sy);ctx.rotate(ship.angle);ctx.fillStyle="#f3f4f7";ctx.beginPath();ctx.moveTo(0,-7);ctx.lineTo(5,6);ctx.lineTo(0,3);ctx.lineTo(-5,6);ctx.closePath();ctx.fill();if(ax||ay||android16AutoPilot){ctx.strokeStyle="#36d15c";ctx.beginPath();ctx.moveTo(0,7);ctx.lineTo(0,18);ctx.stroke()}ctx.restore();
+      const hud=$("#spaceHud",root);if(hud){const sp=Math.hypot(ship.vx,ship.vy);hud.innerHTML=`<b>STAR</b><span>RADIUS 3475</span><span>BODIES ${bodies.length}</span><span>THR ${Math.round((ax||ay||android16AutoPilot)?100:0)}%</span><span>POS ${Math.round(ship.x)}, ${Math.round(ship.y)}</span><span>VEL ${sp.toFixed(1)}</span>`}
+      requestAnimationFrame(frame);
+    };requestAnimationFrame(frame);
   }
 
   function renderApps() {
@@ -2475,20 +2648,112 @@
     root.innerHTML = `<div class="a17-page screen-off-page" id="screenOffPage">${ambient}</div>`;
   }
 
+  function lockCredentialMarkup() {
+    if (!lockAuthVisible) return "";
+    if (state.screenLock === "PIN") {
+      return `<div class="lock-auth-panel"><button class="lock-auth-close" type="button" data-action="closeLockAuth">×</button><div class="lock-auth-title">Masukkan PIN</div>${pinDots(lockPinAttempt)}${pinPadMarkup("lock-pin")}</div>`;
+    }
+    if (state.screenLock === "Pola") {
+      return `<div class="lock-auth-panel pattern-auth-panel"><button class="lock-auth-close" type="button" data-action="closeLockAuth">×</button><div class="lock-auth-title">Gambar pola untuk membuka</div>${patternMarkup("unlock")}</div>`;
+    }
+    return "";
+  }
+
   function renderLock() {
-    root.innerHTML = `<div class="a17-page lock-page" id="lockPage"><div class="lock-wall"></div><div class="lock-content"><div class="lock-date" id="lockDateLive">${formatDate()}</div><div class="lock-time ${state.dynamicClock && state.lockNotifications ? "compact" : ""}" id="lockClockLive">${lockClockMarkup()}</div>
-      ${state.lockNotifications ? `<div class="lock-notifications"><div class="lock-notification"><strong>Waifu Gallery</strong><span>${state.notificationMode === "compact" ? "Galeri siap dibuka" : "Galeri siap dibuka • Mini Game dan Ponsel tersedia"}</span></div>${state.notificationMode === "full" ? `<div class="lock-notification"><strong>Now Playing</strong><span>${state.nowPlaying ? "Ambient track detected" : "Off"}</span></div>` : ""}</div>` : ""}
-      <div class="lock-spacer"></div><div class="lock-text">${escapeHtml(state.lockText)}</div><div class="lock-shortcuts"><button class="lock-shortcut" type="button" data-lock-shortcut="${state.leftShortcut}">${shortcutIcon(state.leftShortcut)}</button><button class="lock-shortcut" type="button" data-lock-shortcut="${state.rightShortcut}">${shortcutIcon(state.rightShortcut)}</button></div><div class="unlock-hint">${t("unlock")}</div></div></div>`;
+    const fpClass = state.fingerprintEnrolled ? "ready" : "not-ready";
+    root.innerHTML = `<div class="a17-page lock-page ${lockAuthVisible?"auth-open":""}" id="lockPage"><div class="lock-wall"></div><div class="lock-content"><div class="lock-date" id="lockDateLive">${formatDate()}</div><div class="lock-time ${state.dynamicClock && state.lockNotifications ? "compact" : ""}" id="lockClockLive">${lockClockMarkup()}</div>
+      ${state.lockNotifications && !lockAuthVisible ? `<div class="lock-notifications"><div class="lock-notification"><strong>Waifu Gallery</strong><span>${state.notificationMode === "compact" ? "Galeri siap dibuka" : "Galeri siap dibuka • Mini Game dan Ponsel tersedia"}</span></div>${state.notificationMode === "full" ? `<div class="lock-notification"><strong>Now Playing</strong><span>${state.nowPlaying ? "Ambient track detected" : "Off"}</span></div>` : ""}</div>` : ""}
+      <div class="lock-spacer"></div>${!lockAuthVisible?`<button class="in-display-fingerprint ${fpClass}" type="button" data-action="lockFingerprint" aria-label="Sidik jari"><span>◉</span></button>`:""}<div class="lock-text">${escapeHtml(state.lockText)}</div>${!lockAuthVisible?`<div class="lock-shortcuts"><button class="lock-shortcut" type="button" data-lock-shortcut="${state.leftShortcut}">${shortcutIcon(state.leftShortcut)}</button><button class="lock-shortcut" type="button" data-lock-shortcut="${state.rightShortcut}">${shortcutIcon(state.rightShortcut)}</button></div><div class="unlock-hint">${state.screenLock==="PIN"?"Geser ke atas untuk memasukkan PIN":state.screenLock==="Pola"?"Geser ke atas untuk menggambar pola":t("unlock")}</div>`:""}</div>${lockCredentialMarkup()}</div>`;
+  }
+
+  function quickTile(key, icon, title, subtitle, active, shape = "round") {
+    return `<button class="axion-qs-tile ${shape} ${active ? "on" : ""}" type="button" data-quick-toggle="${key}">
+      <span class="axion-qs-icon">${icon}</span>
+      <span class="axion-qs-copy"><strong>${title}</strong><small>${subtitle}</small></span>
+    </button>`;
   }
 
   function renderQuickShade() {
-    const tiles = [
-      ["wifi", "⌁", t("wifi"), state.wifi && !state.airplane], ["bluetooth", "ᛒ", t("bluetooth"), state.bluetooth],
-      ["dark", "◐", t("darkTheme"), state.dark], ["flashlight", "⌁", t("flashlight"), state.flashlight],
-      ["airplane", "✈", t("airplane"), state.airplane], ["batterySaver", "▰", t("saver"), state.batterySaver],
-      ["screenRecord", "●", t("screenRecord"), state.screenRecord]
+    const wifiOn = state.wifi && !state.airplane;
+    const dataOn = state.mobileData && !state.airplane;
+    const connectionName = wifiOn ? escapeHtml(state.connectedWifi || "Wi-Fi") : "Off";
+    const dataLabel = dataOn ? "5G" : "Off";
+
+    const mainTiles = [
+      quickTile("wifi", "⌁", "Wi-Fi", connectionName, wifiOn, "wide"),
+      quickTile("mobileData", "⇅", "Mobile data", dataLabel, dataOn, "wide"),
+      quickTile("bluetooth", "ᛒ", "Bluetooth", state.bluetooth ? "On" : "Off", state.bluetooth),
+      quickTile("airplane", "✈", "Airplane", state.airplane ? "On" : "Off", state.airplane),
+      quickTile("flashlight", "ϟ", "Torch", state.flashlight ? "On" : "Off", state.flashlight, "wide"),
+      quickTile("alarmEnabled", "◷", "Alarm", state.alarmEnabled ? "06:30" : "No alarm", state.alarmEnabled),
+      quickTile("caffeine", "♨", "Caffeine", state.caffeine ? "Keep awake" : "Off", state.caffeine),
+      quickTile("batterySaver", "▰", "Battery", state.batterySaver ? "Saver on" : `${state.battery}%`, state.batterySaver),
+      quickTile("screenRecord", "▣", "Recorder", state.screenRecord ? "Recording" : "Off", state.screenRecord),
+      quickTile("locationEnabled", "⌖", "Location", state.locationEnabled ? "On" : "Off", state.locationEnabled),
+      quickTile("autoRotate", "⟳", "Auto rotate", state.autoRotate ? "On" : "Off", state.autoRotate),
+      quickTile("doNotDisturb", "◒", "Do not disturb", state.doNotDisturb ? "On" : "Off", state.doNotDisturb),
+      quickTile("hotspot", "◉", "Hotspot", state.hotspot ? "On" : "Off", state.hotspot)
     ];
-    return `<div class="quick-shade"><div class="shade-time">${formatTime().replace(".", ":")}</div><div class="shade-date">${formatDate()}</div><div class="quick-grid">${tiles.map(x => `<button class="quick-tile ${x[3] ? "on" : ""}" type="button" data-quick-toggle="${x[0]}"><b>${x[1]}</b><span><strong>${x[2]}</strong><span>${x[3] ? "On" : "Off"}</span></span></button>`).join("")}</div><div class="brightness-row">☀ <input id="brightnessSlider" type="range" min="35" max="100" value="${state.brightness}"></div><button class="a17-apply" style="display:block;margin:11px auto 0" type="button" data-action="closeShade">⌃</button></div>`;
+
+    return `<div class="quick-shade axion-separate-qs">
+      <div class="axion-qs-head">
+        <div><strong>${formatTime().replace(".", ":")}</strong><small>${formatDate()}</small></div>
+        <div class="axion-qs-status"><span>${dataOn ? "5G" : ""}</span><span>${wifiOn ? "⌁" : ""}</span><span>${state.battery}%</span></div>
+      </div>
+      <div class="axion-qs-grid">${mainTiles.join("")}</div>
+      <label class="axion-slider-row"><span>☀</span><input id="brightnessSlider" type="range" min="35" max="100" value="${state.brightness}"></label>
+      <label class="axion-slider-row volume"><span>♫</span><input id="qsVolumeSlider" type="range" min="0" max="100" value="${state.volume}"></label>
+      <div class="axion-qs-footer">
+        <button type="button" class="${state.separateQs ? "on" : ""}" data-quick-toggle="separateQs">▥ <span>Separate QS</span></button>
+        <button type="button" data-nav="settings">⚙</button>
+        <button type="button" data-action="closeShade">⌃</button>
+      </div>
+      ${!state.separateQs ? renderNotificationCards(true) : ""}
+    </div>`;
+  }
+
+  function notificationItems() {
+    const items = [];
+    if (state.screenRecord) items.push({ app:"settings-app", icon:"●", title:"Perekaman layar", body:"Perekaman simulator sedang berjalan", time:"sekarang" });
+    items.push(
+      { app:"wa-business", icon:"W", title:"WA Business", body:"3 pesan baru dari kontak simulasi", time:"1 mnt" },
+      { app:"nekogram", icon:"N", title:"Nekogram", body:"Waifu Gallery: ada pesan baru", time:"4 mnt" },
+      { app:"youtube", icon:"▶", title:"YouTube", body:"Rekomendasi video baru tersedia", time:"12 mnt" },
+      { app:"spotify", icon:"◉", title:"Spotify", body:"Lanjutkan musik terakhir", time:"18 mnt" }
+    );
+    return items;
+  }
+
+  function renderNotificationCards(compact = false) {
+    if (state.shadeNotificationsCleared) {
+      return `<div class="axion-notification-empty"><span>✓</span><strong>Tidak ada notifikasi baru</strong><small>Notifikasi simulasi sudah dibersihkan</small></div>`;
+    }
+    return `<div class="axion-notification-list ${compact ? "compact" : ""}">${notificationItems().map(n => `
+      <button class="axion-notification-card" type="button" data-open-app="${n.app}">
+        <span class="axion-notification-icon">${n.icon}</span>
+        <span><strong>${n.title}</strong><small>${n.body}</small></span>
+        <em>${n.time}</em>
+      </button>`).join("")}</div>`;
+  }
+
+  function renderNotificationShade() {
+    return `<div class="quick-shade axion-notification-shade">
+      <div class="axion-notif-head">
+        <div><strong>${formatTime().replace(".", ":")}</strong><small>${formatDate()}</small></div>
+        <button type="button" data-action="closeShade">⌃</button>
+      </div>
+      <div class="axion-notif-title"><strong>Notifikasi</strong><span>${state.doNotDisturb ? "Jangan ganggu aktif" : "Terbaru"}</span></div>
+      ${renderNotificationCards(false)}
+      <div class="axion-notif-footer">
+        <button type="button" data-action="clearShadeNotifications">Hapus semua</button>
+        <button type="button" data-nav="notificationsSettings">Setelan notifikasi</button>
+      </div>
+    </div>`;
+  }
+
+  function renderShadePanel() {
+    if (state.separateQs && state.shadePanel === "notifications") return renderNotificationShade();
+    return renderQuickShade();
   }
 
   function renderBoot() {
@@ -2505,7 +2770,8 @@
         clock: renderClock, shortcuts: renderShortcuts, notifications: renderNotifications, lockMore: renderLockMore,
         wallpaperPicker: renderWallpaperPicker, homeSettings: renderHomeSettings, settings: renderSettings, system: renderSystem,
         languageRegion: renderLanguageRegion, navigationMode: renderNavigationMode, gestureNavigation: renderGestureNavigation,
-        buttonNavigation: renderButtonNavigation, recents: renderRecents, about: renderAbout,
+        buttonNavigation: renderButtonNavigation, recents: renderRecents, about: renderAbout, androidEasterEgg: renderAndroidEasterEgg, android16Game: renderAndroid16Game,
+        fingerprintSettings: renderFingerprintSettings, fingerprintEnroll: renderFingerprintEnroll, screenLockSettings: renderScreenLockSettings, pinEnroll: renderPinEnroll, patternEnroll: renderPatternEnroll,
         apps: renderApps, appInfo: renderAppInfo, simApp: renderSimApp, camera: renderCamera, boot: renderBoot,
 
         networkInternet: renderNetworkInternet, internetSettings: renderInternetSettings, simSettings: renderSimSettings,
@@ -2555,7 +2821,7 @@
       };
       (map[state.view] || renderHome)();
     }
-    if (state.shade && state.view !== "boot") root.insertAdjacentHTML("beforeend", renderQuickShade());
+    if (state.shade && state.view !== "boot") root.insertAdjacentHTML("beforeend", renderShadePanel());
     bindDynamic();
   }
 
@@ -2563,6 +2829,12 @@
     $$('[data-nav]', root).forEach(btn => btn.addEventListener("click", () => btn.dataset.nav === "back" ? goBack() : navigate(btn.dataset.nav)));
     $$('[data-open-app]', root).forEach(btn => btn.addEventListener("click", () => {
       const id = btn.dataset.openApp;
+      if (id === "google") {
+        vibrate(6);
+        const opened = window.open("https://www.google.com/", "_blank", "noopener,noreferrer");
+        if (!opened) toast("Izinkan pop-up untuk membuka Google");
+        return;
+      }
       state.activeSimApp = id;
       state.recentSimApps = [id, ...(state.recentSimApps || []).filter(x => x !== id)].slice(0, 8);
       save(); vibrate(6); navigate("simApp");
@@ -2740,9 +3012,37 @@
       save(); vibrate(6); render();
     }));
 
+    $$('[data-set-lock-type]', root).forEach(btn => btn.addEventListener("click", () => {
+      const type=btn.dataset.setLockType;
+      if(type==="PIN"){pinEnrollStage="new";pinEnrollBuffer="";pinEnrollFirst="";navigate("pinEnroll");return;}
+      if(type==="Pola"){patternEnrollStage="new";patternEnrollFirst=[];activePattern=[];navigate("patternEnroll");return;}
+      state.screenLock=type; save(); vibrate(8); render();
+    }));
+
+    $$('[data-pin-enroll-key]', root).forEach(btn=>btn.addEventListener("click",()=>{
+      const k=btn.dataset.pinEnrollKey;
+      if(k==="⌫") pinEnrollBuffer=pinEnrollBuffer.slice(0,-1); else if(pinEnrollBuffer.length<6) pinEnrollBuffer+=k;
+      render();
+    }));
+    $$('[data-lock-pin-key]', root).forEach(btn=>btn.addEventListener("click",()=>{
+      const k=btn.dataset.lockPinKey;
+      if(k==="⌫") lockPinAttempt=lockPinAttempt.slice(0,-1); else if(lockPinAttempt.length<6) lockPinAttempt+=k;
+      if(lockPinAttempt.length>=4 && lockPinAttempt===String(state.screenLockPin||"2580")){vibrate(22);unlockPhone();return;}
+      render();
+    }));
+    bindPatternBoard();
+    const fpSensor=$('.finger-enroll-sensor',root);
+    if(fpSensor){
+      let fpTimer=null;
+      const pulse=()=>{if(state.fingerprintEnrollProgress>=100)return;state.fingerprintEnrollProgress=Math.min(100,(Number(state.fingerprintEnrollProgress)||0)+17);save();fpSensor.classList.add('scanning');vibrate(10);setTimeout(()=>fpSensor.classList.remove('scanning'),180);if(state.fingerprintEnrollProgress>=100){setTimeout(render,220);}else{const ring=$('.finger-enroll-ring',root);if(ring)ring.style.setProperty('--fp-progress',`${state.fingerprintEnrollProgress*3.6}deg`);const label=$('.finger-progress-label',root);if(label)label.textContent=`${state.fingerprintEnrollProgress}%`;}};
+      fpSensor.addEventListener('pointerdown',()=>{pulse();fpTimer=setInterval(pulse,520)});
+      ['pointerup','pointercancel','pointerleave'].forEach(ev=>fpSensor.addEventListener(ev,()=>{if(fpTimer){clearInterval(fpTimer);fpTimer=null;}}));
+    }
+
     $$('[data-action]', root).forEach(btn => btn.addEventListener("click", () => handleAction(btn.dataset.action)));
 
     $("#brightnessSlider")?.addEventListener("input", e => { state.brightness = Number(e.target.value); save(); applyTheme(); });
+    $("#qsVolumeSlider")?.addEventListener("input", e => { state.volume = Number(e.target.value); save(); });
 
     if (state.view === "simApp" && state.activeSimApp === "spotify") hydrateSpotifyAccount();
     if (state.view === "simApp" && ["youtube","youtube-music"].includes(state.activeSimApp)) hydrateYouTubeAccount();
@@ -2758,10 +3058,45 @@
         if (lockStartY == null) return;
         const dy = e.clientY - lockStartY;
         lockStartY = null;
-        if (dy < -42) unlockPhone();
+        if (dy < -42) {
+          if (state.screenLock === "PIN" || state.screenLock === "Pola") { lockAuthVisible = true; lockPinAttempt = ""; activePattern = []; render(); }
+          else unlockPhone();
+        }
       });
       lockPage.addEventListener("pointercancel", () => { lockStartY = null; });
     }
+  }
+
+  function bindPatternBoard() {
+    const board=$('[data-pattern-board]',root); if(!board) return;
+    const mode=board.dataset.patternBoard;
+    let drawing=false; activePattern=[];
+    const svg=$('.pattern-lines',board);
+    const dots=$$('[data-pattern-dot]',board);
+    const centers=()=>dots.map(d=>{const br=board.getBoundingClientRect(),r=d.getBoundingClientRect();return{x:r.left-br.left+r.width/2,y:r.top-br.top+r.height/2}});
+    const redraw=(pointer=null)=>{
+      dots.forEach((d,i)=>d.classList.toggle('selected',activePattern.includes(i)));
+      if(!svg)return; const pts=centers(); let html='';
+      for(let i=1;i<activePattern.length;i++){const a=pts[activePattern[i-1]],b=pts[activePattern[i]];html+=`<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"/>`;}
+      if(pointer&&activePattern.length){const a=pts[activePattern[activePattern.length-1]];html+=`<line class="ghost" x1="${a.x}" y1="${a.y}" x2="${pointer.x}" y2="${pointer.y}"/>`;}
+      svg.innerHTML=html;
+    };
+    const addFromPoint=(clientX,clientY)=>{const br=board.getBoundingClientRect(),pts=centers();const x=clientX-br.left,y=clientY-br.top;let best=-1,dist=28;pts.forEach((p,i)=>{const d=Math.hypot(p.x-x,p.y-y);if(d<dist&&!activePattern.includes(i)){best=i;dist=d}});if(best>=0){activePattern.push(best);vibrate(5);redraw({x,y});}};
+    board.addEventListener('pointerdown',e=>{if(e.target.closest('.lock-auth-close'))return;drawing=true;activePattern=[];board.setPointerCapture?.(e.pointerId);addFromPoint(e.clientX,e.clientY);e.preventDefault()});
+    board.addEventListener('pointermove',e=>{if(!drawing)return;addFromPoint(e.clientX,e.clientY);const br=board.getBoundingClientRect();redraw({x:e.clientX-br.left,y:e.clientY-br.top});e.preventDefault()});
+    const finish=()=>{
+      if(!drawing)return;drawing=false;redraw();
+      if(mode==='enroll'){
+        const status=$('#patternEnrollStatus',root);
+        if(activePattern.length<4){if(status)status.textContent='Hubungkan minimal 4 titik';vibrate([20,40,20]);return;}
+        if(patternEnrollStage==='new'){patternEnrollFirst=[...activePattern];patternEnrollStage='confirm';setTimeout(render,220);return;}
+        if(activePattern.join('-')===patternEnrollFirst.join('-')){state.screenLock='Pola';state.screenLockPattern=[...activePattern];save();vibrate(25);toast('Pola berhasil disimpan');setTimeout(()=>navigate('deviceUnlock',false),280);}else{if(status)status.textContent='Pola tidak cocok. Coba lagi.';vibrate([20,40,20]);}
+      } else if(mode==='unlock'){
+        const saved=Array.isArray(state.screenLockPattern)?state.screenLockPattern:[0,1,2,5];
+        if(activePattern.join('-')===saved.join('-')){vibrate(22);unlockPhone();}else{vibrate([20,45,20]);toast('Pola salah');setTimeout(()=>{activePattern=[];redraw()},240);}
+      }
+    };
+    board.addEventListener('pointerup',finish);board.addEventListener('pointercancel',finish);
   }
 
   function cycleSystemSetting(key) {
@@ -2781,10 +3116,22 @@
   function toggleQuick(key) {
     if (key === "airplane") {
       state.airplane = !state.airplane;
-      if (state.airplane) state.wifi = false;
+      if (state.airplane) {
+        state.wifi = false;
+        state.mobileData = false;
+      }
     } else if (key === "screenRecord") {
       state.screenRecord = !state.screenRecord;
       state.screenRecordStart = state.screenRecord ? Date.now() : 0;
+    } else if (key === "separateQs") {
+      state.separateQs = !state.separateQs;
+      state.shadePanel = "quick";
+    } else if (key === "mobileData") {
+      if (state.airplane) state.airplane = false;
+      state.mobileData = !state.mobileData;
+    } else if (key === "wifi") {
+      if (state.airplane) state.airplane = false;
+      state.wifi = !state.wifi;
     } else {
       state[key] = !state[key];
     }
@@ -2930,6 +3277,21 @@
   }
 
   function handleAction(action) {
+    if (action === "startFingerprintEnroll") { state.fingerprintEnrollProgress=0; save(); navigate("fingerprintEnroll"); return; }
+    if (action === "finishFingerprintEnroll") { state.fingerprintEnrolled=true; state.sideKeyConfigured=true; state.fingerprintEnrollProgress=100; save(); navigate("fingerprintSettings",false); toast("Sidik jari ditambahkan"); return; }
+    if (action === "removeFingerprint") { state.fingerprintEnrolled=false; state.sideKeyConfigured=false; state.fingerprintEnrollProgress=0; save(); render(); toast("Sidik jari dihapus"); return; }
+    if (action === "pinEnrollContinue") {
+      if(pinEnrollBuffer.length<4)return;
+      if(pinEnrollStage==="new"){pinEnrollFirst=pinEnrollBuffer;pinEnrollBuffer="";pinEnrollStage="confirm";render();return;}
+      if(pinEnrollBuffer===pinEnrollFirst){state.screenLock="PIN";state.screenLockPin=pinEnrollBuffer;save();pinEnrollBuffer="";pinEnrollFirst="";pinEnrollStage="new";toast("PIN berhasil disimpan");setTimeout(()=>navigate("deviceUnlock",false),260);}else{pinEnrollBuffer="";toast("PIN tidak cocok. Coba lagi.");vibrate([20,40,20]);render();}
+      return;
+    }
+    if (action === "closeLockAuth") { lockAuthVisible=false;lockPinAttempt="";activePattern=[];render();return; }
+    if (action === "lockFingerprint") {
+      const sensor=$('.in-display-fingerprint',root);
+      if(!state.fingerprintEnrolled){toast('Daftarkan sidik jari di Setelan');vibrate(6);return;}
+      sensor?.classList.add('scanning');vibrate(18);setTimeout(()=>{if(state.locked)unlockPhone();},520);return;
+    }
     if (action === "dismissMenu") { state.longPressMenu = false; render(); }
     if (action === "extractSimWallpaperPalette") { applyWallpaperColorBurst(); }
     if (action === "openStyle") { state.styleTab = "home"; state.wallpaperTarget = "home"; navigate("wallpaperStyle"); }
@@ -2943,6 +3305,7 @@
       navigate("wallpaperStyle", false);
     }
     if (action === "closeShade") { state.shade = false; render(); }
+    if (action === "clearShadeNotifications") { state.shadeNotificationsCleared = true; save(); vibrate(6); render(); return; }
     if (action === "shutter") toast(t("photoCaptured"));
     if (action === "nowPlayingToast") toast(t("nowPlayingDesc"));
     if (action === "addLanguage") {
@@ -3002,8 +3365,8 @@
     }
   }
 
-  function lockPhone() { state.screenOff = false; state.locked = true; state.shade = false; save(); render(); }
-  function unlockPhone() { state.screenOff = false; state.locked = false; state.view = "home"; state.shade = false; save(); render(); }
+  function lockPhone() { lockAuthVisible=false;lockPinAttempt="";activePattern=[]; state.screenOff = false; state.locked = true; state.shade = false; save(); render(); }
+  function unlockPhone() { lockAuthVisible=false;lockPinAttempt="";activePattern=[]; state.screenOff = false; state.locked = false; state.view = "home"; state.shade = false; save(); render(); }
   function togglePower() {
     if (state.screenOff) {
       state.screenOff = false;
@@ -3028,9 +3391,18 @@
   closeBtn?.addEventListener("click", () => dialog.open && dialog.close());
   dialog.addEventListener("cancel", e => { e.preventDefault(); dialog.close(); });
 
-  statusBar?.addEventListener("click", () => {
+  statusBar?.addEventListener("click", e => {
     if (state.view === "boot") return;
-    state.shade = !state.shade; render();
+    const rect = statusBar.getBoundingClientRect();
+    const localX = e.clientX - rect.left;
+    if (state.separateQs) {
+      state.shadePanel = localX < rect.width / 2 ? "quick" : "notifications";
+    } else {
+      state.shadePanel = "quick";
+    }
+    state.shade = true;
+    save();
+    render();
   });
   gesture?.addEventListener("click", () => {
     if (state.navigationMode !== "gesture") return;
@@ -3127,6 +3499,10 @@
     const ambientClock = $("#ambientClockLive", root);
     const ambientDate = $("#ambientDateLive", root);
     const appClock = $("#appClockLive", root);
+    const usageClock = $("#homeUsageTime", root);
+    const wellbeingUsage = $("#wellbeingUsageTime", root);
+    if (usageClock) usageClock.textContent = formatUsageDuration();
+    if (wellbeingUsage) wellbeingUsage.textContent = formatUsageDuration();
     if (lockClock) lockClock.innerHTML = lockClockMarkup();
     if (lockDate) lockDate.textContent = formatDate();
     if (ambientClock) ambientClock.textContent = formatTime().replace(".", ":");

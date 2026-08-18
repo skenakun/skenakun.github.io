@@ -1,0 +1,367 @@
+/* =========================================================
+   Android Simulator Enhancer
+   Dynamic Island + Stopwatch + In-simulator Browser + Media notification
+   Baseline: 094a2c341eb41f0c8cf91f58b5c5f23e3a9ab7c8
+   ========================================================= */
+
+/* 1. Remove the red screen-record timer pill from the status bar. */
+#androidRecordPill,
+.pixel-record-pill{
+  display:none!important;
+  visibility:hidden!important;
+}
+
+/* Dynamic Island */
+.android-dynamic-island{
+  position:absolute;
+  z-index:180;
+  top:7px;
+  left:50%;
+  transform:translateX(-50%);
+  color:#fff;
+  font-family:inherit;
+  pointer-events:auto;
+  transition:
+    width .28s cubic-bezier(.2,.8,.2,1),
+    min-height .28s cubic-bezier(.2,.8,.2,1),
+    border-radius .28s ease,
+    opacity .18s ease;
+}
+.android-dynamic-island.island-idle{
+  width:20px;
+  min-height:14px;
+  opacity:0;
+  pointer-events:none;
+}
+.android-dynamic-island.has-activity{
+  width:126px;
+  min-height:35px;
+  border-radius:20px;
+  background:#050507;
+  box-shadow:0 4px 12px rgba(0,0,0,.26);
+}
+.android-dynamic-island.has-activity.expanded{
+  width:190px;
+  min-height:75px;
+  border-radius:24px;
+}
+.island-main{
+  width:100%;
+  min-height:35px;
+  padding:5px 8px;
+  border:0;
+  display:grid;
+  grid-template-columns:27px minmax(0,1fr) auto;
+  gap:6px;
+  align-items:center;
+  border-radius:inherit;
+  color:#fff;
+  background:transparent;
+  cursor:pointer;
+  text-align:left;
+}
+.island-activity-icon{
+  width:27px;
+  height:27px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:11px;
+  font-weight:900;
+}
+.island-activity-icon.spotify{background:#1ed760;color:#061a0d}
+.island-activity-icon.youtube{background:#ff0033}
+.island-activity-icon.youtube-music{background:#ff0033}
+.island-activity-icon.stopwatch{background:#2e85ff}
+.island-activity-copy{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+}
+.island-activity-copy strong{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:6.8px;
+}
+.island-activity-copy small{
+  margin-top:1px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#b8b7bd;
+  font-size:5.7px;
+}
+.island-eq{
+  height:18px;
+  display:flex;
+  align-items:center;
+  gap:2px;
+}
+.island-eq i,
+.enhancer-notification-wave i{
+  width:2px;
+  border-radius:99px;
+  background:currentColor;
+  animation:islandEq .8s ease-in-out infinite alternate;
+}
+.island-eq i:nth-child(1){height:8px}
+.island-eq i:nth-child(2){height:16px;animation-delay:.15s}
+.island-eq i:nth-child(3){height:11px;animation-delay:.3s}
+@keyframes islandEq{
+  to{transform:scaleY(.38)}
+}
+.island-secondary{
+  width:19px;
+  height:19px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:7px;
+  font-weight:900;
+}
+.island-secondary.spotify{background:#1ed760;color:#061a0d}
+.island-secondary.youtube,
+.island-secondary.youtube-music{background:#ff0033}
+.island-expanded-panel{
+  padding:4px 8px 8px;
+  display:flex;
+  gap:5px;
+  justify-content:center;
+}
+.island-expanded-panel button{
+  min-height:24px;
+  padding:0 8px;
+  border:0;
+  border-radius:13px;
+  color:#fff;
+  background:#242429;
+  font:800 5.7px/1 inherit;
+}
+.island-expanded-panel button:active{transform:scale(.96)}
+
+/* 2. Clock app stopwatch */
+.enhancer-stopwatch{
+  margin-top:10px;
+  padding:12px;
+  border-radius:22px;
+  background:var(--android-card,#f7f5fb);
+  color:var(--android-text,#262330);
+  box-shadow:0 5px 17px rgba(20,15,32,.07);
+}
+.enhancer-clock-tabs{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:11px;
+  font-size:6.5px;
+  color:var(--android-muted,#6e6a78);
+}
+.enhancer-clock-tabs strong{
+  padding:5px 9px;
+  border-radius:12px;
+  color:var(--android-blue,#1769d2);
+  background:var(--android-blue-soft,#dce8ff);
+}
+.stopwatch-display{
+  padding:7px 0 15px;
+  text-align:center;
+  font-size:28px;
+  font-weight:800;
+  letter-spacing:-.04em;
+  font-variant-numeric:tabular-nums;
+}
+.stopwatch-actions{
+  display:grid;
+  grid-template-columns:1fr 1.2fr 1fr;
+  gap:6px;
+}
+.stopwatch-actions button{
+  min-height:35px;
+  border:0;
+  border-radius:18px;
+  font:900 7px/1 inherit;
+}
+.stopwatch-actions .primary{
+  color:#fff;
+  background:var(--android-blue,#1769d2);
+}
+.stopwatch-actions .secondary{
+  color:var(--android-text,#262330);
+  background:var(--android-blue-soft,#dce8ff);
+}
+.stopwatch-actions button:disabled{opacity:.36}
+.stopwatch-laps{
+  max-height:105px;
+  margin-top:9px;
+  overflow:auto;
+  scrollbar-width:none;
+}
+.stopwatch-laps::-webkit-scrollbar{display:none}
+.stopwatch-laps>div{
+  min-height:27px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid rgba(90,86,103,.12);
+  font-size:6.4px;
+}
+.stopwatch-laps>div strong{font-variant-numeric:tabular-nums}
+.stopwatch-laps p{
+  margin:7px 0 0;
+  color:var(--android-muted,#6e6a78);
+  text-align:center;
+  font-size:6px;
+}
+
+/* 3. Google / Chrome browser inside the simulator */
+.sim-browser-page{
+  padding:0!important;
+  overflow:hidden!important;
+  background:#f6f7fb;
+}
+.pixel-screen.android-dark .sim-browser-page{background:#17181b}
+.sim-browser-toolbar{
+  position:absolute;
+  z-index:8;
+  top:27px;
+  left:6px;
+  right:6px;
+  display:grid;
+  grid-template-columns:28px minmax(0,1fr) 28px;
+  gap:5px;
+  align-items:center;
+}
+.sim-browser-toolbar>button,
+.sim-browser-nav>button{
+  width:28px;
+  height:28px;
+  border:0;
+  border-radius:50%;
+  color:var(--android-text,#292631);
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(10px);
+}
+.pixel-screen.android-dark .sim-browser-toolbar>button,
+.pixel-screen.android-dark .sim-browser-nav>button{
+  color:#fff;
+  background:#2c2d31;
+}
+.sim-browser-address{
+  min-width:0;
+  height:32px;
+  padding:0 5px 0 9px;
+  display:grid;
+  grid-template-columns:15px minmax(0,1fr) 24px;
+  align-items:center;
+  gap:4px;
+  border-radius:17px;
+  background:rgba(255,255,255,.94);
+  box-shadow:0 3px 11px rgba(0,0,0,.08);
+}
+.pixel-screen.android-dark .sim-browser-address{background:#2b2c30}
+.sim-browser-address>span{color:#4285f4;font-size:12px;font-weight:1000}
+.sim-browser-address input{
+  min-width:0;
+  border:0;
+  outline:0;
+  color:var(--android-text,#292631);
+  background:transparent;
+  font:700 6.5px/1.2 inherit;
+}
+.pixel-screen.android-dark .sim-browser-address input{color:#fff}
+.sim-browser-address button{
+  width:23px;height:23px;
+  border:0;border-radius:50%;
+  color:#fff;background:#4285f4;
+}
+.sim-browser-nav{
+  position:absolute;
+  z-index:7;
+  top:64px;
+  left:6px;
+  right:6px;
+  height:28px;
+  padding:0 6px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  border-radius:14px;
+  color:var(--android-text,#292631);
+  background:rgba(232,235,243,.9);
+  backdrop-filter:blur(10px);
+}
+.pixel-screen.android-dark .sim-browser-nav{color:#fff;background:rgba(36,37,42,.92)}
+.sim-browser-nav button:disabled{opacity:.28}
+.sim-browser-nav strong{
+  margin-left:auto;
+  padding-right:5px;
+  font-size:6px;
+}
+.sim-browser-frame-wrap{
+  position:absolute;
+  inset:97px 0 0;
+  background:#fff;
+}
+.pixel-screen.android-dark .sim-browser-frame-wrap{background:#111}
+.sim-browser-frame-wrap iframe{
+  width:100%;
+  height:calc(100% - 35px);
+  border:0;
+  display:block;
+  background:#fff;
+}
+.sim-browser-note{
+  height:35px;
+  padding:5px 8px;
+  overflow:hidden;
+  border-top:1px solid #ddd;
+  color:#777;
+  background:#fafafa;
+  font:600 5.2px/1.3 inherit;
+}
+.pixel-screen.android-dark .sim-browser-note{
+  border-color:#333;
+  color:#aaa;
+  background:#1b1b1d;
+}
+
+/* 4. Persistent media notification in the separate notification shade */
+.enhancer-media-notification{
+  border:1px solid color-mix(in srgb,var(--android-blue,#1b6fd4) 20%,transparent)!important;
+  background:color-mix(in srgb,var(--android-card,#f7f5fb) 90%,var(--android-blue-soft,#dce8ff) 10%)!important;
+}
+.enhancer-media-notification .enhancer-spotify{
+  color:#061a0d!important;
+  background:#1ed760!important;
+}
+.enhancer-media-notification .enhancer-youtube,
+.enhancer-media-notification .enhancer-youtube-music{
+  color:#fff!important;
+  background:#ff0033!important;
+}
+.enhancer-notification-wave{
+  height:9px;
+  margin-top:3px;
+  display:flex;
+  align-items:center;
+  gap:2px;
+  color:var(--android-blue,#1769d2);
+}
+.enhancer-notification-wave i{height:7px}
+.enhancer-notification-wave i:nth-child(2){height:4px;animation-delay:.12s}
+.enhancer-notification-wave i:nth-child(3){height:8px;animation-delay:.24s}
+.enhancer-notification-wave i:nth-child(4){height:5px;animation-delay:.36s}
+
+@media (prefers-reduced-motion:reduce){
+  .island-eq i,
+  .enhancer-notification-wave i{animation:none!important}
+}
+
+html.performance-lite .android-dynamic-island,
+html.performance-lite .sim-browser-toolbar>button,
+html.performance-lite .sim-browser-nav,
+html.performance-lite .sim-browser-address{
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}

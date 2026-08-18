@@ -7,13 +7,14 @@
   <meta name="description" content="Waifu Gallery, galeri anime colorful dan responsif untuk GitHub Pages.">
   <title>Waifu Gallery</title>
   <script>
-    // Mode Ringan dikontrol pengguna dan diterapkan sebelum paint pertama.
+    // Aktifkan mode ringan sebelum paint pertama pada perangkat lambat.
     (() => {
-      try {
-        if (localStorage.getItem("waifuPerformanceMode") === "lite") {
-          document.documentElement.classList.add("performance-lite");
-        }
-      } catch (_) {}
+      const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      const lite = Boolean(c?.saveData || /(^|-)2g$/.test(c?.effectiveType || "") ||
+        (Number.isFinite(navigator.deviceMemory) && navigator.deviceMemory <= 4) ||
+        (Number.isFinite(navigator.hardwareConcurrency) && navigator.hardwareConcurrency <= 4) ||
+        matchMedia("(prefers-reduced-motion: reduce)").matches);
+      if (lite) document.documentElement.classList.add("performance-lite");
     })();
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,11 +51,6 @@
       <button class="icon-button phone-sim-button" id="phoneSimBtn" type="button" title="Buka simulasi ponsel" aria-label="Buka simulasi ponsel">
         <span class="phone-sim-button-icon">▯</span>
         <span class="desktop-only">Ponsel</span>
-      </button>
-      <button class="icon-button performance-toggle" id="performanceToggle" type="button"
-        title="Aktifkan Mode Ringan" aria-label="Aktifkan Mode Ringan" aria-pressed="false">
-        <span class="performance-toggle-icon" aria-hidden="true">⚡</span>
-        <span class="desktop-only" data-i18n="liteMode">Mode Ringan</span>
       </button>
 
       <button class="language-switch" id="languageToggle" type="button" aria-label="Ganti bahasa ke Inggris" title="Ganti bahasa ke Inggris" data-i18n-aria="languageToggleToEnglish" data-i18n-title="languageToggleToEnglish">
@@ -542,5 +538,6 @@
 
   <script src="./script.js"></script>
   <script src="./feature-loader.js"></script>
+  <script src="./lockscreen-nav-guard.js"></script>
 </body>
 </html>

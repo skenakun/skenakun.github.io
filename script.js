@@ -1199,3 +1199,87 @@ wallpaperInput.addEventListener("change", async (event) => {
 renderPresetPalettes();
 applyThemeState(getThemeState());
 applyLanguage(currentLanguage);
+
+
+/* ===== Realtime active usage tracker for Android Simulator widget ===== */
+(() => {
+  "use strict";
+  if (window.WaifuUsageTracker) return;
+
+  const STORAGE_KEY = "waifuGalleryActiveUsageV1";
+  const dayKey = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  };
+
+  let record = { day: dayKey(), milliseconds: 0 };
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    if (saved && saved.day === record.day && Number.isFinite(Number(saved.milliseconds))) {
+      record.milliseconds = Math.max(0, Number(saved.milliseconds));
+    }
+  } catch {}
+
+  let lastTick = performance.now();
+  let dirtyTicks = 0;
+
+  const ensureToday = () => {
+    const today = dayKey();
+    if (record.day !== today) {
+      record = { day: today, milliseconds: 0 };
+      dirtyTicks = 0;
+      persist();
+    }
+  };
+
+  const persist = () => {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(record)); } catch {}
+  };
+
+  const tick = () => {
+    ensureToday();
+    const now = performance.now();
+    const elapsed = Math.max(0, Math.min(2000, now - lastTick));
+    lastTick = now;
+
+    if (document.visibilityState === "visible") {
+      record.milliseconds += elapsed;
+      dirtyTicks += 1;
+      if (dirtyTicks >= 5) {
+        dirtyTicks = 0;
+        persist();
+      }
+    }
+  };
+
+  const timer = window.setInterval(tick, 1000);
+
+  document.addEventListener("visibilitychange", () => {
+    tick();
+    persist();
+    lastTick = performance.now();
+  });
+
+  window.addEventListener("pagehide", persist);
+  window.addEventListener("beforeunload", persist);
+
+  window.WaifuUsageTracker = Object.freeze({
+    getSeconds() {
+      ensureToday();
+      return Math.max(0, Math.floor(record.milliseconds / 1000));
+    },
+    getMilliseconds() {
+      ensureToday();
+      return Math.max(0, record.milliseconds);
+    },
+    resetToday() {
+      record = { day: dayKey(), milliseconds: 0 };
+      persist();
+      return 0;
+    },
+    stop() {
+      window.clearInterval(timer);
+      persist();
+    }
+  });
+})();

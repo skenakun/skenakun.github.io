@@ -1,0 +1,44 @@
+/*
+ * Android Simulator V7 blank-screen rescue
+ * Baseline commit: 785561e9da81109070156aa574f54c222436d469
+ *
+ * This stylesheet intentionally avoids styling the Android UI itself.
+ * It only prevents the screen root from collapsing or becoming invisible.
+ */
+
+#pixelScreen{
+  isolation:isolate;
+}
+
+#androidScreenRoot{
+  display:block;
+  position:relative;
+  z-index:1;
+  width:100%;
+  min-width:0;
+  min-height:0;
+  height:100%;
+  visibility:visible;
+  overflow:hidden;
+  pointer-events:auto;
+}
+
+#androidScreenRoot > .a17-page,
+#androidScreenRoot > .home-page,
+#androidScreenRoot > .lock-page,
+#androidScreenRoot > .screen-off-page,
+#androidScreenRoot > .boot-page{
+  width:100%;
+  min-width:0;
+  height:100%;
+  min-height:100%;
+  visibility:visible;
+  pointer-events:auto;
+}
+
+#androidScreenRoot:empty::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
