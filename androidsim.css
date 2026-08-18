@@ -1127,3 +1127,4 @@
     margin-inline:6px;
   }
 }
+\n\n/* PERFORMANCE LITE OVERRIDES */\nhtml.performance-lite .phone-sim-dialog::backdrop,\nhtml.performance-lite .home-longpress-menu,\nhtml.performance-lite .quick-shade,\nhtml.performance-lite .volume-toast,\nhtml.performance-lite .toast,\nhtml.performance-lite .sim-app-top,\nhtml.performance-lite .record-screen-time,\nhtml.performance-lite .record-home-dock,\nhtml.performance-lite .launcher-drawer-sheet{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}\nhtml.performance-lite .a17-page,\nhtml.performance-lite .boot-mark,\nhtml.performance-lite .scan-spinner,\nhtml.performance-lite .recorder-wave i{animation:none!important}\nhtml.performance-lite .pixel-frame,\nhtml.performance-lite .sim-card,\nhtml.performance-lite .phone-sim-dialog{box-shadow:none!important}\n

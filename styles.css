@@ -1782,3 +1782,78 @@ body.default-style .language-slider {
     background: rgba(44, 29, 65, 0.94);
   }
 }
+
+/* =========================================================
+   PERFORMANCE / MODE RINGAN
+   User-controlled. Gallery rendering remains visible in both modes.
+   ========================================================= */
+.mini-game-button-icon{color:var(--violet);font-weight:900}
+.phone-sim-button-icon{display:inline-grid;place-items:center;width:15px;height:20px;border:2px solid currentColor;border-radius:5px;color:var(--violet);font-size:0}
+.phone-sim-button-icon::after{content:"";width:3px;height:3px;border-radius:50%;background:currentColor}
+.feature-loading{pointer-events:none;opacity:.7}
+.feature-loading::before{content:"";width:12px;height:12px;flex:0 0 12px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:featureLoaderSpin .7s linear infinite}
+@keyframes featureLoaderSpin{to{transform:rotate(360deg)}}
+
+/* Do not use content-visibility on the masonry cards. It can collapse/skips
+   multicolumn content on some Chromium/low-memory combinations. */
+.gallery-load-sentinel{height:1px;width:100%;clear:both;pointer-events:none}
+.gallery-item img{backface-visibility:hidden}
+
+.performance-toggle{position:relative}
+.performance-toggle-icon{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:7px;color:var(--violet);background:color-mix(in srgb,var(--violet) 10%,transparent);font-size:.78rem}
+.performance-toggle.is-active{color:var(--mu-primary);border-color:color-mix(in srgb,var(--mu-primary) 35%,var(--line));background:color-mix(in srgb,var(--mu-primary) 10%,rgba(255,255,255,.9))}
+.performance-toggle.is-active .performance-toggle-icon{color:#fff;background:linear-gradient(135deg,var(--violet),var(--pink));box-shadow:0 5px 14px rgba(124,58,237,.18)}
+body.dark-mode .performance-toggle.is-active{background:color-mix(in srgb,var(--mu-primary) 13%,rgba(31,27,37,.86))}
+
+html.performance-lite .blob,
+html.performance-lite .floating-card,
+html.performance-lite .sparkle,
+html.performance-lite .gradient-text{animation:none!important}
+html.performance-lite .blob{filter:blur(28px)!important;opacity:.24!important}
+html.performance-lite .topbar,
+html.performance-lite .stat-card,
+html.performance-lite .gallery-shell,
+html.performance-lite .gallery-overlay,
+html.performance-lite .theme-dialog::backdrop,
+html.performance-lite .lightbox::backdrop{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html.performance-lite .floating-card,
+html.performance-lite .gallery-shell,
+html.performance-lite .gallery-item,
+html.performance-lite .topbar{box-shadow:none!important}
+html.performance-lite .orbit{display:none!important}
+html.performance-lite .background-layer{opacity:.55}
+html.performance-lite *{scroll-behavior:auto!important}
+html.performance-lite .gallery-item{transition:none!important}
+html.performance-lite .gallery-item:hover{transform:none!important}
+html.performance-lite .gallery-item img{transition:none!important}
+
+@media (max-width:720px){
+  .performance-toggle{min-width:42px;padding-inline:10px}
+  .blob{animation:none!important}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .feature-loading::before{animation-duration:1.4s}
+}
+
+
+
+/* =========================================================
+   GALLERY VISIBILITY FIX - baseline cb7a419
+   Reserve a small layout box so Chromium never collapses the masonry while
+   images decode. The real image height takes over immediately after load.
+   ========================================================= */
+.gallery-item {
+  min-height: 120px;
+  contain: none;
+}
+.gallery-item img {
+  min-height: 120px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, .08), rgba(236, 72, 153, .06));
+}
+@media (max-width: 640px) {
+  .gallery-item,
+  .gallery-item img {
+    min-height: 96px;
+  }
+}

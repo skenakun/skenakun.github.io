@@ -1,38 +1,50 @@
+/* ===========================
+   PERFORMANCE PROFILE
+   =========================== */
+const PERFORMANCE_MODE_KEY = "waifuPerformanceMode";
+let performanceLite = false;
+try {
+  performanceLite = localStorage.getItem(PERFORMANCE_MODE_KEY) === "lite";
+} catch (_) {
+  performanceLite = document.documentElement.classList.contains("performance-lite");
+}
+document.documentElement.classList.toggle("performance-lite", performanceLite);
+
 const seedPhotos = [
-  { id: "seed-1", src: "./assets/waifu-01.jpg", title: "Purple Serenity", category: "classic", uploaded: false },
-  { id: "seed-2", src: "./assets/waifu-02.jpg", title: "Quiet Garden", category: "classic", uploaded: false },
-  { id: "seed-3", src: "./assets/waifu-03.jpg", title: "Soft Smile", category: "portrait", uploaded: false },
-  { id: "seed-4", src: "./assets/waifu-04.jpg", title: "Lavender Casual", category: "casual", uploaded: false },
-  { id: "seed-5", src: "./assets/waifu-05.jpg", title: "Elegant Violet", category: "portrait", uploaded: false },
-  { id: "seed-6", src: "./assets/waifu-06.jpg", title: "Wisteria Day", category: "casual", uploaded: false },
-  { id: "seed-7", src: "./assets/waifu-07.jpg", title: "Sakura Bride", category: "wedding", uploaded: false },
-  { id: "seed-8", src: "./assets/waifu-08.jpg", title: "Violet Bride", category: "wedding", uploaded: false },
-  { id: "seed-9", src: "./assets/waifu-09.jpg", title: "Moonlight Bride", category: "wedding", uploaded: false },
-  { id: "seed-10", src: "./assets/waifu-10.jpg", title: "Sunny Street", category: "casual", uploaded: false },
-  { id: "seed-11", src: "./assets/waifu-11.jpg", title: "Frostlight Portrait", category: "portrait", uploaded: false },
-  { id: "seed-12", src: "./assets/waifu-12.jpg", title: "Gentle Afternoon", category: "casual", uploaded: false },
-  { id: "seed-13", src: "./assets/waifu-13.jpg", title: "Moonlit Blossom", category: "classic", uploaded: false },
-  { id: "seed-14", src: "./assets/waifu-14.jpg", title: "Lavender Stage", category: "classic", uploaded: false },
-  { id: "seed-15", src: "./assets/waifu-15.jpg", title: "Twilight Reflection", category: "classic", uploaded: false },
-  { id: "seed-16", src: "./assets/waifu-16.jpg", title: "Feather Moon", category: "portrait", uploaded: false },
-  { id: "seed-17", src: "./assets/waifu-17.jpg", title: "Starlit Water", category: "classic", uploaded: false },
-  { id: "seed-18", src: "./assets/waifu-18.jpg", title: "White Dress Portrait", category: "portrait", uploaded: false },
-  { id: "seed-19", src: "./assets/waifu-19.jpg", title: "Featherfall Garden", category: "classic", uploaded: false },
-  { id: "seed-20", src: "./assets/waifu-20.jpg", title: "Blue Moon Garden", category: "wedding", uploaded: false },
-  { id: "seed-21", src: "./assets/waifu-21.jpg", title: "Azure Flower Night", category: "wedding", uploaded: false },
-  { id: "seed-22", src: "./assets/waifu-22.jpg", title: "Violet Close-up", category: "portrait", uploaded: false },
-  { id: "seed-23", src: "./assets/waifu-23.jpg", title: "Winter Crown", category: "portrait", uploaded: false },
-  { id: "seed-24", src: "./assets/waifu-24.jpg", title: "Crystal Reverie", category: "portrait", uploaded: false },
-  { id: "seed-25", src: "./assets/waifu-25.jpg", title: "Ice Throne", category: "classic", uploaded: false },
-  { id: "seed-26", src: "./assets/waifu-26.jpg", title: "Frost Scepter", category: "classic", uploaded: false },
-  { id: "seed-27", src: "./assets/waifu-27.jpg", title: "Blue Palace", category: "classic", uploaded: false },
-  { id: "seed-28", src: "./assets/waifu-28.jpg", title: "Snow Festival", category: "casual", uploaded: false },
-  { id: "seed-29", src: "./assets/waifu-29.jpg", title: "Cozy Winter", category: "casual", uploaded: false },
-  { id: "seed-30", src: "./assets/waifu-30.jpg", title: "Snow Clinic", category: "casual", uploaded: false },
-  { id: "seed-31", src: "./assets/waifu-31.jpg", title: "Blooming Bride", category: "wedding", uploaded: false },
-  { id: "seed-32", src: "./assets/waifu-32.jpg", title: "Soft Bridal Moment", category: "wedding", uploaded: false },
-  { id: "seed-33", src: "./assets/waifu-33.jpg", title: "Casual Violet", category: "casual", uploaded: false },
-  { id: "seed-34", src: "./assets/waifu-34.jpg", title: "Purple Rose Garden", category: "classic", uploaded: false }
+  { id: "seed-1", src: "./assets/waifu-01.jpg", thumb: "./thumbs/waifu-01.webp", title: "Purple Serenity", category: "classic", uploaded: false },
+  { id: "seed-2", src: "./assets/waifu-02.jpg", thumb: "./thumbs/waifu-02.webp", title: "Quiet Garden", category: "classic", uploaded: false },
+  { id: "seed-3", src: "./assets/waifu-03.jpg", thumb: "./thumbs/waifu-03.webp", title: "Soft Smile", category: "portrait", uploaded: false },
+  { id: "seed-4", src: "./assets/waifu-04.jpg", thumb: "./thumbs/waifu-04.webp", title: "Lavender Casual", category: "casual", uploaded: false },
+  { id: "seed-5", src: "./assets/waifu-05.jpg", thumb: "./thumbs/waifu-05.webp", title: "Elegant Violet", category: "portrait", uploaded: false },
+  { id: "seed-6", src: "./assets/waifu-06.jpg", thumb: "./thumbs/waifu-06.webp", title: "Wisteria Day", category: "casual", uploaded: false },
+  { id: "seed-7", src: "./assets/waifu-07.jpg", thumb: "./thumbs/waifu-07.webp", title: "Sakura Bride", category: "wedding", uploaded: false },
+  { id: "seed-8", src: "./assets/waifu-08.jpg", thumb: "./thumbs/waifu-08.webp", title: "Violet Bride", category: "wedding", uploaded: false },
+  { id: "seed-9", src: "./assets/waifu-09.jpg", thumb: "./thumbs/waifu-09.webp", title: "Moonlight Bride", category: "wedding", uploaded: false },
+  { id: "seed-10", src: "./assets/waifu-10.jpg", thumb: "./thumbs/waifu-10.webp", title: "Sunny Street", category: "casual", uploaded: false },
+  { id: "seed-11", src: "./assets/waifu-11.jpg", thumb: "./thumbs/waifu-11.webp", title: "Frostlight Portrait", category: "portrait", uploaded: false },
+  { id: "seed-12", src: "./assets/waifu-12.jpg", thumb: "./thumbs/waifu-12.webp", title: "Gentle Afternoon", category: "casual", uploaded: false },
+  { id: "seed-13", src: "./assets/waifu-13.jpg", thumb: "./thumbs/waifu-13.webp", title: "Moonlit Blossom", category: "classic", uploaded: false },
+  { id: "seed-14", src: "./assets/waifu-14.jpg", thumb: "./thumbs/waifu-14.webp", title: "Lavender Stage", category: "classic", uploaded: false },
+  { id: "seed-15", src: "./assets/waifu-15.jpg", thumb: "./thumbs/waifu-15.webp", title: "Twilight Reflection", category: "classic", uploaded: false },
+  { id: "seed-16", src: "./assets/waifu-16.jpg", thumb: "./thumbs/waifu-16.webp", title: "Feather Moon", category: "portrait", uploaded: false },
+  { id: "seed-17", src: "./assets/waifu-17.jpg", thumb: "./thumbs/waifu-17.webp", title: "Starlit Water", category: "classic", uploaded: false },
+  { id: "seed-18", src: "./assets/waifu-18.jpg", thumb: "./thumbs/waifu-18.webp", title: "White Dress Portrait", category: "portrait", uploaded: false },
+  { id: "seed-19", src: "./assets/waifu-19.jpg", thumb: "./thumbs/waifu-19.webp", title: "Featherfall Garden", category: "classic", uploaded: false },
+  { id: "seed-20", src: "./assets/waifu-20.jpg", thumb: "./thumbs/waifu-20.webp", title: "Blue Moon Garden", category: "wedding", uploaded: false },
+  { id: "seed-21", src: "./assets/waifu-21.jpg", thumb: "./thumbs/waifu-21.webp", title: "Azure Flower Night", category: "wedding", uploaded: false },
+  { id: "seed-22", src: "./assets/waifu-22.jpg", thumb: "./thumbs/waifu-22.webp", title: "Violet Close-up", category: "portrait", uploaded: false },
+  { id: "seed-23", src: "./assets/waifu-23.jpg", thumb: "./thumbs/waifu-23.webp", title: "Winter Crown", category: "portrait", uploaded: false },
+  { id: "seed-24", src: "./assets/waifu-24.jpg", thumb: "./thumbs/waifu-24.webp", title: "Crystal Reverie", category: "portrait", uploaded: false },
+  { id: "seed-25", src: "./assets/waifu-25.jpg", thumb: "./thumbs/waifu-25.webp", title: "Ice Throne", category: "classic", uploaded: false },
+  { id: "seed-26", src: "./assets/waifu-26.jpg", thumb: "./thumbs/waifu-26.webp", title: "Frost Scepter", category: "classic", uploaded: false },
+  { id: "seed-27", src: "./assets/waifu-27.jpg", thumb: "./thumbs/waifu-27.webp", title: "Blue Palace", category: "classic", uploaded: false },
+  { id: "seed-28", src: "./assets/waifu-28.jpg", thumb: "./thumbs/waifu-28.webp", title: "Snow Festival", category: "casual", uploaded: false },
+  { id: "seed-29", src: "./assets/waifu-29.jpg", thumb: "./thumbs/waifu-29.webp", title: "Cozy Winter", category: "casual", uploaded: false },
+  { id: "seed-30", src: "./assets/waifu-30.jpg", thumb: "./thumbs/waifu-30.webp", title: "Snow Clinic", category: "casual", uploaded: false },
+  { id: "seed-31", src: "./assets/waifu-31.jpg", thumb: "./thumbs/waifu-31.webp", title: "Blooming Bride", category: "wedding", uploaded: false },
+  { id: "seed-32", src: "./assets/waifu-32.jpg", thumb: "./thumbs/waifu-32.webp", title: "Soft Bridal Moment", category: "wedding", uploaded: false },
+  { id: "seed-33", src: "./assets/waifu-33.jpg", thumb: "./thumbs/waifu-33.webp", title: "Casual Violet", category: "casual", uploaded: false },
+  { id: "seed-34", src: "./assets/waifu-34.jpg", thumb: "./thumbs/waifu-34.webp", title: "Purple Rose Garden", category: "classic", uploaded: false }
 ];
 
 const gallery = document.getElementById("gallery");
@@ -46,6 +58,7 @@ const shuffleBtn = document.getElementById("shuffleBtn");
 const themeBurstBtn = document.getElementById("themeBurstBtn");
 const toast = document.getElementById("toast");
 const languageToggle = document.getElementById("languageToggle");
+const performanceToggle = document.getElementById("performanceToggle");
 
 const lightbox = document.getElementById("lightbox");
 const lightboxImage = document.getElementById("lightboxImage");
@@ -74,6 +87,11 @@ const translations = {
     languageToggleToIndonesian: "Switch language to Indonesian",
     languageChanged: "Bahasa diubah ke Indonesia.",
     themeButtonTitle: "Buka pengaturan tema",
+    liteMode: "Mode Ringan",
+    liteModeEnable: "Aktifkan Mode Ringan",
+    liteModeDisable: "Nonaktifkan Mode Ringan",
+    liteModeEnabled: "Mode Ringan aktif. Efek visual dikurangi agar lebih ringan.",
+    liteModeDisabled: "Mode Ringan nonaktif. Tampilan penuh dipulihkan.",
     addPhoto: "Tambah Foto",
     heroKicker: "KOLEKSI WAIFU PRIBADI",
     heroTitle: "Galeri waifu yang",
@@ -83,6 +101,7 @@ const translations = {
     shufflePhotos: "Acak Foto",
     totalPhotos: "Total Foto",
     responsive: "Responsif",
+    pagesReady: "Siap di Pages",
     myCollection: "KOLEKSI SAYA",
     searchPlaceholder: "Cari foto...",
     searchAria: "Cari foto",
@@ -146,6 +165,11 @@ const translations = {
     languageToggleToIndonesian: "Ganti bahasa ke Indonesia",
     languageChanged: "Language changed to English.",
     themeButtonTitle: "Open theme settings",
+    liteMode: "Lite Mode",
+    liteModeEnable: "Enable Lite Mode",
+    liteModeDisable: "Disable Lite Mode",
+    liteModeEnabled: "Lite Mode is on. Heavy visual effects are reduced.",
+    liteModeDisabled: "Lite Mode is off. Full visuals are restored.",
     addPhoto: "Add Photo",
     heroKicker: "PERSONAL WAIFU COLLECTION",
     heroTitle: "A waifu gallery",
@@ -155,6 +179,7 @@ const translations = {
     shufflePhotos: "Shuffle Photos",
     totalPhotos: "Total Photos",
     responsive: "Responsive",
+    pagesReady: "Pages Ready",
     myCollection: "MY COLLECTION",
     searchPlaceholder: "Search photos...",
     searchAria: "Search photos",
@@ -259,6 +284,7 @@ function applyLanguage(language, options = {}) {
   languageToggle.setAttribute("aria-label", t(nextLanguageKey));
   languageToggle.setAttribute("title", t(nextLanguageKey));
   languageToggle.setAttribute("aria-pressed", String(currentLanguage === "en"));
+  syncPerformanceToggle();
 
   if (typeof renderGallery === "function") renderGallery();
   if (typeof updateLightbox === "function" && lightbox?.open) updateLightbox();
@@ -269,9 +295,37 @@ function applyLanguage(language, options = {}) {
   }
 }
 
+function syncPerformanceToggle() {
+  if (!performanceToggle) return;
+  performanceToggle.classList.toggle("is-active", performanceLite);
+  performanceToggle.setAttribute("aria-pressed", String(performanceLite));
+  const key = performanceLite ? "liteModeDisable" : "liteModeEnable";
+  performanceToggle.setAttribute("title", t(key));
+  performanceToggle.setAttribute("aria-label", t(key));
+}
+
+function applyPerformanceMode(enabled, options = {}) {
+  performanceLite = Boolean(enabled);
+  document.documentElement.classList.toggle("performance-lite", performanceLite);
+  try {
+    localStorage.setItem(PERFORMANCE_MODE_KEY, performanceLite ? "lite" : "full");
+  } catch (_) {}
+  syncPerformanceToggle();
+
+  // Re-render the gallery so the selected image source/batch size is applied immediately.
+  if (typeof renderGallery === "function") renderGallery();
+  if (options.announce) showToast(t(performanceLite ? "liteModeEnabled" : "liteModeDisabled"));
+}
+
+performanceToggle?.addEventListener("click", () => {
+  applyPerformanceMode(!performanceLite, { announce: true });
+});
+
 languageToggle.addEventListener("click", () => {
   applyLanguage(currentLanguage === "id" ? "en" : "id", { announce: true });
 });
+
+syncPerformanceToggle();
 
 
 const DB_NAME = "waifuGalleryPagesDB";
@@ -377,71 +431,115 @@ function getFilteredPhotos() {
   });
 }
 
+function galleryInitialBatchSize() { return performanceLite ? 6 : 8; }
+function galleryBatchSize() { return performanceLite ? 6 : 8; }
+let galleryRenderedCount = 0;
+let galleryObserver = null;
+
+/*
+ * The gallery already lazy-renders items in small DOM batches. Native
+ * loading="lazy" is intentionally NOT used here because Chromium can
+ * postpone zero-height images inside a CSS multi-column container. That
+ * creates a deadlock where the masonry has no height, the images are judged
+ * off-screen, and the gallery looks completely empty.
+ */
+function createGalleryItem(photo, itemIndex = 0) {
+  const button = document.createElement("button");
+  button.className = "gallery-item";
+  button.type = "button";
+  button.dataset.id = photo.id;
+  button.setAttribute("aria-label", t("openPhoto", { title: photo.title }));
+
+  const img = document.createElement("img");
+  const preferredSource = performanceLite && photo.thumb ? photo.thumb : photo.src;
+  img.src = preferredSource;
+  img.alt = photo.title;
+  // Items are inserted only when their batch is needed, so eager loading here
+  // is safe and prevents Chromium masonry/lazy-loading collapse.
+  img.loading = "eager";
+  img.decoding = "async";
+  img.fetchPriority = itemIndex < 2 ? "high" : "auto";
+  img.addEventListener("error", () => {
+    // If an optimized thumbnail is unavailable on GitHub Pages, fall back to the original image.
+    if (img.dataset.fallbackApplied === "1" || !photo.src || img.src.endsWith(photo.src.replace(/^\.\//, ""))) return;
+    img.dataset.fallbackApplied = "1";
+    img.src = photo.src;
+  }, { once: true });
+
+  const overlay = document.createElement("span");
+  overlay.className = "gallery-overlay";
+
+  // Build overlay text with DOM nodes instead of an undefined escapeHTML helper.
+  // textContent safely escapes text and prevents gallery rendering from throwing.
+  const overlayTitle = document.createElement("strong");
+  overlayTitle.textContent = photo.title;
+  const overlayCategory = document.createElement("span");
+  overlayCategory.textContent = prettyCategory(photo.category);
+  overlay.append(overlayTitle, overlayCategory);
+
+  button.append(img, overlay);
+  return button;
+}
+
+function appendGalleryBatch() {
+  const end = Math.min(currentList.length, galleryRenderedCount + (galleryRenderedCount ? galleryBatchSize() : galleryInitialBatchSize()));
+  const fragment = document.createDocumentFragment();
+  for (let i = galleryRenderedCount; i < end; i += 1) {
+    fragment.appendChild(createGalleryItem(currentList[i], i));
+  }
+  gallery.appendChild(fragment);
+  galleryRenderedCount = end;
+
+  const oldSentinel = document.getElementById("galleryLoadSentinel");
+  oldSentinel?.remove();
+  galleryObserver?.disconnect();
+
+  if (galleryRenderedCount < currentList.length) {
+    const sentinel = document.createElement("div");
+    sentinel.id = "galleryLoadSentinel";
+    sentinel.className = "gallery-load-sentinel";
+    sentinel.setAttribute("aria-hidden", "true");
+    gallery.after(sentinel);
+
+    if ("IntersectionObserver" in window) {
+      galleryObserver = new IntersectionObserver((entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) appendGalleryBatch();
+      }, { rootMargin: performanceLite ? "260px" : "600px" });
+      galleryObserver.observe(sentinel);
+      // A small safety batch prevents an empty-looking gallery if an observer is delayed.
+      if (!performanceLite) window.setTimeout(() => {
+        if (galleryRenderedCount < currentList.length && sentinel.isConnected) appendGalleryBatch();
+      }, 500);
+    } else {
+      // Old browsers: load the rest without blocking first paint.
+      setTimeout(() => {
+        while (galleryRenderedCount < currentList.length) appendGalleryBatch();
+      }, 60);
+    }
+  }
+}
+
 function renderGallery() {
   currentList = getFilteredPhotos();
+  galleryObserver?.disconnect();
+  galleryRenderedCount = 0;
   gallery.innerHTML = "";
+  document.getElementById("galleryLoadSentinel")?.remove();
 
-  currentList.forEach((photo, index) => {
-    const button = document.createElement("button");
-    button.className = "gallery-item";
-    button.type = "button";
-    button.dataset.id = photo.id;
-    button.setAttribute("aria-label", t("openPhoto", { title: photo.title }));
-
-    const img = document.createElement("img");
-    img.src = photo.src;
-    img.alt = photo.title;
-    img.loading = "lazy";
-    img.decoding = "async";
-
-    const overlay = document.createElement("span");
-    overlay.className = "gallery-overlay";
-    overlay.innerHTML =
-      `<strong>${escapeHTML(photo.title)}</strong>` +
-      `<span>${escapeHTML(prettyCategory(photo.category))}</span>`;
-
-    button.appendChild(img);
-
-    if (photo.uploaded) {
-      const badge = document.createElement("span");
-      badge.className = "upload-badge";
-      badge.textContent = t("uploadBadge");
-      button.appendChild(badge);
-    }
-
-    button.appendChild(overlay);
-    button.addEventListener("click", () => openPhoto(index));
-    gallery.appendChild(button);
-  });
-
-  const total = getAllPhotos().length;
-  photoCount.textContent = total;
+  photoCount.textContent = getAllPhotos().length;
+  emptyState.hidden = currentList.length !== 0;
+  gallery.hidden = currentList.length === 0;
 
   if (activeFilter === "all" && !searchInput.value.trim()) {
     resultInfo.textContent = t("showingAll", { count: currentList.length });
   } else {
-    resultInfo.textContent = t("showingFiltered", { count: currentList.length, total });
+    resultInfo.textContent = t("showingFiltered", {
+      count: currentList.length,
+      total: getAllPhotos().length
+    });
   }
 
-  emptyState.hidden = currentList.length !== 0;
-}
-
-function escapeHTML(value) {
-  return value.replace(/[&<>"']/g, (char) => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  })[char]);
-}
-
-function openPhoto(index) {
-  if (!currentList.length) return;
-
-  currentIndex = index;
-  updateLightbox();
-  lightbox.showModal();
+  if (currentList.length) appendGalleryBatch();
 }
 
 function updateLightbox() {
@@ -483,14 +581,17 @@ function showToast(message) {
 }
 
 function shuffleGallery() {
-  const items = [...gallery.children];
-
-  for (let i = items.length - 1; i > 0; i -= 1) {
+  const list = getFilteredPhotos();
+  for (let i = list.length - 1; i > 0; i -= 1) {
     const j = Math.floor(Math.random() * (i + 1));
-    [items[i], items[j]] = [items[j], items[i]];
+    [list[i], list[j]] = [list[j], list[i]];
   }
-
-  items.forEach((item) => gallery.appendChild(item));
+  currentList = list;
+  galleryObserver?.disconnect();
+  galleryRenderedCount = 0;
+  gallery.innerHTML = "";
+  document.getElementById("galleryLoadSentinel")?.remove();
+  if (currentList.length) appendGalleryBatch();
   showToast(t("shuffled"));
 }
 
@@ -516,7 +617,11 @@ filterChips.addEventListener("click", (event) => {
   renderGallery();
 });
 
-searchInput.addEventListener("input", renderGallery);
+let searchRenderTimer = 0;
+searchInput.addEventListener("input", () => {
+  clearTimeout(searchRenderTimer);
+  searchRenderTimer = window.setTimeout(renderGallery, performanceLite ? 180 : 100);
+});
 
 shuffleBtn.addEventListener("click", shuffleGallery);
 
@@ -643,9 +748,17 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-(async function init() {
-  await loadUploads();
+(function init() {
   renderGallery();
+  const loadLocalUploads = async () => {
+    await loadUploads();
+    if (uploadedPhotos.length) renderGallery();
+  };
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(loadLocalUploads, { timeout: 1200 });
+  } else {
+    setTimeout(loadLocalUploads, 120);
+  }
 })();
 
 

@@ -936,3 +936,4 @@ body.dark-mode .game-picker-card {
     max-height: 116px;
   }
 }
+\n\n/* PERFORMANCE LITE OVERRIDES */\nhtml.performance-lite .game-dialog::backdrop,\nhtml.performance-lite .game-over,\nhtml.performance-lite .game-shell{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}\nhtml.performance-lite .crystal-gem,\nhtml.performance-lite .moving-trap{animation:none!important}\nhtml.performance-lite .game-shell,\nhtml.performance-lite .game-sidebar,\nhtml.performance-lite .game-stage,\nhtml.performance-lite .arcade-shell{box-shadow:none!important}\n

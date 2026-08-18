@@ -6,13 +6,21 @@
   <meta name="theme-color" content="#7c3aed">
   <meta name="description" content="Waifu Gallery, galeri anime colorful dan responsif untuk GitHub Pages.">
   <title>Waifu Gallery</title>
+  <script>
+    // Mode Ringan dikontrol pengguna dan diterapkan sebelum paint pertama.
+    (() => {
+      try {
+        if (localStorage.getItem("waifuPerformanceMode") === "lite") {
+          document.documentElement.classList.add("performance-lite");
+        }
+      } catch (_) {}
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500..900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./minigame.css">
-  <link rel="stylesheet" href="./androidsim.css">
 </head>
 <body>
   <div class="background-layer" aria-hidden="true">
@@ -42,6 +50,11 @@
       <button class="icon-button phone-sim-button" id="phoneSimBtn" type="button" title="Buka simulasi ponsel" aria-label="Buka simulasi ponsel">
         <span class="phone-sim-button-icon">▯</span>
         <span class="desktop-only">Ponsel</span>
+      </button>
+      <button class="icon-button performance-toggle" id="performanceToggle" type="button"
+        title="Aktifkan Mode Ringan" aria-label="Aktifkan Mode Ringan" aria-pressed="false">
+        <span class="performance-toggle-icon" aria-hidden="true">⚡</span>
+        <span class="desktop-only" data-i18n="liteMode">Mode Ringan</span>
       </button>
 
       <button class="language-switch" id="languageToggle" type="button" aria-label="Ganti bahasa ke Inggris" title="Ganti bahasa ke Inggris" data-i18n-aria="languageToggleToEnglish" data-i18n-title="languageToggleToEnglish">
@@ -103,13 +116,13 @@
         <div class="orbit orbit-two"></div>
 
         <article class="floating-card card-one">
-          <img src="./assets/waifu-01.jpg" alt="">
+          <img src="./thumbs/waifu-01.webp" alt="" decoding="async" fetchpriority="high">
         </article>
         <article class="floating-card card-two">
-          <img src="./assets/waifu-08.jpg" alt="">
+          <img src="./thumbs/waifu-08.webp" alt="" decoding="async" fetchpriority="low">
         </article>
         <article class="floating-card card-three">
-          <img src="./assets/waifu-06.jpg" alt="">
+          <img src="./thumbs/waifu-06.webp" alt="" decoding="async" fetchpriority="low">
         </article>
         <span class="sparkle sparkle-1">✦</span>
         <span class="sparkle sparkle-2">✧</span>
@@ -528,7 +541,6 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="./script.js"></script>
-  <script src="./minigame.js"></script>
-  <script src="./androidsim.js"></script>
+  <script src="./feature-loader.js"></script>
 </body>
 </html>
