@@ -1,0 +1,730 @@
+--- /mnt/data/chrome-github-pages-only-f5ff0f7/androidsim-enhancer.js	2026-08-18 10:25:44.070400053 +0000
++++ /mnt/data/chrome-browser-fix-edc78e0/androidsim-enhancer.js	2026-08-18 10:28:57.549090601 +0000
+@@ -1638,15 +1638,22 @@
+ 
+   /* =========================================================
+      IN-SIMULATOR BROWSER
+-     GitHub Pages only / no backend
++     GitHub Pages only / no self-hosted backend
++
++     Important browser-security constraint:
++     arbitrary sites cannot be embedded reliably in a third-party iframe.
++     The default compatibility view therefore uses Jina Reader/Search for
++     public pages. The user can still switch to the site's original iframe
++     when the destination explicitly allows framing, or open it externally.
+      ========================================================= */
+ 
+   const MOBILE_BROWSER_WIDTH = 412;
+   let browserResizeTimer = 0;
+-  let staticReaderBusy = false;
++  let browserCompatRequestToken = 0;
++  const browserCompatCache = new Map();
+ 
+   function googleHomeUrl() {
+-    return "https://www.google.com/webhp?igu=1&hl=id&gl=id";
++    return "https://www.google.com/webhp?hl=id&gl=id";
+   }
+ 
+   function normalizeUrl(raw, searchText = true) {
+@@ -1655,34 +1662,22 @@
+ 
+     const isProtocol = /^[a-z][a-z0-9+.-]*:\/\//i.test(value);
+     if (searchText && !isProtocol && !value.includes(".")) {
+-      return `https://www.google.com/search?igu=1&hl=id&gl=id&q=${encodeURIComponent(value)}`;
++      return `https://www.google.com/search?hl=id&gl=id&q=${encodeURIComponent(value)}`;
+     }
+ 
+     try {
+       const url = new URL(isProtocol ? value : `https://${value}`);
+       if (!["http:", "https:"].includes(url.protocol)) return googleHomeUrl();
+-
+-      // Google's ?igu=1 variant is intentionally used because ordinary
+-      // Google Search pages commonly refuse to render in third-party frames.
+-      if (url.hostname === "google.com" || url.hostname === "www.google.com") {
+-        if (!url.searchParams.has("igu")) url.searchParams.set("igu", "1");
+-        if (!url.searchParams.has("hl")) url.searchParams.set("hl", "id");
+-        if (!url.searchParams.has("gl")) url.searchParams.set("gl", "id");
+-      }
+       return url.toString();
+     } catch {
+-      return `https://www.google.com/search?igu=1&hl=id&gl=id&q=${encodeURIComponent(value)}`;
++      return `https://www.google.com/search?hl=id&gl=id&q=${encodeURIComponent(value)}`;
+     }
+   }
+ 
+   function displayUrl(url) {
+     try {
+       const parsed = new URL(url);
+-      if (parsed.hostname.endsWith("google.com")) {
+-        parsed.searchParams.delete("igu");
+-        parsed.searchParams.delete("hl");
+-        parsed.searchParams.delete("gl");
+-      }
++      parsed.searchParams.delete("igu");
+       return parsed.toString();
+     } catch {
+       return String(url || "");
+@@ -1692,13 +1687,37 @@
+   function browserLabel(url, fallback = "Chrome") {
+     try {
+       const host = new URL(url).hostname.replace(/^www\./, "");
+-      if (host.endsWith("google.com")) return "Google";
++      if (host === "google.com" || host.endsWith(".google.com")) return "Google";
+       return host || fallback;
+     } catch {
+       return fallback;
+     }
+   }
+ 
++  function googleQueryFromUrl(url) {
++    try {
++      const parsed = new URL(url);
++      const host = parsed.hostname.replace(/^www\./, "").toLowerCase();
++      if (host !== "google.com" && !host.endsWith(".google.com")) return "";
++      if (parsed.pathname !== "/search") return "";
++      return String(parsed.searchParams.get("q") || "").trim();
++    } catch {
++      return "";
++    }
++  }
++
++  function isGoogleHome(url) {
++    try {
++      const parsed = new URL(url);
++      const host = parsed.hostname.replace(/^www\./, "").toLowerCase();
++      return (host === "google.com" || host.endsWith(".google.com")) &&
++        (parsed.pathname === "/" || parsed.pathname === "/webhp") &&
++        !parsed.searchParams.get("q");
++    } catch {
++      return false;
++    }
++  }
++
+   function fitBrowserMobileViewport() {
+     const wrap = root.querySelector(".sim-browser-frame-wrap");
+     const frame = root.querySelector("#stableBrowserFrame");
+@@ -1726,100 +1745,86 @@
+     }, 30);
+   }
+ 
+-  function browserStaticStatus(message = "", kind = "") {
+-    const status = root.querySelector("#staticBrowserStatus");
+-    if (!status) return;
+-    status.textContent = message;
+-    status.hidden = !message;
+-    status.dataset.kind = kind;
+-  }
+-
+-  function absolutizeDocumentForStaticReader(html, sourceUrl) {
+-    const parser = new DOMParser();
+-    const doc = parser.parseFromString(String(html || ""), "text/html");
+-
+-    // Never let a fetched document rewrite the simulator parent page.
+-    doc.querySelectorAll('base').forEach(node => node.remove());
+-    const base = doc.createElement('base');
+-    base.href = sourceUrl;
+-    doc.head.prepend(base);
+-
+-    // Navigation inside srcdoc cannot update state.browser because the
+-    // document is sandboxed. Force ordinary links/forms to a real browser tab.
+-    doc.querySelectorAll('a[href]').forEach(anchor => {
+-      anchor.target = '_blank';
+-      anchor.rel = 'noopener noreferrer';
+-    });
+-    doc.querySelectorAll('form').forEach(form => {
+-      form.target = '_blank';
+-    });
+-
+-    // Defensive: a remote document fetched with CORS must not get same-origin
+-    // access to the GitHub Pages application. The iframe sandbox below keeps it
+-    // in an opaque origin; this removal also avoids common frame-busting code.
+-    doc.querySelectorAll('script').forEach(script => {
+-      if (!script.src) script.remove();
+-    });
+-
+-    return '<!doctype html>\n' + doc.documentElement.outerHTML;
++  function browserMode() {
++    return String(state.browser.viewMode || "compat");
+   }
+ 
+-  async function tryStaticReader() {
+-    if (staticReaderBusy) return;
+-    const target = normalizeUrl(state.browser.current || googleHomeUrl(), false);
+-    if (!/^https?:\/\//i.test(target)) return;
+-
+-    staticReaderBusy = true;
+-    browserStaticStatus("Mencoba mode kompatibilitas statis…", "loading");
+-
+-    try {
+-      const response = await fetch(target, {
+-        method: "GET",
+-        mode: "cors",
+-        credentials: "omit",
+-        redirect: "follow",
+-        cache: "no-store",
+-        headers: { "Accept": "text/html,application/xhtml+xml" }
+-      });
+-
+-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+-      const type = String(response.headers.get("content-type") || "").toLowerCase();
+-      if (type && !type.includes("text/html") && !type.includes("application/xhtml+xml")) {
+-        throw new Error("Bukan dokumen HTML");
+-      }
++  function setBrowserMode(mode) {
++    state.browser.viewMode = mode === "original" ? "original" : "compat";
++    saveState();
++  }
+ 
+-      const html = await response.text();
+-      const frame = root.querySelector("#stableBrowserFrame");
+-      if (!(frame instanceof HTMLIFrameElement)) return;
+-
+-      frame.removeAttribute("src");
+-      frame.setAttribute(
+-        "sandbox",
+-        "allow-forms allow-scripts allow-popups allow-popups-to-escape-sandbox allow-modals"
+-      );
+-      frame.srcdoc = absolutizeDocumentForStaticReader(html, response.url || target);
+-      browserStaticStatus(
+-        "Mode statis aktif. Link berikutnya dibuka di tab browser karena halaman ini tidak berjalan pada origin aslinya.",
+-        "ok"
+-      );
+-      requestAnimationFrame(fitBrowserMobileViewport);
+-    } catch (error) {
+-      browserStaticStatus(
+-        "Website tidak mengizinkan pengambilan lintas-origin. Gunakan tombol ↗ untuk membuka situs penuh.",
+-        "error"
+-      );
+-    } finally {
+-      staticReaderBusy = false;
+-    }
++  function escapeAttribute(value = "") {
++    return esc(value).replace(/`/g, "&#96;");
+   }
+ 
+-  function renderBrowser(url = state.browser.current, label = "Chrome") {
+-    const safe = normalizeUrl(url, false);
+-    state.browser.current = safe;
+-    saveState();
++  function browserReaderStyles() {
++    return `
++      <style>
++        .sim-browser-compat {
++          position:absolute; inset:0; overflow:auto; background:#fff; color:#202124;
++          font-family:Arial,Helvetica,sans-serif; overscroll-behavior:contain;
++        }
++        .sim-browser-compat * { box-sizing:border-box; }
++        .sim-browser-loading, .sim-browser-error {
++          min-height:100%; display:grid; place-items:center; padding:28px; text-align:center;
++        }
++        .sim-browser-loading > div, .sim-browser-error > div { max-width:330px; }
++        .sim-browser-spinner {
++          width:34px; height:34px; margin:0 auto 14px; border:4px solid #dfe3eb;
++          border-top-color:#4285f4; border-radius:50%; animation:simBrowserSpin .8s linear infinite;
++        }
++        @keyframes simBrowserSpin { to { transform:rotate(360deg); } }
++        .sim-browser-error button, .sim-browser-reader button, .sim-browser-search-results button {
++          border:0; border-radius:18px; padding:9px 14px; cursor:pointer;
++        }
++        .sim-browser-google-home {
++          min-height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
++          padding:76px 24px 30px; background:#fff;
++        }
++        .sim-browser-google-logo { font-size:54px; font-weight:600; letter-spacing:-5px; margin-bottom:26px; }
++        .sim-browser-google-logo span:nth-child(1), .sim-browser-google-logo span:nth-child(4) { color:#4285f4; }
++        .sim-browser-google-logo span:nth-child(2), .sim-browser-google-logo span:nth-child(6) { color:#ea4335; }
++        .sim-browser-google-logo span:nth-child(3) { color:#fbbc05; }
++        .sim-browser-google-logo span:nth-child(5) { color:#34a853; }
++        .sim-browser-google-search {
++          width:100%; display:flex; align-items:center; gap:8px; border:1px solid #dfe1e5;
++          border-radius:24px; padding:5px 7px 5px 15px; box-shadow:0 1px 6px rgba(32,33,36,.14);
++        }
++        .sim-browser-google-search input { flex:1; min-width:0; border:0; outline:0; font-size:16px; padding:8px 0; }
++        .sim-browser-google-search button { width:38px; height:38px; border:0; border-radius:50%; background:#4285f4; color:#fff; }
++        .sim-browser-google-hint { margin-top:28px; color:#5f6368; font-size:12px; text-align:center; line-height:1.5; }
++        .sim-browser-search-results { min-height:100%; padding:18px 16px 34px; background:#fff; }
++        .sim-browser-search-head { display:flex; align-items:center; gap:10px; padding:5px 0 14px; border-bottom:1px solid #eceff3; margin-bottom:12px; }
++        .sim-browser-search-g { color:#4285f4; font-size:24px; font-weight:700; }
++        .sim-browser-search-head strong { font-size:15px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
++        .sim-browser-search-result { padding:12px 2px 15px; border-bottom:1px solid #eef0f2; }
++        .sim-browser-search-result small { display:block; color:#4d5156; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px; }
++        .sim-browser-search-result a { color:#1a0dab; text-decoration:none; font-size:18px; line-height:1.3; display:block; margin-bottom:5px; }
++        .sim-browser-search-result p { margin:0; color:#4d5156; font-size:13px; line-height:1.45; }
++        .sim-browser-reader { min-height:100%; padding:18px 18px 36px; background:#fff; }
++        .sim-browser-reader-head { border-bottom:1px solid #eceff3; padding-bottom:12px; margin-bottom:16px; }
++        .sim-browser-reader-head small { color:#5f6368; display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
++        .sim-browser-reader h1 { font-size:25px; line-height:1.2; margin:8px 0 12px; }
++        .sim-browser-reader h2 { font-size:20px; margin:22px 0 9px; }
++        .sim-browser-reader h3 { font-size:17px; margin:18px 0 7px; }
++        .sim-browser-reader p, .sim-browser-reader li { font-size:14px; line-height:1.6; }
++        .sim-browser-reader a { color:#1967d2; text-decoration:none; overflow-wrap:anywhere; }
++        .sim-browser-reader img { max-width:100%; height:auto; border-radius:10px; }
++        .sim-browser-reader pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#f6f8fa; border-radius:10px; padding:12px; }
++        .sim-browser-reader code { background:#f1f3f4; border-radius:4px; padding:1px 4px; }
++        .sim-browser-reader blockquote { margin:12px 0; padding:8px 12px; border-left:3px solid #dadce0; color:#5f6368; }
++        .sim-browser-reader-note {
++          margin:16px 0 0; padding:10px 12px; border-radius:12px; background:#eef4ff; color:#35517b; font-size:12px; line-height:1.45;
++        }
++      </style>
++    `;
++  }
+ 
++  function renderBrowserChrome(content, safe, label = "Chrome", mode = browserMode()) {
+     root.innerHTML = `
+       <div class="a17-page sim-browser-page">
++        ${browserReaderStyles()}
+         <div class="sim-browser-toolbar">
+           <button type="button" data-stable-action="browser-exit" aria-label="Kembali">‹</button>
+ 
+@@ -1827,7 +1832,7 @@
+             <span class="sim-browser-google-mark">G</span>
+             <input
+               id="stableBrowserAddress"
+-              value="${esc(displayUrl(safe))}"
++              value="${escapeAttribute(displayUrl(safe))}"
+               autocomplete="off"
+               inputmode="url"
+               spellcheck="false"
+@@ -1835,7 +1840,12 @@
+             <button type="submit" aria-label="Buka">➜</button>
+           </form>
+ 
+-          <button type="button" data-stable-action="browser-static-reader" aria-label="Mode kompatibilitas statis">▤</button>
++          <button
++            type="button"
++            data-stable-action="browser-toggle-mode"
++            aria-label="${mode === "original" ? "Gunakan mode kompatibilitas" : "Coba tampilan website asli"}">
++            ${mode === "original" ? "▤" : "◎"}
++          </button>
+           <button type="button" data-stable-action="browser-external" aria-label="Buka situs penuh">↗</button>
+         </div>
+ 
+@@ -1843,23 +1853,10 @@
+           <button type="button" data-stable-action="browser-back" ${state.browser.index <= 0 ? "disabled" : ""}>‹</button>
+           <button type="button" data-stable-action="browser-forward" ${state.browser.index >= state.browser.history.length - 1 ? "disabled" : ""}>›</button>
+           <button type="button" data-stable-action="browser-home">⌂</button>
+-          <strong>${esc(browserLabel(safe, label))} • mode ponsel</strong>
++          <strong>${esc(browserLabel(safe, label))} • ${mode === "original" ? "asli" : "kompatibel"}</strong>
+         </div>
+ 
+-        <div class="sim-browser-frame-wrap">
+-          <iframe
+-            id="stableBrowserFrame"
+-            src="${esc(safe)}"
+-            title="Chrome Android Simulator"
+-            referrerpolicy="origin-when-cross-origin"
+-            allow="clipboard-read; clipboard-write; autoplay; fullscreen; geolocation; camera; microphone">
+-          </iframe>
+-
+-          <div id="staticBrowserStatus" class="sim-browser-note" hidden></div>
+-          <div class="sim-browser-note sim-browser-static-help">
+-            Mode GitHub Pages langsung. Jika situs menolak iframe, tekan ▤ untuk mencoba salinan statis (jika CORS diizinkan), atau ↗ untuk situs penuh.
+-          </div>
+-        </div>
++        <div class="sim-browser-frame-wrap">${content}</div>
+       </div>
+     `;
+ 
+@@ -1868,17 +1865,373 @@
+       const input = root.querySelector("#stableBrowserAddress");
+       navigateBrowser(input?.value || "");
+     });
++  }
++
++  function renderBrowserLoading(safe, label = "Chrome", message = "Membuka halaman…") {
++    renderBrowserChrome(`
++      <div class="sim-browser-compat sim-browser-loading">
++        <div><div class="sim-browser-spinner"></div><strong>${esc(message)}</strong><p>Mohon tunggu.</p></div>
++      </div>
++    `, safe, label, "compat");
++  }
++
++  function renderBrowserError(safe, message, label = "Chrome") {
++    renderBrowserChrome(`
++      <div class="sim-browser-compat sim-browser-error">
++        <div>
++          <strong>Halaman tidak dapat dimuat</strong>
++          <p>${esc(message)}</p>
++          <button type="button" data-stable-action="browser-toggle-mode">Coba tampilan asli</button>
++          <button type="button" data-stable-action="browser-external">Buka di browser</button>
++        </div>
++      </div>
++    `, safe, label, "compat");
++  }
++
++  function renderLocalGoogleHome(safe) {
++    renderBrowserChrome(`
++      <div class="sim-browser-compat sim-browser-google-home">
++        <div class="sim-browser-google-logo" aria-label="Google"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></div>
++        <form id="simGoogleSearchForm" class="sim-browser-google-search">
++          <span>⌕</span>
++          <input id="simGoogleSearchInput" type="search" autocomplete="off" placeholder="Telusuri Google atau ketik URL">
++          <button type="submit" aria-label="Cari">➜</button>
++        </form>
++        <div class="sim-browser-google-hint">Pencarian ditampilkan dalam mode kompatibilitas agar hasil dapat dibuka di dalam Android Simulator.</div>
++      </div>
++    `, safe, "Google", "compat");
++
++    root.querySelector("#simGoogleSearchForm")?.addEventListener("submit", event => {
++      event.preventDefault();
++      navigateBrowser(root.querySelector("#simGoogleSearchInput")?.value || "");
++    });
++  }
++
++  function normalizeReaderUrl(raw, baseUrl = "") {
++    const value = String(raw || "").trim();
++    if (!value) return "";
++    try {
++      const resolved = new URL(value, baseUrl || undefined);
++      if (!["http:", "https:"].includes(resolved.protocol)) return "";
++      return resolved.toString();
++    } catch {
++      return "";
++    }
++  }
++
++  function inlineMarkdown(text, baseUrl = "") {
++    let safe = esc(String(text || ""));
++
++    safe = safe.replace(/!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)/g, (_, alt, url) => {
++      const resolved = normalizeReaderUrl(url, baseUrl);
++      return resolved ? `<img src="${escapeAttribute(resolved)}" alt="${alt}" loading="lazy">` : alt;
++    });
++
++    safe = safe.replace(/\[([^\]]+)\]\(([^\s)]+)\)/g, (_, label, url) => {
++      const resolved = normalizeReaderUrl(url.replaceAll("&amp;", "&"), baseUrl);
++      return resolved
++        ? `<a href="#" data-browser-url="${escapeAttribute(resolved)}">${label}</a>`
++        : label;
++    });
++
++    safe = safe.replace(/`([^`]+)`/g, "<code>$1</code>");
++    safe = safe.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
++    safe = safe.replace(/(^|\s)(https?:\/\/[^\s<]+)/g, (match, prefix, url) => {
++      const clean = url.replace(/[.,;:!?]+$/, "");
++      const suffix = url.slice(clean.length);
++      return `${prefix}<a href="#" data-browser-url="${escapeAttribute(clean)}">${clean}</a>${suffix}`;
++    });
++    return safe;
++  }
++
++  function markdownToReaderHtml(markdown, baseUrl = "") {
++    const source = String(markdown || "").replace(/\r/g, "");
++    const lines = source.split("\n");
++    const out = [];
++    let listOpen = false;
++    let paragraph = [];
++    let codeOpen = false;
++    let codeLines = [];
++
++    const flushParagraph = () => {
++      if (!paragraph.length) return;
++      out.push(`<p>${inlineMarkdown(paragraph.join(" "), baseUrl)}</p>`);
++      paragraph = [];
++    };
++    const closeList = () => {
++      if (!listOpen) return;
++      out.push("</ul>");
++      listOpen = false;
++    };
++    const flushCode = () => {
++      if (!codeOpen) return;
++      out.push(`<pre>${esc(codeLines.join("\n"))}</pre>`);
++      codeLines = [];
++      codeOpen = false;
++    };
++
++    for (const line of lines) {
++      if (/^```/.test(line.trim())) {
++        flushParagraph(); closeList();
++        if (codeOpen) flushCode();
++        else { codeOpen = true; codeLines = []; }
++        continue;
++      }
++      if (codeOpen) { codeLines.push(line); continue; }
++
++      const trimmed = line.trim();
++      if (!trimmed) { flushParagraph(); closeList(); continue; }
++
++      const heading = trimmed.match(/^(#{1,3})\s+(.+)$/);
++      if (heading) {
++        flushParagraph(); closeList();
++        const level = heading[1].length;
++        out.push(`<h${level}>${inlineMarkdown(heading[2], baseUrl)}</h${level}>`);
++        continue;
++      }
++
++      const bullet = trimmed.match(/^[-*+]\s+(.+)$/);
++      if (bullet) {
++        flushParagraph();
++        if (!listOpen) { out.push("<ul>"); listOpen = true; }
++        out.push(`<li>${inlineMarkdown(bullet[1], baseUrl)}</li>`);
++        continue;
++      }
++
++      if (trimmed.startsWith(">")) {
++        flushParagraph(); closeList();
++        out.push(`<blockquote>${inlineMarkdown(trimmed.replace(/^>\s?/, ""), baseUrl)}</blockquote>`);
++        continue;
++      }
++
++      paragraph.push(trimmed);
++    }
++
++    flushParagraph(); closeList(); flushCode();
++    return out.join("\n");
++  }
++
++  function cleanReaderMarkdown(text) {
++    const value = String(text || "");
++    const marker = value.indexOf("Markdown Content:");
++    if (marker >= 0) return value.slice(marker + "Markdown Content:".length).trim();
++    return value.trim();
++  }
++
++  function searchResultsFromMarkdown(markdown) {
++    const lines = String(markdown || "").replace(/\r/g, "").split("\n");
++    const results = [];
++    let current = null;
++
++    const pushCurrent = () => {
++      if (current?.url && current?.title) results.push(current);
++      current = null;
++    };
++
++    for (const rawLine of lines) {
++      const line = rawLine.trim();
++      if (!line) continue;
++
++      const mdLink = line.match(/^#{0,3}\s*\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/);
++      if (mdLink) {
++        pushCurrent();
++        current = { title: mdLink[1].trim(), url: mdLink[2].trim(), snippet: "" };
++        continue;
++      }
++
++      const numbered = line.match(/^\d+[.)]\s+(.+?)\s+-\s+(https?:\/\/\S+)$/);
++      if (numbered) {
++        pushCurrent();
++        current = { title: numbered[1].trim(), url: numbered[2].trim(), snippet: "" };
++        continue;
++      }
++
++      const plainUrl = line.match(/^(https?:\/\/\S+)$/);
++      if (plainUrl && !current) {
++        current = { title: plainUrl[1], url: plainUrl[1], snippet: "" };
++        continue;
++      }
++
++      if (current && !current.snippet && !/^Title:|^URL Source:/i.test(line)) {
++        current.snippet = line.replace(/^[-*]\s*/, "");
++      }
++    }
++    pushCurrent();
++
++    // Fallback: collect any markdown links if the result format changed.
++    if (!results.length) {
++      const rx = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
++      let match;
++      while ((match = rx.exec(String(markdown || ""))) && results.length < 12) {
++        results.push({ title: match[1], url: match[2], snippet: "" });
++      }
++    }
++
++    const seen = new Set();
++    return results.filter(item => {
++      const url = normalizeReaderUrl(item.url);
++      if (!url || seen.has(url)) return false;
++      seen.add(url);
++      item.url = url;
++      return true;
++    }).slice(0, 12);
++  }
++
++  async function fetchCompatText(endpoint) {
++    const cached = browserCompatCache.get(endpoint);
++    if (cached && Date.now() - cached.time < 5 * 60 * 1000) return cached.text;
++
++    const response = await fetch(endpoint, {
++      method: "GET",
++      mode: "cors",
++      credentials: "omit",
++      redirect: "follow",
++      cache: "no-store",
++      headers: { "Accept": "text/plain, text/markdown, application/json;q=0.5, */*;q=0.1" }
++    });
++    if (!response.ok) throw new Error(`HTTP ${response.status}`);
++    const text = await response.text();
++    browserCompatCache.set(endpoint, { time: Date.now(), text });
++    return text;
++  }
++
++  async function renderSearchCompat(safe, query) {
++    const requestToken = ++browserCompatRequestToken;
++    renderBrowserLoading(safe, "Google", `Mencari “${query}”…`);
+ 
++    try {
++      const endpoint = `https://s.jina.ai/${encodeURIComponent(query)}`;
++      const markdown = await fetchCompatText(endpoint);
++      if (requestToken !== browserCompatRequestToken || state.browser.current !== safe || browserMode() !== "compat") return;
++      const results = searchResultsFromMarkdown(markdown);
++      if (!results.length) throw new Error("Hasil pencarian tidak terbaca");
++
++      const cards = results.map(item => {
++        let host = item.url;
++        try { host = new URL(item.url).hostname.replace(/^www\./, ""); } catch {}
++        return `
++          <article class="sim-browser-search-result">
++            <small>${esc(host)}</small>
++            <a href="#" data-browser-url="${escapeAttribute(item.url)}">${esc(item.title)}</a>
++            ${item.snippet ? `<p>${esc(item.snippet)}</p>` : ""}
++          </article>
++        `;
++      }).join("");
++
++      renderBrowserChrome(`
++        <div class="sim-browser-compat sim-browser-search-results">
++          <div class="sim-browser-search-head"><span class="sim-browser-search-g">G</span><strong>${esc(query)}</strong></div>
++          ${cards}
++          <div class="sim-browser-reader-note">Hasil ditampilkan melalui layanan pencarian kompatibilitas karena browser web tidak mengizinkan halaman induk menangkap klik di dalam Google iframe lintas-origin.</div>
++        </div>
++      `, safe, "Google", "compat");
++    } catch (error) {
++      if (requestToken !== browserCompatRequestToken || state.browser.current !== safe) return;
++      renderBrowserError(safe, "Pencarian kompatibilitas sedang tidak tersedia. Gunakan tombol ◎ untuk mencoba Google asli atau ↗ untuk membuka browser penuh.", "Google");
++    } finally {
++      // A newer navigation invalidates this response through requestToken.
++    }
++  }
++
++  async function renderReaderCompat(safe, label = "Chrome") {
++    const requestToken = ++browserCompatRequestToken;
++    renderBrowserLoading(safe, label, `Membuka ${browserLabel(safe, label)}…`);
++
++    try {
++      const endpoint = `https://r.jina.ai/${safe}`;
++      const raw = await fetchCompatText(endpoint);
++      if (requestToken !== browserCompatRequestToken || state.browser.current !== safe || browserMode() !== "compat") return;
++      const markdown = cleanReaderMarkdown(raw);
++      if (!markdown) throw new Error("Dokumen kosong");
++
++      let title = browserLabel(safe, label);
++      const titleMatch = raw.match(/^Title:\s*(.+)$/mi);
++      if (titleMatch?.[1]) title = titleMatch[1].trim();
++
++      renderBrowserChrome(`
++        <div class="sim-browser-compat sim-browser-reader">
++          <header class="sim-browser-reader-head">
++            <small>${esc(browserLabel(safe, label))}</small>
++            <h1>${esc(title)}</h1>
++          </header>
++          ${markdownToReaderHtml(markdown, safe)}
++          <div class="sim-browser-reader-note">Mode kompatibilitas menampilkan konten halaman publik tanpa menanam website sebagai iframe. Login, pembayaran, DRM, CAPTCHA, dan aplikasi web kompleks tetap perlu dibuka lewat ↗.</div>
++        </div>
++      `, safe, label, "compat");
++    } catch (error) {
++      if (requestToken !== browserCompatRequestToken || state.browser.current !== safe) return;
++      renderBrowserError(safe, "Website tidak dapat dibaca dalam mode kompatibilitas. Coba tampilan asli (◎) atau buka situs penuh (↗).", label);
++    } finally {
++      // A newer navigation invalidates this response through requestToken.
++    }
++  }
++
++  function renderOriginalBrowser(safe, label = "Chrome") {
++    renderBrowserChrome(`
++      <iframe
++        id="stableBrowserFrame"
++        src="${escapeAttribute(safe)}"
++        title="Chrome Android Simulator"
++        referrerpolicy="origin-when-cross-origin"
++        allow="clipboard-read; clipboard-write; autoplay; fullscreen; geolocation; camera; microphone">
++      </iframe>
++      <div class="sim-browser-note sim-browser-static-help">Jika halaman menampilkan “refused to connect”, tekan ▤ untuk kembali ke mode kompatibilitas.</div>
++    `, safe, label, "original");
+     requestAnimationFrame(fitBrowserMobileViewport);
+     setTimeout(fitBrowserMobileViewport, 120);
+   }
+ 
++  function bindBrowserCompatNavigation() {
++    const host = root.querySelector(".sim-browser-frame-wrap");
++    if (!host || host.dataset.compatNavBound === "1") return;
++    host.dataset.compatNavBound = "1";
++    host.addEventListener("click", event => {
++      const link = event.target instanceof Element
++        ? event.target.closest("[data-browser-url]")
++        : null;
++      if (!link) return;
++      const target = String(link.dataset.browserUrl || "");
++      if (!target) return;
++      event.preventDefault();
++      event.stopPropagation();
++      navigateBrowser(target);
++    });
++  }
++
++  function renderBrowser(url = state.browser.current, label = "Chrome", options = {}) {
++    const safe = normalizeUrl(url, false);
++    state.browser.current = safe;
++    if (options.mode) setBrowserMode(options.mode);
++    if (!state.browser.viewMode) state.browser.viewMode = "compat";
++    saveState();
++
++    if (browserMode() === "original") {
++      renderOriginalBrowser(safe, label);
++      return;
++    }
++
++    if (isGoogleHome(safe)) {
++      renderLocalGoogleHome(safe);
++      bindBrowserCompatNavigation();
++      return;
++    }
++
++    const query = googleQueryFromUrl(safe);
++    if (query) {
++      void renderSearchCompat(safe, query).then(bindBrowserCompatNavigation);
++      return;
++    }
++
++    void renderReaderCompat(safe, label).then(bindBrowserCompatNavigation);
++  }
++
+   function navigateBrowser(raw) {
+     const next = normalizeUrl(raw, true);
+     state.browser.history = state.browser.history.slice(0, state.browser.index + 1);
+     state.browser.history.push(next);
+     state.browser.index = state.browser.history.length - 1;
+     state.browser.current = next;
++    state.browser.viewMode = "compat";
+     saveState();
+     renderBrowser(next, browserLabel(next));
+   }
+@@ -1889,6 +2242,7 @@
+ 
+     state.browser.index = nextIndex;
+     state.browser.current = state.browser.history[nextIndex];
++    state.browser.viewMode = "compat";
+     saveState();
+     renderBrowser(state.browser.current, browserLabel(state.browser.current));
+   }
+@@ -1902,6 +2256,7 @@
+     }
+ 
+     state.browser.current = normalized;
++    state.browser.viewMode = "compat";
+     saveState();
+     renderBrowser(normalized, label);
+   }
+@@ -2040,8 +2395,10 @@
+     }
+ 
+ 
+-    if (action === "browser-static-reader") {
+-      void tryStaticReader();
++    if (action === "browser-toggle-mode" || action === "browser-static-reader") {
++      const nextMode = browserMode() === "original" ? "compat" : "original";
++      setBrowserMode(nextMode);
++      renderBrowser(state.browser.current || googleHomeUrl(), browserLabel(state.browser.current || googleHomeUrl()), { mode: nextMode });
+       return;
+     }
+ 

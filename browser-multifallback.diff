@@ -1,0 +1,303 @@
+--- /mnt/data/chrome-multifallback-2bdc641/androidsim-enhancer.original.js	2026-08-18 11:01:08.179430285 +0000
++++ /mnt/data/chrome-multifallback-2bdc641/androidsim-enhancer.js	2026-08-18 11:04:14.425605888 +0000
+@@ -1687,6 +1687,7 @@
+   function browserLabel(url, fallback = "Chrome") {
+     try {
+       const host = new URL(url).hostname.replace(/^www\./, "");
++      if (host.startsWith("scholar.google.")) return "Google Scholar";
+       if (host === "google.com" || host.endsWith(".google.com")) return "Google";
+       return host || fallback;
+     } catch {
+@@ -1718,6 +1719,25 @@
+     }
+   }
+ 
++  function isGoogleScholar(url) {
++    try {
++      const host = new URL(url).hostname.replace(/^www\./, "").toLowerCase();
++      return host.startsWith("scholar.google.");
++    } catch {
++      return false;
++    }
++  }
++
++  function scholarQueryFromUrl(url) {
++    try {
++      const parsed = new URL(url);
++      if (!isGoogleScholar(parsed.toString())) return "";
++      return String(parsed.searchParams.get("q") || "").trim();
++    } catch {
++      return "";
++    }
++  }
++
+   // Google normally blocks ordinary third-party framing. The `igu=1` flag is
+   // Google's embeddable search variant and is required when we intentionally
+   // fall back from the local/compatibility UI to the real Google results page.
+@@ -1835,6 +1855,18 @@
+         .sim-browser-reader-note {
+           margin:16px 0 0; padding:10px 12px; border-radius:12px; background:#eef4ff; color:#35517b; font-size:12px; line-height:1.45;
+         }
++        .sim-browser-scholar { min-height:100%; background:#fff; color:#202124; padding:24px 16px 40px; }
++        .sim-browser-scholar-brand { display:flex; align-items:center; gap:10px; margin:18px 0 22px; color:#4285f4; }
++        .sim-browser-scholar-brand b { font-size:32px; font-weight:500; letter-spacing:-1px; }
++        .sim-browser-scholar-brand small { color:#5f6368; font-size:12px; }
++        .sim-browser-scholar-search { display:flex; align-items:center; gap:8px; border:1px solid #dadce0; border-radius:24px; padding:5px 6px 5px 14px; box-shadow:0 1px 4px rgba(60,64,67,.12); }
++        .sim-browser-scholar-search input { flex:1; min-width:0; border:0; outline:0; font-size:15px; padding:9px 0; }
++        .sim-browser-scholar-search button { width:38px; height:38px; border:0; border-radius:50%; background:#4285f4; color:#fff; cursor:pointer; }
++        .sim-browser-scholar-result { padding:15px 2px; border-bottom:1px solid #edf0f3; }
++        .sim-browser-scholar-result a { color:#1a0dab; font-size:17px; line-height:1.35; text-decoration:none; display:block; }
++        .sim-browser-scholar-result small { display:block; color:#137333; margin:5px 0; overflow-wrap:anywhere; }
++        .sim-browser-scholar-result p { margin:5px 0 0; color:#4d5156; font-size:13px; line-height:1.5; }
++        .sim-browser-source-badge { display:inline-flex; align-items:center; border-radius:999px; padding:4px 8px; margin:0 0 10px; background:#f1f3f4; color:#5f6368; font-size:11px; }
+       </style>
+     `;
+   }
+@@ -1899,6 +1931,7 @@
+         <div>
+           <strong>Halaman tidak dapat dimuat</strong>
+           <p>${esc(message)}</p>
++          <button type="button" data-stable-action="browser-retry">Coba lagi</button>
+           <button type="button" data-stable-action="browser-toggle-mode">Coba tampilan asli</button>
+           <button type="button" data-stable-action="browser-external">Buka di browser</button>
+         </div>
+@@ -1925,6 +1958,65 @@
+     });
+   }
+ 
++  function renderLocalScholarHome(safe, query = "") {
++    renderBrowserChrome(`
++      <div class="sim-browser-compat sim-browser-scholar">
++        <div class="sim-browser-scholar-brand"><b>Google Scholar</b><small>mode kompatibilitas</small></div>
++        <form id="simScholarSearchForm" class="sim-browser-scholar-search">
++          <span>⌕</span>
++          <input id="simScholarSearchInput" type="search" autocomplete="off" value="${escapeAttribute(query)}" placeholder="Telusuri artikel ilmiah">
++          <button type="submit" aria-label="Cari">➜</button>
++        </form>
++        ${query ? `<div class="sim-browser-reader-note">Menyiapkan hasil untuk “${esc(query)}”…</div>` : `<div class="sim-browser-google-hint">Google Scholar asli menolak embedding pada banyak halaman. Mode ini mempertahankan pencarian di dalam simulator dan membuka hasil publik dengan fallback kompatibilitas.</div>`}
++      </div>
++    `, safe, "Google Scholar", "compat");
++
++    root.querySelector("#simScholarSearchForm")?.addEventListener("submit", event => {
++      event.preventDefault();
++      const q = String(root.querySelector("#simScholarSearchInput")?.value || "").trim();
++      if (!q) return;
++      navigateBrowser(`https://scholar.google.com/scholar?q=${encodeURIComponent(q)}`);
++    });
++  }
++
++  async function renderScholarCompat(safe) {
++    const query = scholarQueryFromUrl(safe);
++    if (!query) {
++      renderLocalScholarHome(safe);
++      return;
++    }
++    const requestToken = ++browserCompatRequestToken;
++    renderLocalScholarHome(safe, query);
++    try {
++      const endpoint = `https://s.jina.ai/?q=${encodeURIComponent(query + " research paper journal DOI")}`;
++      const markdown = await fetchCompatText(endpoint);
++      if (requestToken !== browserCompatRequestToken || state.browser.current !== safe || browserMode() !== "compat") return;
++      const results = searchResultsFromMarkdown(markdown).slice(0, 10);
++      if (!results.length) throw new Error("Hasil akademik tidak terbaca");
++      const cards = results.map(item => {
++        let host = item.url;
++        try { host = new URL(item.url).hostname.replace(/^www\./, ""); } catch {}
++        return `<article class="sim-browser-scholar-result"><a href="#" data-browser-url="${escapeAttribute(item.url)}">${esc(item.title)}</a><small>${esc(host)}</small>${item.snippet ? `<p>${esc(item.snippet)}</p>` : ""}</article>`;
++      }).join("");
++      renderBrowserChrome(`
++        <div class="sim-browser-compat sim-browser-scholar">
++          <div class="sim-browser-scholar-brand"><b>Google Scholar</b><small>fallback publik</small></div>
++          <form id="simScholarSearchForm" class="sim-browser-scholar-search"><span>⌕</span><input id="simScholarSearchInput" type="search" autocomplete="off" value="${escapeAttribute(query)}"><button type="submit">➜</button></form>
++          <div class="sim-browser-source-badge">Hasil akademik kompatibel</div>${cards}
++          <div class="sim-browser-reader-note">Google Scholar asli dapat menolak embedding/reader. Hasil ini adalah fallback pencarian web akademik; tautan publik tetap dibuka di dalam simulator bila dapat dibaca.</div>
++        </div>
++      `, safe, "Google Scholar", "compat");
++      root.querySelector("#simScholarSearchForm")?.addEventListener("submit", event => {
++        event.preventDefault();
++        const q = String(root.querySelector("#simScholarSearchInput")?.value || "").trim();
++        if (q) navigateBrowser(`https://scholar.google.com/scholar?q=${encodeURIComponent(q)}`);
++      });
++    } catch {
++      if (requestToken !== browserCompatRequestToken || state.browser.current !== safe) return;
++      renderBrowserError(safe, "Google Scholar asli menolak embedding dan fallback pencarian sedang tidak tersedia. Coba lagi atau buka Scholar penuh lewat ↗.", "Google Scholar");
++    }
++  }
++
+   function normalizeReaderUrl(raw, baseUrl = "") {
+     const value = String(raw || "").trim();
+     if (!value) return "";
+@@ -2095,24 +2187,73 @@
+     }).slice(0, 12);
+   }
+ 
+-  async function fetchCompatText(endpoint) {
+-    const cached = browserCompatCache.get(endpoint);
++  async function fetchCompatText(endpoint, extraHeaders = {}) {
++    const cacheKey = endpoint + "|" + JSON.stringify(extraHeaders);
++    const cached = browserCompatCache.get(cacheKey);
+     if (cached && Date.now() - cached.time < 5 * 60 * 1000) return cached.text;
+-
+     const response = await fetch(endpoint, {
+-      method: "GET",
+-      mode: "cors",
+-      credentials: "omit",
+-      redirect: "follow",
+-      cache: "no-store",
+-      headers: { "Accept": "text/plain, text/markdown, application/json;q=0.5, */*;q=0.1" }
++      method: "GET", mode: "cors", credentials: "omit", redirect: "follow", cache: "no-store",
++      headers: { "Accept": "text/plain, text/markdown, application/json;q=0.5, */*;q=0.1", ...extraHeaders }
+     });
+     if (!response.ok) throw new Error(`HTTP ${response.status}`);
+     const text = await response.text();
+-    browserCompatCache.set(endpoint, { time: Date.now(), text });
++    browserCompatCache.set(cacheKey, { time: Date.now(), text });
+     return text;
+   }
+ 
++  async function fetchReaderWithFallback(safe) {
++    const endpoint = `https://r.jina.ai/${safe}`;
++    try {
++      return { source: "Reader", text: await fetchCompatText(endpoint) };
++    } catch (firstError) {
++      try {
++        const text = await fetchCompatText(endpoint, { "X-Engine": "browser", "X-Timeout": "15", "X-With-Iframe": "true" });
++        return { source: "Reader browser", text };
++      } catch { throw firstError; }
++    }
++  }
++
++  function htmlToCompatHtml(rawHtml, baseUrl) {
++    const doc = new DOMParser().parseFromString(String(rawHtml || ""), "text/html");
++    doc.querySelectorAll("script,style,noscript,template,svg,canvas,iframe,object,embed,form,input,button,select,textarea").forEach(node => node.remove());
++    const source = doc.querySelector("article, main, [role='main']") || doc.body;
++    if (!source) return "";
++    const nodes = [...source.querySelectorAll("h1,h2,h3,p,blockquote,pre,li,a,img")].slice(0, 450);
++    const out = [];
++    for (const node of nodes) {
++      const tag = node.tagName.toLowerCase();
++      if (tag === "img") {
++        const src = normalizeReaderUrl(node.getAttribute("src") || node.getAttribute("data-src") || "", baseUrl);
++        if (src) out.push(`<img src="${escapeAttribute(src)}" alt="${escapeAttribute(node.getAttribute("alt") || "")}" loading="lazy">`);
++        continue;
++      }
++      if (tag === "a") {
++        const href = normalizeReaderUrl(node.getAttribute("href") || "", baseUrl);
++        const text = String(node.textContent || "").trim();
++        if (href && text) out.push(`<p><a href="#" data-browser-url="${escapeAttribute(href)}">${esc(text)}</a></p>`);
++        continue;
++      }
++      const text = String(node.textContent || "").replace(/\s+/g, " ").trim();
++      if (!text) continue;
++      if (tag === "h1") out.push(`<h1>${esc(text)}</h1>`);
++      else if (tag === "h2") out.push(`<h2>${esc(text)}</h2>`);
++      else if (tag === "h3") out.push(`<h3>${esc(text)}</h3>`);
++      else if (tag === "blockquote") out.push(`<blockquote>${esc(text)}</blockquote>`);
++      else if (tag === "pre") out.push(`<pre>${esc(text)}</pre>`);
++      else if (tag === "li") out.push(`<p>• ${esc(text)}</p>`);
++      else out.push(`<p>${esc(text)}</p>`);
++    }
++    return out.join("\n");
++  }
++
++  async function fetchAllOriginsCompat(safe) {
++    const endpoint = `https://api.allorigins.win/raw?url=${encodeURIComponent(safe)}`;
++    const raw = await fetchCompatText(endpoint, { "Accept": "text/html,application/xhtml+xml,text/plain;q=0.8,*/*;q=0.1" });
++    const html = htmlToCompatHtml(raw, safe);
++    if (!html) throw new Error("Konten HTML kosong");
++    return html;
++  }
++
+   async function renderSearchCompat(safe, query) {
+     const requestToken = ++browserCompatRequestToken;
+     renderBrowserLoading(safe, "Google", `Mencari “${query}”…`);
+@@ -2149,14 +2290,7 @@
+     } catch (error) {
+       if (requestToken !== browserCompatRequestToken || state.browser.current !== safe) return;
+ 
+-      // Do not strand the user on an error screen if the optional compatibility
+-      // service is rate-limited/unavailable. Fall back automatically to the
+-      // embeddable Google results page. Navigation/history stays inside the
+-      // simulator and the ▤ button can switch back to compatibility mode.
+-      setBrowserMode("original");
+-      renderOriginalBrowser(safe, "Google", {
+-        note: "Mode kompatibilitas pencarian sedang tidak tersedia. Google asli ditampilkan otomatis."
+-      });
++      renderBrowserError(safe, "Layanan pencarian kompatibilitas sedang tidak tersedia. Tekan Coba lagi; tampilan Google asli tetap tersedia melalui tombol ◎.", "Google");
+     } finally {
+       // A newer navigation invalidates this response through requestToken.
+     }
+@@ -2165,33 +2299,26 @@
+   async function renderReaderCompat(safe, label = "Chrome") {
+     const requestToken = ++browserCompatRequestToken;
+     renderBrowserLoading(safe, label, `Membuka ${browserLabel(safe, label)}…`);
+-
+     try {
+-      const endpoint = `https://r.jina.ai/${safe}`;
+-      const raw = await fetchCompatText(endpoint);
++      const reader = await fetchReaderWithFallback(safe);
+       if (requestToken !== browserCompatRequestToken || state.browser.current !== safe || browserMode() !== "compat") return;
+-      const markdown = cleanReaderMarkdown(raw);
++      const markdown = cleanReaderMarkdown(reader.text);
+       if (!markdown) throw new Error("Dokumen kosong");
+-
+       let title = browserLabel(safe, label);
+-      const titleMatch = raw.match(/^Title:\s*(.+)$/mi);
++      const titleMatch = reader.text.match(/^Title:\s*(.+)$/mi);
+       if (titleMatch?.[1]) title = titleMatch[1].trim();
+-
+-      renderBrowserChrome(`
+-        <div class="sim-browser-compat sim-browser-reader">
+-          <header class="sim-browser-reader-head">
+-            <small>${esc(browserLabel(safe, label))}</small>
+-            <h1>${esc(title)}</h1>
+-          </header>
+-          ${markdownToReaderHtml(markdown, safe)}
+-          <div class="sim-browser-reader-note">Mode kompatibilitas menampilkan konten halaman publik tanpa menanam website sebagai iframe. Login, pembayaran, DRM, CAPTCHA, dan aplikasi web kompleks tetap perlu dibuka lewat ↗.</div>
+-        </div>
+-      `, safe, label, "compat");
+-    } catch (error) {
+-      if (requestToken !== browserCompatRequestToken || state.browser.current !== safe) return;
+-      renderBrowserError(safe, "Website tidak dapat dibaca dalam mode kompatibilitas. Coba tampilan asli (◎) atau buka situs penuh (↗).", label);
+-    } finally {
+-      // A newer navigation invalidates this response through requestToken.
++      renderBrowserChrome(`<div class="sim-browser-compat sim-browser-reader"><div class="sim-browser-source-badge">${esc(reader.source)}</div><header class="sim-browser-reader-head"><small>${esc(browserLabel(safe, label))}</small><h1>${esc(title)}</h1></header>${markdownToReaderHtml(markdown, safe)}<div class="sim-browser-reader-note">Konten ditampilkan dalam mode kompatibilitas. Jika Reader utama ditolak, Chrome Simulator otomatis mencoba fallback HTML publik.</div></div>`, safe, label, "compat");
++      return;
++    } catch {
++      try {
++        const html = await fetchAllOriginsCompat(safe);
++        if (requestToken !== browserCompatRequestToken || state.browser.current !== safe || browserMode() !== "compat") return;
++        renderBrowserChrome(`<div class="sim-browser-compat sim-browser-reader"><div class="sim-browser-source-badge">Fallback HTML</div><header class="sim-browser-reader-head"><small>${esc(browserLabel(safe, label))}</small><h1>${esc(browserLabel(safe, label))}</h1></header>${html}<div class="sim-browser-reader-note">Halaman ini memakai fallback HTML publik. Script, login, dan session situs asli tidak dijalankan di mode ini.</div></div>`, safe, label, "compat");
++        return;
++      } catch {
++        if (requestToken !== browserCompatRequestToken || state.browser.current !== safe) return;
++        renderBrowserError(safe, "Website menolak Reader dan fallback HTML publik. Coba lagi, tampilan asli (◎), atau buka situs penuh (↗).", label);
++      }
+     }
+   }
+ 
+@@ -2247,6 +2374,11 @@
+       return;
+     }
+ 
++    if (isGoogleScholar(safe)) {
++      void renderScholarCompat(safe).then(bindBrowserCompatNavigation);
++      return;
++    }
++
+     const query = googleQueryFromUrl(safe);
+     if (query) {
+       void renderSearchCompat(safe, query).then(bindBrowserCompatNavigation);
+@@ -2425,6 +2557,12 @@
+       return;
+     }
+ 
++    if (action === "browser-retry") {
++      state.browser.viewMode = "compat";
++      saveState();
++      renderBrowser(state.browser.current || googleHomeUrl(), browserLabel(state.browser.current || googleHomeUrl()), { mode: "compat" });
++      return;
++    }
+ 
+     if (action === "browser-toggle-mode" || action === "browser-static-reader") {
+       const nextMode = browserMode() === "original" ? "compat" : "original";
