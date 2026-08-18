@@ -1073,3 +1073,57 @@
 .translate-status.error{color:#9b4d5a}
 .translate-loader{width:12px;height:12px;margin-left:auto;border:2px solid rgba(23,78,166,.2);border-top-color:#174ea6;border-radius:50%;animation:translateSpin .7s linear infinite}
 @keyframes translateSpin{to{transform:rotate(360deg)}}
+
+
+/* Secure realtime media integrations: Spotify + YouTube */
+.media-live-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px}.media-live-head h2{margin:0;font-size:23px}.media-live-head small{color:var(--muted);font-size:10px}.media-security-pill{padding:6px 9px;border-radius:999px;background:var(--a2);color:var(--a);font-size:9px;font-weight:900}.media-auth-card,.media-paste-card{margin:8px 12px;padding:12px;border-radius:20px;background:var(--card);border:1px solid var(--line)}.media-auth-card>strong,.media-paste-card>strong{display:block;font-size:13px}.media-auth-card p{margin:5px 0 10px;color:var(--muted);font-size:9px;line-height:1.45}.media-auth-card label{display:grid;gap:5px;font-size:9px;font-weight:800}.media-auth-card input,.media-paste-card input{min-width:0;width:100%;height:36px;padding:0 10px;border:1px solid var(--line);border-radius:12px;background:var(--surf);color:var(--txt);font:inherit}.media-auth-card code{word-break:break-all;font-size:8px}.media-auth-actions{display:flex;gap:7px;margin-top:10px}.media-auth-actions button{min-height:34px;padding:0 11px;border:0;border-radius:13px;background:var(--a2);color:var(--a);font-size:9px;font-weight:900}.media-auth-actions .sim-primary{background:var(--a);color:#fff}.media-paste-card label{margin-top:8px;display:grid;grid-template-columns:1fr auto;gap:6px}.media-paste-card button{padding:0 11px;border:0;border-radius:12px;background:var(--a);color:#fff;font-weight:900}.media-account-area{margin:8px 12px}.media-loading,.media-empty{padding:16px;border:1px dashed var(--line);border-radius:18px;color:var(--muted);background:color-mix(in srgb,var(--card) 86%,transparent);font-size:9px;line-height:1.4}.media-profile{display:flex;align-items:center;gap:9px;margin-bottom:8px;padding:10px;border-radius:18px;background:var(--card)}.media-profile>div{width:42px;height:42px;overflow:hidden;display:grid;place-items:center;border-radius:50%;background:var(--a2)}.media-profile img{width:100%;height:100%;object-fit:cover}.media-profile section{display:grid}.media-profile small{color:var(--muted);font-size:9px}.media-list{display:grid;gap:6px}.media-list>button{min-height:54px;padding:7px 8px;display:grid;grid-template-columns:42px 1fr;align-items:center;gap:9px;border:1px solid var(--line);border-radius:16px;background:var(--card);color:var(--txt);text-align:left}.media-list>button>span{width:42px;height:42px;overflow:hidden;display:grid;place-items:center;border-radius:10px;background:var(--a2)}.media-list img{width:100%;height:100%;object-fit:cover}.media-list b,.media-list small{display:block}.media-list b{font-size:10px}.media-list small{margin-top:2px;color:var(--muted);font-size:8px}.media-embed-shell{margin:10px 12px 14px;overflow:hidden;border-radius:18px;background:#111;min-height:152px}.media-embed-shell iframe{display:block;width:100%;height:152px;border:0}.media-embed-shell.youtube{aspect-ratio:16/9;min-height:0}.media-embed-shell.youtube iframe{height:100%}.spotify-live-app{background:#121212;color:#fff}.spotify-live-app .sim-app-top{background:#202020}.spotify-live-app .media-auth-card,.spotify-live-app .media-paste-card,.spotify-live-app .media-profile,.spotify-live-app .media-list>button{background:#1d1d1d;border-color:#303030;color:#fff}.spotify-live-app input{background:#111;color:#fff;border-color:#333}.spotify-live-app .media-security-pill{background:#173d25;color:#1ed760}.youtube-live-app{background:#f8f7fb}.youtube-live-app.music{background:#0f0f10;color:#fff}.youtube-live-app.music .sim-app-top,.youtube-live-app.music .media-auth-card,.youtube-live-app.music .media-paste-card,.youtube-live-app.music .media-list>button{background:#1b1b1d;color:#fff;border-color:#303034}.youtube-live-app.music input{background:#111;color:#fff;border-color:#333}
+
+/* FiveM / GTA RP style paste-link media controls */
+.roleplay-link-card{position:relative;overflow:hidden}.roleplay-link-card:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--a)}
+.media-paste-title{display:flex;align-items:center;justify-content:space-between;gap:8px}.media-paste-title>span{padding:4px 7px;border-radius:999px;background:var(--a2);color:var(--a);font-size:7px;font-weight:900;white-space:nowrap}
+.roleplay-link-card p{margin:5px 0 8px;color:var(--muted);font-size:8.5px;line-height:1.45}.roleplay-link-card>small{display:block;margin-top:7px;color:var(--muted);font-size:7.5px;line-height:1.35}
+.media-paste-card .media-paste-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:5px}.media-paste-card .media-paste-row button{min-width:46px;height:36px;padding:0 8px}.media-paste-card .media-clip-btn{background:var(--a2);color:var(--a)}
+.spotify-live-app .roleplay-link-card .media-clip-btn{background:#173d25;color:#1ed760}.youtube-live-app.music .roleplay-link-card .media-clip-btn{background:#2b2b2e;color:#fff}
+@media(max-width:560px){.media-paste-card .media-paste-row{grid-template-columns:1fr auto}.media-paste-card .media-paste-row input{grid-column:1/-1}.media-paste-card .media-paste-row button{min-width:70px}}
+
+/* =========================================================
+   FIX 0462ee1: YouTube / YouTube Music embedded playback
+   YouTube requires an embedded viewport of at least 200x200 px.
+   The old 16:9 card could shrink below that size inside the Pixel frame.
+   ========================================================= */
+.media-embed-shell.youtube{
+  box-sizing:border-box;
+  width:calc(100% - 8px);
+  height:210px;
+  min-width:200px;
+  min-height:200px;
+  margin:10px 4px 12px;
+  aspect-ratio:auto;
+  border-radius:15px;
+  overflow:hidden;
+  background:#000;
+}
+.media-embed-shell.youtube iframe{
+  display:block;
+  width:100%;
+  height:100%;
+  min-width:200px;
+  min-height:200px;
+  border:0;
+  background:#000;
+  pointer-events:auto;
+}
+.youtube-player-note{
+  margin:0 8px 10px;
+  color:var(--muted);
+  font-size:7.5px;
+  line-height:1.4;
+}
+.youtube-live-app.music .youtube-player-note{color:#aaa}
+@media(max-width:560px){
+  .media-embed-shell.youtube{
+    width:calc(100% - 12px);
+    height:clamp(210px,56vw,260px);
+    margin-inline:6px;
+  }
+}

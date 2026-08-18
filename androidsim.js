@@ -36,7 +36,7 @@
     { id: "ice", accent: "#3e8ab8", soft: "#d9eef8", parts: ["#3e8ab8", "#85bdda", "#d4ecf8", "#255e7b"] }
   ];
 
-  const SIM_APPS = [{"id":"youtube","name":"YouTube","glyph":"▶","tone":"red","category":"media"},{"id":"play-store","name":"Play Store","glyph":"▶","tone":"multi","category":"store"},{"id":"translate","name":"Terjemah","glyph":"文","tone":"blue","category":"utility"},{"id":"digi-bank","name":"DIGI bank bjb","glyph":"D","tone":"blue","category":"finance"},{"id":"dana","name":"DANA","glyph":"D","tone":"blue","category":"finance"},{"id":"bcr","name":"BCR","glyph":"☎","tone":"green","category":"finance"},{"id":"brimo","name":"BRImo","glyph":"B","tone":"blue","category":"finance"},{"id":"canva","name":"Canva","glyph":"C","tone":"purple","category":"creative"},{"id":"capcut","name":"CapCut","glyph":"✂","tone":"dark","category":"creative"},{"id":"chrome","name":"Chrome","glyph":"●","tone":"multi","category":"browser"},{"id":"weather","name":"Cuaca","glyph":"☀","tone":"yellow","category":"utility"},{"id":"dolby","name":"Dolby Atmos","glyph":"D","tone":"blue","category":"utility"},{"id":"drive","name":"Drive","glyph":"▲","tone":"multi","category":"files"},{"id":"facebook","name":"Facebook","glyph":"f","tone":"blue","category":"social"},{"id":"files","name":"Files","glyph":"▤","tone":"blue","category":"files"},{"id":"photos","name":"Foto","glyph":"✿","tone":"multi","category":"files"},{"id":"gamebar","name":"GameBar","glyph":"🎮","tone":"blue","category":"game"},{"id":"gemini","name":"Gemini","glyph":"✦","tone":"multi","category":"ai"},{"id":"gmail","name":"Gmail","glyph":"M","tone":"multi","category":"mail"},{"id":"google","name":"Google","glyph":"G","tone":"multi","category":"search"},{"id":"grab","name":"Grab","glyph":"G","tone":"green","category":"maps"},{"id":"instagram","name":"Instagram","glyph":"◎","tone":"multi","category":"social"},{"id":"clock","name":"Jam","glyph":"◷","tone":"blue","category":"utility"},{"id":"calendar","name":"Kalender","glyph":"18","tone":"blue","category":"utility"},{"id":"calculator","name":"Kalkulator","glyph":"±","tone":"dark","category":"calculator"},{"id":"camera","name":"Kamera","glyph":"◉","tone":"dark","category":"camera"},{"id":"keep","name":"Keep","glyph":"●","tone":"yellow","category":"notes"},{"id":"personal-safety","name":"Keselamatan Pribadi","glyph":"✚","tone":"multi","category":"utility"},{"id":"contacts","name":"Kontak","glyph":"●","tone":"blue","category":"contacts"},{"id":"m365","name":"M365 Copilot","glyph":"M","tone":"multi","category":"ai"},{"id":"maps","name":"Maps","glyph":"⌖","tone":"multi","category":"maps"},{"id":"meet","name":"Meet","glyph":"▰","tone":"yellow","category":"communication"},{"id":"message","name":"Message","glyph":"✉","tone":"blue","category":"communication"},{"id":"messenger","name":"Messenger","glyph":"➤","tone":"blue","category":"communication"},{"id":"nekogram","name":"Nekogram","glyph":"N","tone":"blue","category":"communication"},{"id":"ovo","name":"OVO","glyph":"O","tone":"purple","category":"finance"},{"id":"recorder","name":"Perekam Suara","glyph":"▥","tone":"red","category":"utility"},{"id":"pinterest","name":"Pinterest","glyph":"P","tone":"red","category":"social"},{"id":"game-space-app","name":"Ruang Game","glyph":"🎮","tone":"yellow","category":"game"},{"id":"sandbox","name":"Sandbox","glyph":"◆","tone":"dark","category":"utility"},{"id":"settings-app","name":"Setelan","glyph":"⚙","tone":"blue","category":"settings"},{"id":"sim-toolkit","name":"SIM Toolkit","glyph":"SIM","tone":"slate","category":"utility"},{"id":"spotify","name":"Spotify","glyph":"◉","tone":"green","category":"media"},{"id":"phone","name":"Telepon","glyph":"☎","tone":"blue","category":"phone"},{"id":"threads","name":"Threads","glyph":"@","tone":"dark","category":"social"},{"id":"tiktok","name":"TikTok","glyph":"♪","tone":"dark","category":"social"},{"id":"wa-business","name":"WA Business","glyph":"W","tone":"green","category":"communication"},{"id":"x","name":"X","glyph":"X","tone":"dark","category":"social"}];
+  const SIM_APPS = [{"id":"youtube","name":"YouTube","glyph":"▶","tone":"red","category":"media"},{"id":"youtube-music","name":"YouTube Music","glyph":"◉","tone":"red","category":"media"},{"id":"play-store","name":"Play Store","glyph":"▶","tone":"multi","category":"store"},{"id":"translate","name":"Terjemah","glyph":"文","tone":"blue","category":"utility"},{"id":"digi-bank","name":"DIGI bank bjb","glyph":"D","tone":"blue","category":"finance"},{"id":"dana","name":"DANA","glyph":"D","tone":"blue","category":"finance"},{"id":"bcr","name":"BCR","glyph":"☎","tone":"green","category":"finance"},{"id":"brimo","name":"BRImo","glyph":"B","tone":"blue","category":"finance"},{"id":"canva","name":"Canva","glyph":"C","tone":"purple","category":"creative"},{"id":"capcut","name":"CapCut","glyph":"✂","tone":"dark","category":"creative"},{"id":"chrome","name":"Chrome","glyph":"●","tone":"multi","category":"browser"},{"id":"weather","name":"Cuaca","glyph":"☀","tone":"yellow","category":"utility"},{"id":"dolby","name":"Dolby Atmos","glyph":"D","tone":"blue","category":"utility"},{"id":"drive","name":"Drive","glyph":"▲","tone":"multi","category":"files"},{"id":"facebook","name":"Facebook","glyph":"f","tone":"blue","category":"social"},{"id":"files","name":"Files","glyph":"▤","tone":"blue","category":"files"},{"id":"photos","name":"Foto","glyph":"✿","tone":"multi","category":"files"},{"id":"gamebar","name":"GameBar","glyph":"🎮","tone":"blue","category":"game"},{"id":"gemini","name":"Gemini","glyph":"✦","tone":"multi","category":"ai"},{"id":"gmail","name":"Gmail","glyph":"M","tone":"multi","category":"mail"},{"id":"google","name":"Google","glyph":"G","tone":"multi","category":"search"},{"id":"grab","name":"Grab","glyph":"G","tone":"green","category":"maps"},{"id":"instagram","name":"Instagram","glyph":"◎","tone":"multi","category":"social"},{"id":"clock","name":"Jam","glyph":"◷","tone":"blue","category":"utility"},{"id":"calendar","name":"Kalender","glyph":"18","tone":"blue","category":"utility"},{"id":"calculator","name":"Kalkulator","glyph":"±","tone":"dark","category":"calculator"},{"id":"camera","name":"Kamera","glyph":"◉","tone":"dark","category":"camera"},{"id":"keep","name":"Keep","glyph":"●","tone":"yellow","category":"notes"},{"id":"personal-safety","name":"Keselamatan Pribadi","glyph":"✚","tone":"multi","category":"utility"},{"id":"contacts","name":"Kontak","glyph":"●","tone":"blue","category":"contacts"},{"id":"m365","name":"M365 Copilot","glyph":"M","tone":"multi","category":"ai"},{"id":"maps","name":"Maps","glyph":"⌖","tone":"multi","category":"maps"},{"id":"meet","name":"Meet","glyph":"▰","tone":"yellow","category":"communication"},{"id":"message","name":"Message","glyph":"✉","tone":"blue","category":"communication"},{"id":"messenger","name":"Messenger","glyph":"➤","tone":"blue","category":"communication"},{"id":"nekogram","name":"Nekogram","glyph":"N","tone":"blue","category":"communication"},{"id":"ovo","name":"OVO","glyph":"O","tone":"purple","category":"finance"},{"id":"recorder","name":"Perekam Suara","glyph":"▥","tone":"red","category":"utility"},{"id":"pinterest","name":"Pinterest","glyph":"P","tone":"red","category":"social"},{"id":"game-space-app","name":"Ruang Game","glyph":"🎮","tone":"yellow","category":"game"},{"id":"sandbox","name":"Sandbox","glyph":"◆","tone":"dark","category":"utility"},{"id":"settings-app","name":"Setelan","glyph":"⚙","tone":"blue","category":"settings"},{"id":"sim-toolkit","name":"SIM Toolkit","glyph":"SIM","tone":"slate","category":"utility"},{"id":"spotify","name":"Spotify","glyph":"◉","tone":"green","category":"media"},{"id":"phone","name":"Telepon","glyph":"☎","tone":"blue","category":"phone"},{"id":"threads","name":"Threads","glyph":"@","tone":"dark","category":"social"},{"id":"tiktok","name":"TikTok","glyph":"♪","tone":"dark","category":"social"},{"id":"wa-business","name":"WA Business","glyph":"W","tone":"green","category":"communication"},{"id":"x","name":"X","glyph":"X","tone":"dark","category":"social"}];
   const SYSTEM_APPS = [{"id":"sys-amplifier-suara","name":"Amplifier Suara","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-accessibility-suite","name":"Android Accessibility Suite","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-auto","name":"Android Auto","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-switch","name":"Android Switch","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-system-key-verifier","name":"Android System Key Verifier","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-system-safetycore","name":"Android System SafetyCore","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-system-webview","name":"Android System WebView","glyph":"◆","tone":"system","category":"system"},{"id":"sys-carrier-services","name":"Carrier Services","glyph":"◆","tone":"system","category":"system"},{"id":"sys-device-health-services","name":"Device Health Services","glyph":"◆","tone":"system","category":"system"},{"id":"sys-digital-wellbeing","name":"Digital Wellbeing","glyph":"◆","tone":"system","category":"system"},{"id":"sys-google-play-services","name":"Google Play services","glyph":"◆","tone":"system","category":"system"},{"id":"sys-pixel-launcher","name":"Pixel Launcher","glyph":"◆","tone":"system","category":"system"},{"id":"sys-private-compute-services","name":"Private Compute Services","glyph":"◆","tone":"system","category":"system"},{"id":"sys-system-ui","name":"System UI","glyph":"◆","tone":"system","category":"system"},{"id":"sys-permission-controller","name":"Permission Controller","glyph":"◆","tone":"system","category":"system"},{"id":"sys-settings-services","name":"Settings Services","glyph":"◆","tone":"system","category":"system"},{"id":"sys-speech-recognition-synthesis","name":"Speech Recognition & Synthesis","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-shared-library","name":"Android Shared Library","glyph":"◆","tone":"system","category":"system"},{"id":"sys-documentsui","name":"DocumentsUI","glyph":"◆","tone":"system","category":"system"},{"id":"sys-package-installer","name":"Package Installer","glyph":"◆","tone":"system","category":"system"},{"id":"sys-captiveportallogin","name":"CaptivePortalLogin","glyph":"◆","tone":"system","category":"system"},{"id":"sys-emergency-information","name":"Emergency Information","glyph":"◆","tone":"system","category":"system"},{"id":"sys-google-one-time-init","name":"Google One Time Init","glyph":"◆","tone":"system","category":"system"},{"id":"sys-google-services-framework","name":"Google Services Framework","glyph":"◆","tone":"system","category":"system"},{"id":"sys-google-partner-setup","name":"Google Partner Setup","glyph":"◆","tone":"system","category":"system"},{"id":"sys-sim-manager","name":"SIM Manager","glyph":"◆","tone":"system","category":"system"},{"id":"sys-storage-manager","name":"Storage Manager","glyph":"◆","tone":"system","category":"system"},{"id":"sys-device-policy","name":"Device Policy","glyph":"◆","tone":"system","category":"system"},{"id":"sys-download-manager","name":"Download Manager","glyph":"◆","tone":"system","category":"system"}];
   const ALL_APPS = [...SIM_APPS, ...SYSTEM_APPS];
   const SIM_BALANCE = "Rp1.000.000.000.000.000";
@@ -259,6 +259,15 @@
     spotifyPlaying: false,
     spotifyProgress: 0,
     spotifyStartedAt: 0,
+    spotifyClientId: "",
+    googleOAuthClientId: "",
+    mediaEmbedUrl: "",
+    spotifyEmbedUrl: "",
+    spotifyLastUrl: "",
+    youtubeEmbedUrl: "",
+    youtubeLastUrl: "",
+    youtubeMusicEmbedUrl: "",
+    youtubeMusicLastUrl: "",
     translateDirection: "id-en",
     translateText: "",
     translateResult: "",
@@ -1995,11 +2004,330 @@
     return `<div class="a17-page sandbox-app">${simAppTopbar(app)}${main}<nav class="sandbox-nav"><button class="${tab==="apps"?"active":""}" data-sim-action="sandbox-tab-apps">▦<small>Apps</small></button><button class="${tab==="notifications"?"active":""}" data-sim-action="sandbox-tab-notifications">♧<small>Notifications</small></button><button class="${tab==="vault"?"active":""}" data-sim-action="sandbox-tab-vault">▤<small>Vault</small></button></nav></div>`;
   }
 
+  function mediaSafeHtml(value = "") {
+    return escapeHtml(String(value || ""));
+  }
+
+  function spotifyRedirectUri() {
+    return `${location.origin}${location.pathname}`;
+  }
+
+  function spotifySessionToken() {
+    const token = sessionStorage.getItem("wg_spotify_access_token") || "";
+    const expires = Number(sessionStorage.getItem("wg_spotify_expires_at") || 0);
+    if (!token || (expires && Date.now() > expires - 15000)) return "";
+    return token;
+  }
+
+  function youtubeSessionToken() {
+    return sessionStorage.getItem("wg_youtube_access_token") || "";
+  }
+
+  function randomVerifier(size = 64) {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
+    const bytes = new Uint8Array(size);
+    crypto.getRandomValues(bytes);
+    return Array.from(bytes, b => chars[b % chars.length]).join("");
+  }
+
+  async function pkceChallenge(verifier) {
+    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier));
+    return btoa(String.fromCharCode(...new Uint8Array(digest))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+  }
+
+  function spotifyEmbedFromUrl(raw) {
+    const value = String(raw || "").trim();
+    if (!value) return "";
+    try {
+      let type = "", id = "";
+      const uri = value.match(/^spotify:(track|album|playlist|artist|episode|show):([A-Za-z0-9]+)$/i);
+      if (uri) { type = uri[1].toLowerCase(); id = uri[2]; }
+      else {
+        const u = new URL(value);
+        if (!/(^|\.)open\.spotify\.com$/i.test(u.hostname)) return "";
+        const parts = u.pathname.split("/").filter(Boolean);
+        const idx = parts.findIndex(x => ["track","album","playlist","artist","episode","show"].includes(x));
+        if (idx < 0 || !parts[idx+1]) return "";
+        type = parts[idx]; id = parts[idx+1];
+      }
+      if (!/^[A-Za-z0-9]+$/.test(id)) return "";
+      return `https://open.spotify.com/embed/${type}/${encodeURIComponent(id)}?utm_source=generator&theme=0`;
+    } catch { return ""; }
+  }
+
+  function youtubeEmbedFromUrl(raw) {
+    const value = String(raw || "").trim();
+    if (!value) return "";
+    try {
+      const u = new URL(value);
+      const host = u.hostname.toLowerCase().replace(/^www\./, "");
+      const isYoutube = host === "youtube.com" || host === "m.youtube.com" || host === "music.youtube.com" || host === "youtube-nocookie.com";
+      const isShort = host === "youtu.be";
+      if (!isYoutube && !isShort) return "";
+
+      let video = "", list = u.searchParams.get("list") || "", start = 0;
+      if (isShort) video = u.pathname.split("/").filter(Boolean)[0] || "";
+      if (isYoutube) {
+        if (u.pathname === "/watch") video = u.searchParams.get("v") || "";
+        else if (u.pathname === "/playlist") list = u.searchParams.get("list") || "";
+        else if (/^\/(shorts|embed|live)\//.test(u.pathname)) video = u.pathname.split("/").filter(Boolean)[1] || "";
+      }
+
+      const t = u.searchParams.get("t") || u.searchParams.get("start") || "";
+      if (/^\d+$/.test(t)) start = Number(t);
+      else {
+        const m = String(t).match(/(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?/i);
+        if (m && m[0]) start = (Number(m[1] || 0) * 3600) + (Number(m[2] || 0) * 60) + Number(m[3] || 0);
+      }
+
+      const safe = x => /^[A-Za-z0-9_-]{6,}$/.test(x || "") ? x : "";
+      video = safe(video); list = safe(list);
+      if (!video && !list) return "";
+
+      // YouTube can reject an embed with error 153 when the request does not
+      // provide a referrer / equivalent client identity. Use the regular
+      // youtube.com embed endpoint and explicitly identify this GitHub Pages
+      // origin. Keep autoplay enabled because the iframe is created by the
+      // user's Putar action; if a browser blocks autoplay the native play
+      // button still works.
+      const origin = location.origin && location.origin !== "null" ? location.origin : "https://skenakun.github.io";
+      const referrer = location.href && /^https?:/i.test(location.href) ? location.href : `${origin}/`;
+      const params = new URLSearchParams({
+        playsinline: "1",
+        rel: "0",
+        autoplay: "1",
+        controls: "1",
+        enablejsapi: "1",
+        origin,
+        widget_referrer: referrer
+      });
+      if (start) params.set("start", String(start));
+      if (list && video) params.set("list", list);
+
+      if (list && !video) {
+        params.set("list", list);
+        return `https://www.youtube.com/embed/videoseries?${params.toString()}`;
+      }
+      return `https://www.youtube.com/embed/${encodeURIComponent(video)}?${params.toString()}`;
+    } catch { return ""; }
+  }
+
+  function upgradeStoredYoutubeEmbed(raw) {
+    const value = String(raw || "").trim();
+    if (!value) return "";
+    try {
+      const u = new URL(value);
+      const host = u.hostname.toLowerCase();
+      if (!host.endsWith("youtube.com") && !host.endsWith("youtube-nocookie.com")) return "";
+      u.protocol = "https:";
+      u.hostname = "www.youtube.com";
+      const origin = location.origin && location.origin !== "null" ? location.origin : "https://skenakun.github.io";
+      const referrer = location.href && /^https?:/i.test(location.href) ? location.href : `${origin}/`;
+      u.searchParams.set("playsinline", "1");
+      u.searchParams.set("rel", "0");
+      u.searchParams.set("controls", "1");
+      u.searchParams.set("enablejsapi", "1");
+      u.searchParams.set("origin", origin);
+      u.searchParams.set("widget_referrer", referrer);
+      return u.toString();
+    } catch { return ""; }
+  }
+
+  function mediaStateForApp(appId = state.activeSimApp) {
+    if (appId === "spotify") return { embedKey:"spotifyEmbedUrl", urlKey:"spotifyLastUrl", inputId:"spotifyUrlInput" };
+    if (appId === "youtube-music") return { embedKey:"youtubeMusicEmbedUrl", urlKey:"youtubeMusicLastUrl", inputId:"youtubeUrlInput" };
+    return { embedKey:"youtubeEmbedUrl", urlKey:"youtubeLastUrl", inputId:"youtubeUrlInput" };
+  }
+
+  function openPastedMediaLink(raw, appId = state.activeSimApp) {
+    const value = String(raw || "").trim();
+    const cfg = mediaStateForApp(appId);
+    let embed = "";
+    if (appId === "spotify") embed = spotifyEmbedFromUrl(value);
+    else embed = youtubeEmbedFromUrl(value);
+    if (!embed) { toast(appId === "spotify" ? "Tautan Spotify tidak dikenali" : "Tautan YouTube / YouTube Music tidak dikenali"); return false; }
+    state[cfg.embedKey] = embed;
+    state[cfg.urlKey] = value;
+    state.mediaEmbedUrl = embed; // migrasi kompatibilitas versi lama
+    save();
+    render();
+    return true;
+  }
+
   function renderSpotifyApp(app) {
-    const idx = Math.max(0, Math.min(INDONESIAN_TRACKS.length-1, Number(state.spotifyTrack)||0));
-    const track = INDONESIAN_TRACKS[idx];
-    const progress = Math.min(track.duration, Number(state.spotifyProgress)||0);
-    return `<div class="a17-page spotify-app">${simAppTopbar(app)}<div class="spotify-top"><h2>Selamat pagi</h2><button>⚙</button></div><div class="spotify-section"><h3>Lagu Indonesia pilihan</h3><div class="spotify-list">${INDONESIAN_TRACKS.map((x,i)=>`<button class="${i===idx?"active":""}" data-sim-action="spotify-track-${i}"><span>${i+1}</span><div><b>${x.title}</b><small>${x.artist}</small></div><i>⋮</i></button>`).join("")}</div></div><div class="spotify-player"><div><b id="spotifyTitle">${track.title}</b><small>${track.artist} • audio simulasi</small></div><button data-sim-action="spotify-prev">◀</button><button class="play" data-sim-action="spotify-toggle">${state.spotifyPlaying?"Ⅱ":"▶"}</button><button data-sim-action="spotify-next">▶</button><input id="spotifyProgress" type="range" min="0" max="${track.duration}" value="${progress}" disabled><span id="spotifyTime">${fmtDuration(progress)} / ${fmtDuration(track.duration)}</span></div></div>`;
+    const connected = !!spotifySessionToken();
+    const configured = !!state.spotifyClientId;
+    const legacy = state.mediaEmbedUrl && state.mediaEmbedUrl.includes("open.spotify.com/embed/") ? state.mediaEmbedUrl : "";
+    const embed = state.spotifyEmbedUrl || legacy || "";
+    return `<div class="a17-page spotify-live-app">${simAppTopbar(app)}
+      <div class="media-live-head"><div><h2>Spotify</h2><small>${connected ? "Akun terhubung dengan OAuth" : "Pemutar resmi Spotify"}</small></div><span class="media-security-pill">OAuth</span></div>
+      <div class="media-auth-card">
+        <strong>${connected ? "Spotify terhubung" : "Hubungkan Spotify"}</strong>
+        <p>${connected ? "Playlist akun dimuat lewat Spotify Web API. Cookie browser tidak dibaca oleh simulator." : "Masukkan Client ID Spotify milik aplikasi web Anda. Login memakai Authorization Code + PKCE, bukan mengambil cookie browser."}</p>
+        <label>Spotify Client ID<input id="spotifyClientIdInput" value="${mediaSafeHtml(state.spotifyClientId)}" placeholder="Client ID dari Spotify Developer Dashboard"></label>
+        <small>Redirect URI: <code>${mediaSafeHtml(spotifyRedirectUri())}</code></small>
+        <div class="media-auth-actions"><button class="sim-primary" data-sim-action="spotify-connect">${connected ? "Hubungkan ulang" : "Hubungkan Spotify"}</button>${connected ? '<button data-sim-action="spotify-disconnect">Putuskan</button>' : ""}</div>
+      </div>
+      <div class="media-paste-card roleplay-link-card"><div class="media-paste-title"><strong>Putar dari link</strong><span>Mode HP Roleplay</span></div><p>Tempel link Spotify publik. Tidak perlu mengambil cookie browser.</p><label class="media-paste-row"><input id="spotifyUrlInput" value="${mediaSafeHtml(state.spotifyLastUrl || "")}" placeholder="https://open.spotify.com/track/..."><button type="button" class="media-clip-btn" data-sim-action="media-paste-clipboard">Tempel</button><button type="button" data-sim-action="spotify-open-url">Putar</button></label><small>Track, album, playlist, artist, episode, show, dan URI spotify:track:... didukung.</small></div>
+      <div id="spotifyAccountArea" class="media-account-area">${connected ? '<div class="media-loading">Memuat profil dan playlist…</div>' : '<div class="media-empty">Hubungkan akun untuk melihat playlist Anda.</div>'}</div>
+      <div class="media-embed-shell" id="spotifyEmbedShell">${embed ? `<iframe src="${mediaSafeHtml(embed)}" title="Spotify player" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>` : '<div class="media-empty">Tempel tautan track, album, artist, atau playlist untuk memutar lewat embed resmi Spotify.</div>'}</div>
+      <p class="sim-disclaimer">Simulator tidak menyalin cookie, password, atau sesi Spotify dari browser. Login akun dilakukan langsung oleh Spotify.</p>
+    </div>`;
+  }
+
+  function renderYouTubeLiveApp(app, music = false) {
+    const connected = !!youtubeSessionToken();
+    const cfg = mediaStateForApp(app.id);
+    const lastUrl = String(state[cfg.urlKey] || "").trim();
+    const rebuilt = lastUrl ? youtubeEmbedFromUrl(lastUrl) : "";
+    const legacyRaw = state[cfg.embedKey] || (state.mediaEmbedUrl && /youtube(?:-nocookie)?\.com\/embed\//.test(state.mediaEmbedUrl) ? state.mediaEmbedUrl : "");
+    const migrated = upgradeStoredYoutubeEmbed(legacyRaw);
+    const embed = rebuilt || migrated || "";
+    // Migrate older youtube-nocookie/localStorage values automatically so a
+    // user who already pasted a link does not stay stuck on the broken player.
+    if (embed && state[cfg.embedKey] !== embed) {
+      state[cfg.embedKey] = embed;
+      state.mediaEmbedUrl = embed;
+      save();
+    }
+    return `<div class="a17-page youtube-live-app ${music ? "music" : ""}">${simAppTopbar(app)}
+      <div class="media-live-head"><div><h2>${music ? "YouTube Music" : "YouTube"}</h2><small>${connected ? "Akun Google terhubung dengan OAuth" : "Player YouTube realtime"}</small></div><span class="media-security-pill">Google OAuth</span></div>
+      <div class="media-auth-card">
+        <strong>${connected ? "Akun YouTube terhubung" : "Hubungkan YouTube"}</strong>
+        <p>${connected ? "Playlist akun diambil melalui YouTube Data API dengan izin Anda." : "Masukkan OAuth Client ID untuk web. Browser tidak memberikan cookie YouTube kepada website lain, jadi akses akun dilakukan melalui OAuth."}</p>
+        <label>Google OAuth Client ID<input id="googleOAuthClientIdInput" value="${mediaSafeHtml(state.googleOAuthClientId)}" placeholder="xxxx.apps.googleusercontent.com"></label>
+        <div class="media-auth-actions"><button class="sim-primary" data-sim-action="youtube-connect">${connected ? "Hubungkan ulang" : "Hubungkan Google"}</button>${connected ? '<button data-sim-action="youtube-disconnect">Putuskan</button>' : ""}</div>
+      </div>
+      <div class="media-paste-card roleplay-link-card"><div class="media-paste-title"><strong>${music ? "Putar YouTube Music dari link" : "Putar YouTube dari link"}</strong><span>Mode HP Roleplay</span></div><p>${music ? "Tempel link music.youtube.com atau YouTube biasa. Video musik akan diputar langsung di player." : "Tempel link video, Shorts, Live, atau playlist seperti pada HP FiveM/GTA RP."}</p><label class="media-paste-row"><input id="youtubeUrlInput" value="${mediaSafeHtml(state[cfg.urlKey] || "")}" placeholder="${music ? "https://music.youtube.com/watch?v=..." : "https://youtu.be/... atau https://youtube.com/watch?v=..."}"><button type="button" class="media-clip-btn" data-sim-action="media-paste-clipboard">Tempel</button><button type="button" data-sim-action="youtube-open-url">Putar</button></label><small>Link akan disimpan hanya di simulator browser ini.</small></div>
+      <div id="youtubeAccountArea" class="media-account-area">${connected ? '<div class="media-loading">Memuat playlist akun…</div>' : '<div class="media-empty">Hubungkan akun untuk memuat playlist Anda secara realtime.</div>'}</div>
+      <div class="media-embed-shell youtube" id="youtubeEmbedShell">${embed ? `<iframe src="${mediaSafeHtml(embed)}" title="${music ? "YouTube Music" : "YouTube"} player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen; web-share" referrerpolicy="origin-when-cross-origin" loading="eager" allowfullscreen></iframe>` : '<div class="media-empty">Tempel tautan YouTube untuk mulai memutar.</div>'}</div>
+      <p class="youtube-player-note">Player dibuat minimal 200 × 200 px sesuai persyaratan YouTube. Jika satu video menolak embed dari pemiliknya, coba video lain yang mengizinkan pemutaran tersemat.</p>
+      <p class="sim-disclaimer">${music ? "YouTube Music di simulator memakai player dan playlist YouTube resmi." : "Video diputar lewat YouTube embedded player."} Cookie akun tidak diekstrak.</p>
+    </div>`;
+  }
+
+  async function startSpotifyOAuth() {
+    const input = $("#spotifyClientIdInput", root);
+    const clientId = (input?.value || state.spotifyClientId || "").trim();
+    if (!clientId) { toast("Masukkan Spotify Client ID terlebih dahulu"); return; }
+    state.spotifyClientId = clientId; save();
+    const verifier = randomVerifier(64);
+    const challenge = await pkceChallenge(verifier);
+    const csrf = randomVerifier(24);
+    sessionStorage.setItem("wg_spotify_verifier", verifier);
+    sessionStorage.setItem("wg_spotify_oauth_state", csrf);
+    sessionStorage.setItem("wg_spotify_return", "1");
+    const u = new URL("https://accounts.spotify.com/authorize");
+    u.searchParams.set("client_id", clientId);
+    u.searchParams.set("response_type", "code");
+    u.searchParams.set("redirect_uri", spotifyRedirectUri());
+    u.searchParams.set("code_challenge_method", "S256");
+    u.searchParams.set("code_challenge", challenge);
+    u.searchParams.set("state", csrf);
+    u.searchParams.set("scope", "user-read-private playlist-read-private playlist-read-collaborative user-library-read");
+    location.assign(u.toString());
+  }
+
+  async function completeSpotifyOAuthIfPresent() {
+    const params = new URLSearchParams(location.search);
+    const code = params.get("code"), returnedState = params.get("state"), err = params.get("error");
+    const verifier = sessionStorage.getItem("wg_spotify_verifier") || "";
+    const expectedState = sessionStorage.getItem("wg_spotify_oauth_state") || "";
+    if (err && sessionStorage.getItem("wg_spotify_return")) {
+      history.replaceState({}, "", spotifyRedirectUri());
+      sessionStorage.removeItem("wg_spotify_return");
+      return false;
+    }
+    if (!code || !verifier || !state.spotifyClientId || returnedState !== expectedState) return false;
+    try {
+      const body = new URLSearchParams({
+        client_id: state.spotifyClientId,
+        grant_type: "authorization_code",
+        code,
+        redirect_uri: spotifyRedirectUri(),
+        code_verifier: verifier
+      });
+      const res = await fetch("https://accounts.spotify.com/api/token", { method:"POST", headers:{"Content-Type":"application/x-www-form-urlencoded"}, body });
+      if (!res.ok) throw new Error("spotify-token");
+      const tok = await res.json();
+      sessionStorage.setItem("wg_spotify_access_token", tok.access_token || "");
+      sessionStorage.setItem("wg_spotify_expires_at", String(Date.now() + Number(tok.expires_in || 3600) * 1000));
+      if (tok.refresh_token) sessionStorage.setItem("wg_spotify_refresh_token", tok.refresh_token);
+      state.activeSimApp = "spotify"; state.view = "simApp"; state.locked = false; save();
+      history.replaceState({}, "", spotifyRedirectUri());
+      ["wg_spotify_verifier","wg_spotify_oauth_state","wg_spotify_return"].forEach(k=>sessionStorage.removeItem(k));
+      return true;
+    } catch {
+      history.replaceState({}, "", spotifyRedirectUri());
+      return false;
+    }
+  }
+
+  async function hydrateSpotifyAccount() {
+    const token = spotifySessionToken();
+    const area = $("#spotifyAccountArea", root);
+    if (!token || !area) return;
+    try {
+      const headers = { Authorization:`Bearer ${token}` };
+      const [meRes, plRes] = await Promise.all([
+        fetch("https://api.spotify.com/v1/me", {headers}),
+        fetch("https://api.spotify.com/v1/me/playlists?limit=20", {headers})
+      ]);
+      if (!meRes.ok || !plRes.ok) throw new Error("spotify-api");
+      const me = await meRes.json(), playlists = await plRes.json();
+      area.innerHTML = `<div class="media-profile"><div>${me.images?.[0]?.url ? `<img src="${mediaSafeHtml(me.images[0].url)}" alt="">` : '<span>♫</span>'}</div><section><b>${mediaSafeHtml(me.display_name || "Spotify")}</b><small>${mediaSafeHtml(me.product || "akun Spotify")}</small></section></div><div class="media-list">${(playlists.items || []).map(p=>`<button type="button" data-spotify-playlist="${mediaSafeHtml(p.id)}"><span>${p.images?.[0]?.url ? `<img src="${mediaSafeHtml(p.images[0].url)}" alt="">` : "♫"}</span><div><b>${mediaSafeHtml(p.name)}</b><small>${Number(p.tracks?.total || 0)} lagu</small></div></button>`).join("") || '<div class="media-empty">Tidak ada playlist.</div>'}</div>`;
+      $$("[data-spotify-playlist]", area).forEach(btn => btn.addEventListener("click", () => {
+        state.spotifyEmbedUrl = `https://open.spotify.com/embed/playlist/${encodeURIComponent(btn.dataset.spotifyPlaylist)}?utm_source=generator&theme=0`; state.mediaEmbedUrl = state.spotifyEmbedUrl; save(); render();
+      }));
+    } catch { area.innerHTML = '<div class="media-empty">Sesi Spotify tidak dapat dimuat. Hubungkan ulang akun.</div>'; }
+  }
+
+  function loadGoogleIdentityScript() {
+    if (window.google?.accounts?.oauth2) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const existing = document.querySelector('script[data-wg-google-oauth]');
+      if (existing) { existing.addEventListener("load", resolve, {once:true}); existing.addEventListener("error", reject, {once:true}); return; }
+      const sc = document.createElement("script");
+      sc.src = "https://accounts.google.com/gsi/client"; sc.async = true; sc.defer = true; sc.dataset.wgGoogleOauth = "1";
+      sc.onload = resolve; sc.onerror = reject; document.head.appendChild(sc);
+    });
+  }
+
+  async function startYouTubeOAuth() {
+    const input = $("#googleOAuthClientIdInput", root);
+    const clientId = (input?.value || state.googleOAuthClientId || "").trim();
+    if (!clientId) { toast("Masukkan Google OAuth Client ID terlebih dahulu"); return; }
+    state.googleOAuthClientId = clientId; save();
+    try {
+      await loadGoogleIdentityScript();
+      const client = google.accounts.oauth2.initTokenClient({
+        client_id: clientId,
+        scope: "https://www.googleapis.com/auth/youtube.readonly",
+        callback: resp => {
+          if (resp?.access_token) {
+            sessionStorage.setItem("wg_youtube_access_token", resp.access_token);
+            sessionStorage.setItem("wg_youtube_expires_at", String(Date.now() + Number(resp.expires_in || 3600)*1000));
+            render();
+          } else toast("Login Google dibatalkan");
+        }
+      });
+      client.requestAccessToken({ prompt: youtubeSessionToken() ? "" : "consent" });
+    } catch { toast("Google Identity Services gagal dimuat"); }
+  }
+
+  async function hydrateYouTubeAccount() {
+    const token = youtubeSessionToken();
+    const area = $("#youtubeAccountArea", root);
+    if (!token || !area) return;
+    try {
+      const res = await fetch("https://www.googleapis.com/youtube/v3/playlists?part=snippet,contentDetails&mine=true&maxResults=20", {headers:{Authorization:`Bearer ${token}`}});
+      if (!res.ok) throw new Error("youtube-api");
+      const data = await res.json();
+      area.innerHTML = `<div class="media-list">${(data.items || []).map(p=>`<button type="button" data-youtube-playlist="${mediaSafeHtml(p.id)}"><span>${p.snippet?.thumbnails?.default?.url ? `<img src="${mediaSafeHtml(p.snippet.thumbnails.default.url)}" alt="">` : "▶"}</span><div><b>${mediaSafeHtml(p.snippet?.title || "Playlist")}</b><small>${Number(p.contentDetails?.itemCount || 0)} video</small></div></button>`).join("") || '<div class="media-empty">Tidak ada playlist pada akun ini.</div>'}</div>`;
+      $$("[data-youtube-playlist]", area).forEach(btn => btn.addEventListener("click", () => {
+        const cfg = mediaStateForApp(state.activeSimApp); state[cfg.embedKey] = `https://www.youtube-nocookie.com/embed/videoseries?list=${encodeURIComponent(btn.dataset.youtubePlaylist)}&playsinline=1&rel=0&autoplay=1`; state.mediaEmbedUrl = state[cfg.embedKey]; save(); render();
+      }));
+    } catch { area.innerHTML = '<div class="media-empty">Playlist YouTube tidak dapat dimuat. Coba hubungkan ulang.</div>'; }
   }
 
   function renderTikTokApp(app) {
@@ -2083,12 +2411,14 @@
     if (app.id === "pinterest") { root.innerHTML = renderPinterestApp(app); return; }
     if (app.id === "sandbox") { root.innerHTML = renderSandboxApp(app); return; }
     if (app.id === "spotify") { root.innerHTML = renderSpotifyApp(app); return; }
+    if (app.id === "youtube") { root.innerHTML = renderYouTubeLiveApp(app, false); return; }
+    if (app.id === "youtube-music") { root.innerHTML = renderYouTubeLiveApp(app, true); return; }
     if (app.id === "tiktok") { root.innerHTML = renderTikTokApp(app); return; }
     if (app.id === "wa-business") { root.innerHTML = renderWhatsAppApp(app); return; }
     if (app.id === "x") { root.innerHTML = renderXApp(app); return; }
 
     const commonTop = simAppTopbar(app);
-    const social = ["facebook","instagram","threads","youtube"].includes(app.id);
+    const social = ["facebook","instagram","threads"].includes(app.id);
     const communication = ["message","messenger","meet","phone","gmail"].includes(app.id);
     const files = ["files","drive","photos"].includes(app.id);
     let body = "";
@@ -2254,6 +2584,11 @@
       const empty = $("#allAppsEmpty", root); if (empty) empty.hidden = visible !== 0;
     });
     $$('[data-sim-action]', root).forEach(btn => btn.addEventListener("click", () => handleSimAppAction(btn.dataset.simAction)));
+    [$("#spotifyUrlInput", root), $("#youtubeUrlInput", root)].filter(Boolean).forEach(input => {
+      const playFromInput = () => openPastedMediaLink(input.value, state.activeSimApp);
+      input.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); playFromInput(); } });
+      input.addEventListener("paste", () => window.setTimeout(() => { if (input.value.trim()) playFromInput(); }, 60));
+    });
     const translateInput = $("#translateInput", root);
     if (translateInput) {
       const syncTranslateInput = () => {
@@ -2409,6 +2744,9 @@
 
     $("#brightnessSlider")?.addEventListener("input", e => { state.brightness = Number(e.target.value); save(); applyTheme(); });
 
+    if (state.view === "simApp" && state.activeSimApp === "spotify") hydrateSpotifyAccount();
+    if (state.view === "simApp" && ["youtube","youtube-music"].includes(state.activeSimApp)) hydrateYouTubeAccount();
+
     const lockPage = $("#lockPage", root);
     if (lockPage) {
       let lockStartY = null;
@@ -2471,6 +2809,25 @@
 
   function handleSimAppAction(action) {
     const app = appById(state.activeSimApp);
+    if (action === "spotify-connect") { startSpotifyOAuth(); return; }
+    if (action === "spotify-disconnect") {
+      ["wg_spotify_access_token","wg_spotify_expires_at","wg_spotify_refresh_token"].forEach(k=>sessionStorage.removeItem(k));
+      render(); return;
+    }
+    if (action === "spotify-open-url") { openPastedMediaLink($("#spotifyUrlInput", root)?.value || "", "spotify"); return; }
+    if (action === "youtube-connect") { startYouTubeOAuth(); return; }
+    if (action === "youtube-disconnect") { sessionStorage.removeItem("wg_youtube_access_token"); sessionStorage.removeItem("wg_youtube_expires_at"); render(); return; }
+    if (action === "youtube-open-url") { openPastedMediaLink($("#youtubeUrlInput", root)?.value || "", state.activeSimApp); return; }
+    if (action === "media-paste-clipboard") {
+      const cfg = mediaStateForApp(state.activeSimApp);
+      const input = $("#" + cfg.inputId, root);
+      if (!navigator.clipboard?.readText) { toast("Clipboard browser tidak tersedia"); return; }
+      navigator.clipboard.readText().then(text => {
+        if (input) input.value = text.trim();
+        openPastedMediaLink(text, state.activeSimApp);
+      }).catch(() => toast("Izinkan akses clipboard lalu coba lagi"));
+      return;
+    }
     if (action && action.startsWith("finance-")) { toast(`SIMULASI ${app.name}: transaksi tidak dikirim`); vibrate(8); return; }
 
     if (action === "weather-location") { loadRealtimeWeather(); return; }
@@ -2779,6 +3136,9 @@
     updateRecorderSim();
   }, 1000);
 
-  applyTheme();
-  render();
+  completeSpotifyOAuthIfPresent().then(done => {
+    applyTheme();
+    render();
+    if (done && !dialog.open) { try { dialog.showModal(); } catch {} }
+  });
 })();
