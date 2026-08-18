@@ -714,6 +714,30 @@
     render();
   }
 
+  /*
+   * Public simulator navigation bridge.
+   * Dynamic Island lives outside #androidScreenRoot, so it must not depend on
+   * finding a launcher icon in the currently rendered screen. Open the app
+   * through the same simulator state/navigation path used by launcher icons.
+   */
+  function openSimAppDirect(appId) {
+    const id = String(appId || "").trim();
+    if (!id || !SIM_APPS.some(app => app.id === id)) return false;
+
+    state.activeSimApp = id;
+    state.recentSimApps = [
+      id,
+      ...(state.recentSimApps || []).filter(existingId => existingId !== id)
+    ].slice(0, 8);
+
+    save();
+    vibrate(6);
+    navigate("simApp");
+    return true;
+  }
+
+  window.__waifuAndroidSimOpenApp = openSimAppDirect;
+
   function goBack() {
     if (state.shade) {
       state.shade = false;
@@ -2323,6 +2347,16 @@
     state[cfg.urlKey] = value;
     state.mediaEmbedUrl = embed; // migrasi kompatibilitas versi lama
     save();
+
+    /*
+     * V12: media is owned by a persistent player outside #androidScreenRoot.
+     * The normal Android render may replace root.innerHTML, but it must never
+     * replace the active YouTube / YouTube Music / Spotify iframe.
+     */
+    if (window.__waifuPersistentMediaBridgeV12?.start) {
+      window.__waifuPersistentMediaBridgeV12.start(appId, value, { embed });
+    }
+
     render();
     return true;
   }
@@ -2332,6 +2366,7 @@
     const configured = !!state.spotifyClientId;
     const legacy = state.mediaEmbedUrl && state.mediaEmbedUrl.includes("open.spotify.com/embed/") ? state.mediaEmbedUrl : "";
     const embed = state.spotifyEmbedUrl || legacy || "";
+    const persistentActive = !!window.__waifuPersistentMediaBridgeV12?.isActive?.("spotify");
     return `<div class="a17-page spotify-live-app">${simAppTopbar(app)}
       <div class="media-live-head"><div><h2>Spotify</h2><small>${connected ? "Akun terhubung dengan OAuth" : "Pemutar resmi Spotify"}</small></div><span class="media-security-pill">OAuth</span></div>
       <div class="media-auth-card">
@@ -2343,7 +2378,9 @@
       </div>
       <div class="media-paste-card roleplay-link-card"><div class="media-paste-title"><strong>Putar dari link</strong><span>Mode HP Roleplay</span></div><p>Tempel link Spotify publik. Tidak perlu mengambil cookie browser.</p><label class="media-paste-row"><input id="spotifyUrlInput" value="${mediaSafeHtml(state.spotifyLastUrl || "")}" placeholder="https://open.spotify.com/track/..."><button type="button" class="media-clip-btn" data-sim-action="media-paste-clipboard">Tempel</button><button type="button" data-sim-action="spotify-open-url">Putar</button></label><small>Track, album, playlist, artist, episode, show, dan URI spotify:track:... didukung.</small></div>
       <div id="spotifyAccountArea" class="media-account-area">${connected ? '<div class="media-loading">Memuat profil dan playlist…</div>' : '<div class="media-empty">Hubungkan akun untuk melihat playlist Anda.</div>'}</div>
-      <div class="media-embed-shell" id="spotifyEmbedShell">${embed ? `<iframe src="${mediaSafeHtml(embed)}" title="Spotify player" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>` : '<div class="media-empty">Tempel tautan track, album, artist, atau playlist untuk memutar lewat embed resmi Spotify.</div>'}</div>
+      <div class="media-embed-shell" id="spotifyEmbedShell">${persistentActive
+        ? '<div class="media-empty persistent-core-placeholder">Spotify tetap diputar di background.</div>'
+        : (embed ? `<iframe src="${mediaSafeHtml(embed)}" title="Spotify player" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>` : '<div class="media-empty">Tempel tautan track, album, artist, atau playlist untuk memutar lewat embed resmi Spotify.</div>')}</div>
       <p class="sim-disclaimer">Simulator tidak menyalin cookie, password, atau sesi Spotify dari browser. Login akun dilakukan langsung oleh Spotify.</p>
     </div>`;
   }
@@ -2356,6 +2393,7 @@
     const legacyRaw = state[cfg.embedKey] || (state.mediaEmbedUrl && /youtube(?:-nocookie)?\.com\/embed\//.test(state.mediaEmbedUrl) ? state.mediaEmbedUrl : "");
     const migrated = upgradeStoredYoutubeEmbed(legacyRaw);
     const embed = rebuilt || migrated || "";
+    const persistentActive = !!window.__waifuPersistentMediaBridgeV12?.isActive?.(app.id);
     // Migrate older youtube-nocookie/localStorage values automatically so a
     // user who already pasted a link does not stay stuck on the broken player.
     if (embed && state[cfg.embedKey] !== embed) {
@@ -2373,7 +2411,9 @@
       </div>
       <div class="media-paste-card roleplay-link-card"><div class="media-paste-title"><strong>${music ? "Putar YouTube Music dari link" : "Putar YouTube dari link"}</strong><span>Mode HP Roleplay</span></div><p>${music ? "Tempel link music.youtube.com atau YouTube biasa. Video musik akan diputar langsung di player." : "Tempel link video, Shorts, Live, atau playlist seperti pada HP FiveM/GTA RP."}</p><label class="media-paste-row"><input id="youtubeUrlInput" value="${mediaSafeHtml(state[cfg.urlKey] || "")}" placeholder="${music ? "https://music.youtube.com/watch?v=..." : "https://youtu.be/... atau https://youtube.com/watch?v=..."}"><button type="button" class="media-clip-btn" data-sim-action="media-paste-clipboard">Tempel</button><button type="button" data-sim-action="youtube-open-url">Putar</button></label><small>Link akan disimpan hanya di simulator browser ini.</small></div>
       <div id="youtubeAccountArea" class="media-account-area">${connected ? '<div class="media-loading">Memuat playlist akun…</div>' : '<div class="media-empty">Hubungkan akun untuk memuat playlist Anda secara realtime.</div>'}</div>
-      <div class="media-embed-shell youtube" id="youtubeEmbedShell">${embed ? `<iframe src="${mediaSafeHtml(embed)}" title="${music ? "YouTube Music" : "YouTube"} player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen; web-share" referrerpolicy="origin-when-cross-origin" loading="eager" allowfullscreen></iframe>` : '<div class="media-empty">Tempel tautan YouTube untuk mulai memutar.</div>'}</div>
+      <div class="media-embed-shell youtube" id="youtubeEmbedShell">${persistentActive
+        ? `<div class="media-empty persistent-core-placeholder">${music ? "YouTube Music" : "YouTube"} tetap diputar di background.</div>`
+        : (embed ? `<iframe src="${mediaSafeHtml(embed)}" title="${music ? "YouTube Music" : "YouTube"} player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen; web-share" referrerpolicy="origin-when-cross-origin" loading="eager" allowfullscreen></iframe>` : '<div class="media-empty">Tempel tautan YouTube untuk mulai memutar.</div>')}</div>
       <p class="youtube-player-note">Player dibuat minimal 200 × 200 px sesuai persyaratan YouTube. Jika satu video menolak embed dari pemiliknya, coba video lain yang mengizinkan pemutaran tersemat.</p>
       <p class="sim-disclaimer">${music ? "YouTube Music di simulator memakai player dan playlist YouTube resmi." : "Video diputar lewat YouTube embedded player."} Cookie akun tidak diekstrak.</p>
     </div>`;
@@ -2450,7 +2490,17 @@
       const me = await meRes.json(), playlists = await plRes.json();
       area.innerHTML = `<div class="media-profile"><div>${me.images?.[0]?.url ? `<img src="${mediaSafeHtml(me.images[0].url)}" alt="">` : '<span>♫</span>'}</div><section><b>${mediaSafeHtml(me.display_name || "Spotify")}</b><small>${mediaSafeHtml(me.product || "akun Spotify")}</small></section></div><div class="media-list">${(playlists.items || []).map(p=>`<button type="button" data-spotify-playlist="${mediaSafeHtml(p.id)}"><span>${p.images?.[0]?.url ? `<img src="${mediaSafeHtml(p.images[0].url)}" alt="">` : "♫"}</span><div><b>${mediaSafeHtml(p.name)}</b><small>${Number(p.tracks?.total || 0)} lagu</small></div></button>`).join("") || '<div class="media-empty">Tidak ada playlist.</div>'}</div>`;
       $$("[data-spotify-playlist]", area).forEach(btn => btn.addEventListener("click", () => {
-        state.spotifyEmbedUrl = `https://open.spotify.com/embed/playlist/${encodeURIComponent(btn.dataset.spotifyPlaylist)}?utm_source=generator&theme=0`; state.mediaEmbedUrl = state.spotifyEmbedUrl; save(); render();
+        const playlistId = btn.dataset.spotifyPlaylist || "";
+        const embed = `https://open.spotify.com/embed/playlist/${encodeURIComponent(playlistId)}?utm_source=generator&theme=0`;
+        state.spotifyEmbedUrl = embed;
+        state.spotifyLastUrl = `https://open.spotify.com/playlist/${encodeURIComponent(playlistId)}`;
+        state.mediaEmbedUrl = embed;
+        save();
+        window.__waifuPersistentMediaBridgeV12?.start?.("spotify", state.spotifyLastUrl, {
+          embed,
+          title: btn.querySelector("b")?.textContent?.trim() || "Spotify Playlist"
+        });
+        render();
       }));
     } catch { area.innerHTML = '<div class="media-empty">Sesi Spotify tidak dapat dimuat. Hubungkan ulang akun.</div>'; }
   }
@@ -2498,7 +2548,19 @@
       const data = await res.json();
       area.innerHTML = `<div class="media-list">${(data.items || []).map(p=>`<button type="button" data-youtube-playlist="${mediaSafeHtml(p.id)}"><span>${p.snippet?.thumbnails?.default?.url ? `<img src="${mediaSafeHtml(p.snippet.thumbnails.default.url)}" alt="">` : "▶"}</span><div><b>${mediaSafeHtml(p.snippet?.title || "Playlist")}</b><small>${Number(p.contentDetails?.itemCount || 0)} video</small></div></button>`).join("") || '<div class="media-empty">Tidak ada playlist pada akun ini.</div>'}</div>`;
       $$("[data-youtube-playlist]", area).forEach(btn => btn.addEventListener("click", () => {
-        const cfg = mediaStateForApp(state.activeSimApp); state[cfg.embedKey] = `https://www.youtube-nocookie.com/embed/videoseries?list=${encodeURIComponent(btn.dataset.youtubePlaylist)}&playsinline=1&rel=0&autoplay=1`; state.mediaEmbedUrl = state[cfg.embedKey]; save(); render();
+        const playlistId = btn.dataset.youtubePlaylist || "";
+        const cfg = mediaStateForApp(state.activeSimApp);
+        const raw = `https://www.youtube.com/playlist?list=${encodeURIComponent(playlistId)}`;
+        const embed = youtubeEmbedFromUrl(raw);
+        state[cfg.embedKey] = embed;
+        state[cfg.urlKey] = raw;
+        state.mediaEmbedUrl = embed;
+        save();
+        window.__waifuPersistentMediaBridgeV12?.start?.(state.activeSimApp, raw, {
+          embed,
+          title: btn.querySelector("b")?.textContent?.trim() || (state.activeSimApp === "youtube-music" ? "YouTube Music" : "YouTube")
+        });
+        render();
       }));
     } catch { area.innerHTML = '<div class="media-empty">Playlist YouTube tidak dapat dimuat. Coba hubungkan ulang.</div>'; }
   }
@@ -2823,6 +2885,11 @@
     }
     if (state.shade && state.view !== "boot") root.insertAdjacentHTML("beforeend", renderShadePanel());
     bindDynamic();
+
+    // V12 media bridge survives root.innerHTML replacement.
+    requestAnimationFrame(() => {
+      window.__waifuPersistentMediaBridgeV12?.sync?.();
+    });
   }
 
   function bindDynamic() {

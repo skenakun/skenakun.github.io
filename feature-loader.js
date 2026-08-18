@@ -75,13 +75,6 @@
     const task = new Promise((resolve, reject) => {
       const script = existing || document.createElement("script");
 
-      if (!existing) {
-        script.src = src;
-        script.defer = true;
-        script.dataset.lazySrc = src;
-        document.body.appendChild(script);
-      }
-
       const done = () => {
         cleanup();
         script.dataset.lazyLoaded = "1";
@@ -98,10 +91,19 @@
         script.removeEventListener("error", fail);
       };
 
+      /*
+       * V12: listeners MUST be attached before appendChild().
+       * A cached script can finish immediately after being appended.
+       */
       script.addEventListener("load", done, { once: true });
       script.addEventListener("error", fail, { once: true });
 
-      if (script.dataset.lazyLoaded === "1") {
+      if (!existing) {
+        script.src = src;
+        script.defer = true;
+        script.dataset.lazySrc = src;
+        document.body.appendChild(script);
+      } else if (script.dataset.lazyLoaded === "1") {
         cleanup();
         resolve();
       }
@@ -409,7 +411,15 @@
     root.querySelector("#androidRecoveryReload")?.addEventListener("click", () => location.reload());
   }
 
-  function preparePhoneFeature({ buttonId, css, js, optionalCss = [], optionalJs = [] }) {
+  function preparePhoneFeature({
+    buttonId,
+    css,
+    js,
+    requiredCss = [],
+    requiredJs = [],
+    optionalCss = [],
+    optionalJs = []
+  }) {
     const button = document.getElementById(buttonId);
     if (!button) return;
     clearLoading(button);
@@ -418,6 +428,15 @@
     const ensureCore = async () => {
       loadCss(css);
       await loadScript(js);
+
+      /*
+       * V11: media persistence and Dynamic Island are part of the required
+       * Android runtime. The simulator is not marked ready until they are
+       * loaded, so playback can never start before the enhancer exists.
+       */
+      for (const required of requiredCss) await loadCss(required);
+      for (const required of requiredJs) await loadScript(required);
+
       button.dataset.featureReady = "1";
       clearLoading(button);
     };
@@ -533,15 +552,19 @@
     }
   }
 
-  preparePhoneFeature({
+      preparePhoneFeature({
     buttonId: "phoneSimBtn",
-    css: "./androidsim.css",
-    js: "./androidsim.js",
-    optionalCss: [
-      "./androidsim-enhancer.css?v=785-blank-v7",
-      "./androidsim-media-persistence.css?v=785-blank-v7",
-      "./androidsim-blank-rescue.css?v=785-blank-v7"
+    css: "./androidsim.css?v=v13-media-island",
+    js: "./androidsim.js?v=v13-media-island",
+    requiredCss: [
+      "./androidsim-media-persistence.css?v=v13-media-island",
+      "./androidsim-enhancer.css?v=v13-media-island",
+      "./androidsim-blank-rescue.css?v=v13-media-island"
     ],
-    optionalJs: ["./androidsim-enhancer.js?v=785-blank-v7"]
+    requiredJs: [
+      "./androidsim-enhancer.js?v=v13-media-island"
+    ],
+    optionalCss: [],
+    optionalJs: []
   });
 })();

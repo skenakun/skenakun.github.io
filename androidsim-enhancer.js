@@ -1,6 +1,552 @@
 (() => {
   "use strict";
 
+  if (window.__waifuPersistentMediaBridgeV12) return;
+
+  const phone = document.getElementById("pixelScreen");
+  const root = document.getElementById("androidScreenRoot");
+  const dialog = document.getElementById("phoneSimDialog");
+
+  if (!phone || !root) return;
+
+  const session = {
+    active: false,
+    app: "",
+    raw: "",
+    embed: "",
+    title: "",
+    subtitle: "",
+    artwork: "",
+    startedAt: 0,
+    expanded: false
+  };
+
+  const appMeta = app => ({
+    spotify: { label: "Spotify", glyph: "●" },
+    youtube: { label: "YouTube", glyph: "▶" },
+    "youtube-music": { label: "YouTube Music", glyph: "♫" }
+  }[app] || { label: "Media", glyph: "♪" });
+
+  function esc(value = "") {
+    return String(value).replace(/[&<>"']/g, c => ({
+      "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+    }[c]));
+  }
+
+  function youtubeInfo(raw) {
+    const value = String(raw || "").trim();
+    if (!value) return null;
+    try {
+      const u = new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`);
+      const host = u.hostname.replace(/^www\./, "").toLowerCase();
+      let video = "";
+      let list = u.searchParams.get("list") || "";
+
+      if (host === "youtu.be") {
+        video = u.pathname.split("/").filter(Boolean)[0] || "";
+      } else if (host.endsWith("youtube.com")) {
+        if (u.pathname === "/watch") video = u.searchParams.get("v") || "";
+        const parts = u.pathname.split("/").filter(Boolean);
+        if (["shorts", "live", "embed"].includes(parts[0])) video = parts[1] || "";
+        if (parts[0] === "playlist") list = u.searchParams.get("list") || list;
+      }
+
+      if (!video && !list) return null;
+      return {
+        video,
+        list,
+        artwork: video ? `https://i.ytimg.com/vi/${encodeURIComponent(video)}/hqdefault.jpg` : ""
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  function youtubeEmbed(raw) {
+    const info = youtubeInfo(raw);
+    if (!info) return "";
+    const origin = location.origin && location.origin !== "null"
+      ? location.origin
+      : "https://skenakun.github.io";
+
+    const params = new URLSearchParams({
+      playsinline: "1",
+      rel: "0",
+      autoplay: "1",
+      controls: "1",
+      enablejsapi: "1",
+      origin,
+      widget_referrer: location.href
+    });
+    if (info.list) params.set("list", info.list);
+
+    if (!info.video && info.list) {
+      return `https://www.youtube.com/embed/videoseries?${params.toString()}`;
+    }
+    return `https://www.youtube.com/embed/${encodeURIComponent(info.video)}?${params.toString()}`;
+  }
+
+  function spotifyEmbed(raw) {
+    const value = String(raw || "").trim();
+    if (!value) return "";
+    let type = "";
+    let id = "";
+    const uri = value.match(/^spotify:(track|album|playlist|artist|episode|show):([A-Za-z0-9]+)$/i);
+    if (uri) {
+      type = uri[1].toLowerCase();
+      id = uri[2];
+    } else {
+      try {
+        const u = new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`);
+        if (!u.hostname.toLowerCase().endsWith("spotify.com")) return "";
+        const parts = u.pathname.split("/").filter(Boolean);
+        const idx = parts.findIndex(x => ["track","album","playlist","artist","episode","show"].includes(x));
+        if (idx >= 0) {
+          type = parts[idx];
+          id = parts[idx + 1] || "";
+        }
+      } catch {
+        return "";
+      }
+    }
+    if (!type || !id) return "";
+    return `https://open.spotify.com/embed/${encodeURIComponent(type)}/${encodeURIComponent(id)}?utm_source=generator&theme=0`;
+  }
+
+  function embedFor(app, raw) {
+    return app === "spotify" ? spotifyEmbed(raw) : youtubeEmbed(raw);
+  }
+
+  function fallbackArtwork(app) {
+    const bg = app === "spotify" ? "#1ed760" : "#ff0033";
+    const fg = app === "spotify" ? "#08150d" : "#ffffff";
+    const text = app === "spotify" ? "S" : (app === "youtube-music" ? "M" : "▶");
+    return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+        <rect width="120" height="120" rx="28" fill="${bg}"/>
+        <text x="60" y="73" text-anchor="middle" font-size="54" font-family="sans-serif" font-weight="700" fill="${fg}">${text}</text>
+      </svg>`
+    );
+  }
+
+  function ensureHost() {
+    let host = document.getElementById("androidPersistentMediaHostV12");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "androidPersistentMediaHostV12";
+      host.className = "android-persistent-media-v12 is-parked";
+      host.setAttribute("aria-label", "Persistent media player");
+      phone.appendChild(host);
+    }
+    return host;
+  }
+
+  function frame() {
+    return ensureHost().querySelector("iframe");
+  }
+
+  function sameFrame(embed, app) {
+    const host = ensureHost();
+    return !!frame() &&
+      host.dataset.mediaApp === app &&
+      host.dataset.mediaSrc === embed;
+  }
+
+  function createFrame(embed, app) {
+    const host = ensureHost();
+    if (sameFrame(embed, app)) return frame();
+
+    host.replaceChildren();
+
+    const iframe = document.createElement("iframe");
+    iframe.src = embed;
+    iframe.title = `${appMeta(app).label} player`;
+    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen; web-share";
+    iframe.referrerPolicy = "origin-when-cross-origin";
+    iframe.loading = "eager";
+    iframe.setAttribute("allowfullscreen", "");
+
+    host.dataset.mediaApp = app;
+    host.dataset.mediaSrc = embed;
+    host.appendChild(iframe);
+    phone.dataset.persistentMediaV12 = "1";
+    return iframe;
+  }
+
+  function currentMediaApp() {
+    if (root.querySelector(".spotify-live-app")) return "spotify";
+    const yt = root.querySelector(".youtube-live-app");
+    if (!yt) return "";
+    return yt.classList.contains("music") ? "youtube-music" : "youtube";
+  }
+
+  function shellFor(app) {
+    if (app === "spotify") return root.querySelector("#spotifyEmbedShell");
+    if (app === "youtube" || app === "youtube-music") return root.querySelector("#youtubeEmbedShell");
+    return null;
+  }
+
+  /*
+   * A stored media URL is rendered by androidsim.js as a normal iframe before
+   * the user presses controls inside the embedded player. Those controls live
+   * in a cross-origin iframe, so the parent page cannot reliably observe the
+   * internal Play click. If that iframe stays inside #androidScreenRoot it is
+   * destroyed as soon as Android navigates Home/QS/Notifications, and the
+   * media bridge never owns an active session (therefore no Dynamic Island).
+   *
+   * Adopt the iframe as soon as a supported media app renders it. From that
+   * point the same persistent bridge owns YouTube, YouTube Music and Spotify,
+   * including media that came from a URL saved in localStorage.
+   */
+  function adoptRenderedMedia() {
+    const app = currentMediaApp();
+    if (!app) return false;
+
+    const shell = shellFor(app);
+    const renderedFrame = shell?.querySelector("iframe");
+    if (!(renderedFrame instanceof HTMLIFrameElement)) return false;
+
+    const source = String(
+      renderedFrame.getAttribute("src") || renderedFrame.src || ""
+    ).trim();
+    if (!source || source === "about:blank") return false;
+
+    const input = app === "spotify"
+      ? root.querySelector("#spotifyUrlInput")
+      : root.querySelector("#youtubeUrlInput");
+    const raw = String(input?.value || source).trim();
+    const info = app === "spotify" ? null : youtubeInfo(raw || source);
+    const meta = appMeta(app);
+
+    createFrame(source, app);
+    session.active = true;
+    session.app = app;
+    session.raw = raw;
+    session.embed = source;
+    session.title = meta.label;
+    session.subtitle = "Sedang diputar";
+    session.artwork = info?.artwork || fallbackArtwork(app);
+    session.startedAt = Date.now();
+    session.expanded = false;
+
+    ensurePlaceholder(shell);
+    return true;
+  }
+
+  function shadeOpen() {
+    return !!root.querySelector(".quick-shade, .axion-notification-shade, .axion-separate-qs");
+  }
+
+  function ensurePlaceholder(shell) {
+    if (!shell) return;
+
+    /*
+     * The patched androidsim.js should already avoid generating a duplicate
+     * iframe. Remove one defensively if an older cached core briefly renders it.
+     */
+    shell.querySelectorAll("iframe").forEach(node => node.remove());
+
+    if (shell.querySelector(".persistent-core-placeholder")) return;
+
+    shell.replaceChildren();
+    const el = document.createElement("div");
+    el.className = "media-empty persistent-core-placeholder";
+    el.textContent = `${appMeta(session.app).label} sedang diputar. Player tetap aktif saat membuka Home, QS, atau Notifikasi.`;
+    shell.appendChild(el);
+  }
+
+  function showAtShell(shell) {
+    const host = ensureHost();
+    if (!frame() || !shell) return park();
+
+    const phoneRect = phone.getBoundingClientRect();
+    const shellRect = shell.getBoundingClientRect();
+    if (shellRect.width < 40 || shellRect.height < 40) return park();
+
+    host.style.setProperty("--pm-left", `${shellRect.left - phoneRect.left}px`);
+    host.style.setProperty("--pm-top", `${shellRect.top - phoneRect.top}px`);
+    host.style.setProperty("--pm-width", `${shellRect.width}px`);
+    host.style.setProperty("--pm-height", `${shellRect.height}px`);
+
+    host.classList.remove("is-parked");
+    host.classList.add("is-visible");
+  }
+
+  function park() {
+    const host = ensureHost();
+    if (!frame()) return;
+    /*
+     * Do NOT hide, detach, resize, change src, or set display:none.
+     * It stays fully rendered behind #androidScreenRoot.
+     */
+    host.classList.add("is-parked");
+    host.classList.remove("is-visible");
+  }
+
+  function ensureIsland() {
+    let island = document.getElementById("androidDynamicIsland");
+    if (!island) {
+      island = document.createElement("div");
+      island.id = "androidDynamicIsland";
+      phone.appendChild(island);
+    }
+    return island;
+  }
+
+  function renderIsland() {
+    if (!session.active) return;
+
+    const island = ensureIsland();
+    const meta = appMeta(session.app);
+    island.className = `android-dynamic-island media-v12 has-activity ${session.expanded ? "expanded" : ""}`;
+
+    if (!session.expanded) {
+      island.innerHTML = `
+        <button type="button" class="media-v12-compact" data-media-v12-action="toggle">
+          <img src="${esc(session.artwork || fallbackArtwork(session.app))}" alt="">
+          <span><strong>${esc(session.title || meta.label)}</strong><small>${esc(meta.label)}</small></span>
+          <i class="media-v12-wave"><b></b><b></b><b></b><b></b></i>
+        </button>
+      `;
+      return;
+    }
+
+    island.innerHTML = `
+      <div class="media-v12-expanded">
+        <button type="button" class="media-v12-now" data-media-v12-action="toggle">
+          <img src="${esc(session.artwork || fallbackArtwork(session.app))}" alt="">
+          <span><strong>${esc(session.title || meta.label)}</strong><small>${esc(meta.label)}</small></span>
+          <i class="media-v12-wave"><b></b><b></b><b></b><b></b></i>
+        </button>
+        <div class="media-v12-progress"><i></i></div>
+        <div class="media-v12-actions">
+          <button type="button" data-media-v12-action="open">Buka aplikasi</button>
+          <button type="button" data-media-v12-action="stop">Hentikan</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function notificationMarkup() {
+    const meta = appMeta(session.app);
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "axion-notification-card enhancer-media-notification media-v12-notification";
+    button.dataset.mediaV12Action = "open";
+    button.innerHTML = `
+      <span class="axion-notification-icon">${meta.glyph}</span>
+      <span>
+        <strong>${esc(session.title || meta.label)}</strong>
+        <small>${esc(meta.label)} • sedang diputar</small>
+        <span class="media-v12-mini-wave"><i></i><i></i><i></i><i></i></span>
+      </span>
+      <em>sekarang</em>
+    `;
+    return button;
+  }
+
+  function syncNotification() {
+    if (!session.active) return;
+    const containers = [
+      root.querySelector(".axion-notification-shade"),
+      root.querySelector(".axion-separate-qs"),
+      root.querySelector(".quick-shade")
+    ].filter(Boolean);
+
+    for (const container of containers) {
+      const existing = container.querySelector(".media-v12-notification");
+      if (existing) continue;
+
+      let list = container.querySelector(".axion-notification-list");
+      if (!list) {
+        list = document.createElement("div");
+        list.className = "axion-notification-list";
+        container.querySelector(".axion-notification-empty")?.remove();
+        const footer = container.querySelector(".axion-notif-footer");
+        if (footer) container.insertBefore(list, footer);
+        else container.appendChild(list);
+      }
+      list.prepend(notificationMarkup());
+    }
+  }
+
+  function sync() {
+    // Recover media that androidsim.js rendered from a previously saved URL.
+    // This is also the path used when the user presses Play inside the
+    // cross-origin YouTube / Spotify iframe instead of the outer "Putar" button.
+    if ((!session.active || !frame()) && !adoptRenderedMedia()) return;
+
+    const app = currentMediaApp();
+    if (!shadeOpen() && app === session.app) {
+      const shell = shellFor(app);
+      ensurePlaceholder(shell);
+      showAtShell(shell);
+    } else {
+      park();
+    }
+
+    renderIsland();
+    syncNotification();
+  }
+
+  function start(app, raw, options = {}) {
+    const source = String(options.embed || embedFor(app, raw) || "").trim();
+    if (!source) return false;
+
+    if (!sameFrame(source, app)) {
+      createFrame(source, app);
+      session.startedAt = Date.now();
+    }
+
+    const info = app === "spotify" ? null : youtubeInfo(raw);
+    const meta = appMeta(app);
+
+    session.active = true;
+    session.app = app;
+    session.raw = String(raw || "");
+    session.embed = source;
+    session.title = String(options.title || meta.label);
+    session.subtitle = String(options.subtitle || "Sedang diputar");
+    session.artwork = String(options.artwork || info?.artwork || fallbackArtwork(app));
+    session.expanded = false;
+
+    sync();
+    return true;
+  }
+
+  function stop() {
+    const host = ensureHost();
+    host.replaceChildren();
+    host.removeAttribute("data-media-app");
+    host.removeAttribute("data-media-src");
+    phone.removeAttribute("data-persistent-media-v12");
+
+    session.active = false;
+    session.app = "";
+    session.raw = "";
+    session.embed = "";
+    session.title = "";
+    session.subtitle = "";
+    session.artwork = "";
+    session.startedAt = 0;
+    session.expanded = false;
+
+    const island = document.getElementById("androidDynamicIsland");
+    if (island) {
+      island.className = "android-dynamic-island island-idle";
+      island.innerHTML = "";
+    }
+    root.querySelectorAll(".media-v12-notification").forEach(n => n.remove());
+  }
+
+  async function openMediaApp() {
+    const target = session.app;
+    if (!target) return;
+
+    if (currentMediaApp() === target) {
+      sync();
+      return;
+    }
+
+    /*
+     * Do not search Home for a media launcher icon. YouTube, YouTube Music
+     * and Spotify can live only in the app drawer, while Dynamic Island is
+     * rendered outside #androidScreenRoot. Ask the simulator core to open the
+     * app directly so the persistent iframe survives the navigation.
+     */
+    const directOpen = window.__waifuAndroidSimOpenApp;
+    if (typeof directOpen === "function" && directOpen(target)) {
+      await new Promise(resolve =>
+        requestAnimationFrame(() => requestAnimationFrame(resolve))
+      );
+      sync();
+      return;
+    }
+
+    // Compatibility fallback for an older cached androidsim.js.
+    let button = root.querySelector(`[data-open-app="${CSS.escape(target)}"]`);
+    if (button instanceof HTMLElement) {
+      button.click();
+      requestAnimationFrame(sync);
+      return;
+    }
+
+    document.querySelector('[data-sim-command="home"]')?.click();
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+    button = root.querySelector(`[data-open-app="${CSS.escape(target)}"]`);
+    if (button instanceof HTMLElement) {
+      button.click();
+      requestAnimationFrame(sync);
+    }
+  }
+
+  document.addEventListener("click", event => {
+    const target = event.target instanceof Element ? event.target : null;
+    const action = target?.closest("[data-media-v12-action]")?.dataset.mediaV12Action;
+    if (!action) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    if (action === "toggle") {
+      session.expanded = !session.expanded;
+      renderIsland();
+    } else if (action === "stop") {
+      stop();
+    } else if (action === "open") {
+      session.expanded = false;
+      renderIsland();
+      void openMediaApp();
+    }
+  }, true);
+
+  /*
+   * Synchronize only after root-level Android navigation.
+   * This observer never touches the iframe source.
+   */
+  let queued = false;
+  const observer = new MutationObserver(() => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => {
+      queued = false;
+      sync();
+    });
+  });
+  observer.observe(root, { childList: true, subtree: false });
+
+  const timer = window.setInterval(() => {
+    if (!session.active) return;
+    if (dialog && !dialog.open) {
+      park();
+      return;
+    }
+    sync();
+  }, 600);
+
+  window.addEventListener("resize", () => session.active && sync(), { passive:true });
+
+  window.__waifuPersistentMediaBridgeV12 = {
+    version: "12",
+    start,
+    stop,
+    sync,
+    renderIsland,
+    syncNotification,
+    isActive(app = "") {
+      return !!session.active && (!app || session.app === app) && !!frame();
+    },
+    getState() {
+      return { ...session, iframeAlive: !!frame() };
+    }
+  };
+})();
+
+(() => {
+  "use strict";
+
   /*
    * Stable Android Simulator enhancer
    * Replaces the previous enhancer that could create recursive MutationObserver
@@ -9,8 +555,8 @@
    * Baseline: 3695b75b5ecbd94a9e5adb49ffb41e9183488ca5
    */
 
-  if (window.__waifuAndroidEnhancerMediaV7) return;
-  window.__waifuAndroidEnhancerMediaV7 = true;
+  if (window.__waifuAndroidEnhancerMediaV12) return;
+  window.__waifuAndroidEnhancerMediaV12 = true;
 
   const phone = document.getElementById("pixelScreen");
   const root = document.getElementById("androidScreenRoot");
@@ -79,6 +625,11 @@
   }
 
   const state = loadState();
+
+  function mediaBridgeV12() {
+    return window.__waifuPersistentMediaBridgeV12 || null;
+  }
+
 
   function saveState() {
     try {
@@ -327,6 +878,11 @@
   }
 
   function renderIsland(force = false) {
+    const bridge = mediaBridgeV12();
+    if (bridge?.isActive?.()) {
+      bridge.renderIsland?.();
+      return;
+    }
     const island = ensureIsland();
     const key = islandMarkupKey();
 
@@ -385,17 +941,22 @@
       </button>
       ${expanded ? `
         <div class="island-media-player">
-          <div class="island-media-now">
+          <button
+            class="island-media-now island-expanded-toggle"
+            type="button"
+            data-stable-action="toggle-island"
+            aria-label="Perkecil Dynamic Island"
+          >
             <img src="${esc(artwork)}" alt="">
             <span>
               <strong>${esc(title)}</strong>
               <small>${esc(meta.label)}</small>
             </span>
             <span class="island-big-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
-          </div>
+          </button>
           <div class="island-media-progress"><span id="stableIslandMediaProgress"></span></div>
           <div class="island-media-actions">
-            <button type="button" data-stable-action="open-media">Buka aplikasi</button>
+            <button type="button" data-stable-action="open-media" data-media-app="${esc(state.media.app)}">Buka aplikasi</button>
             <button type="button" class="danger" data-stable-action="media-dismiss">Hentikan</button>
           </div>
         </div>
@@ -598,12 +1159,14 @@
 
     if (!host.querySelector("iframe")) return;
 
+    /*
+     * V11 media continuity:
+     * Do not move, detach, resize or rebuild the iframe when Android
+     * switches to Home, Quick Settings or Notifications.
+     * Only change presentation state.
+     */
     host.classList.add("is-parked");
     host.classList.remove("is-visible");
-    host.style.removeProperty("--media-left");
-    host.style.removeProperty("--media-top");
-    host.style.removeProperty("--media-width");
-    host.style.removeProperty("--media-height");
   }
 
   function mediaShellForApp(appId) {
@@ -662,6 +1225,52 @@
     if (!source) return null;
 
     const current = host.querySelector("iframe");
+
+    /*
+     * If media is already playing, Android navigation must never replace
+     * its iframe. A different source is only allowed when the user starts
+     * a new URL explicitly through startPersistentMedia().
+     */
+    if (
+      current &&
+      state.media.playing &&
+      host.dataset.mediaApp === appId
+    ) {
+      return current;
+    }
+
+    if (
+      current &&
+      host.dataset.mediaApp === appId &&
+      host.dataset.mediaSrc === source
+    ) {
+      return current;
+    }
+
+    host.replaceChildren();
+
+    const frame = document.createElement("iframe");
+    frame.src = source;
+    frame.title = `${mediaMeta(appId).label} player`;
+    frame.allow = "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
+    frame.referrerPolicy = "origin-when-cross-origin";
+    frame.loading = "eager";
+    frame.setAttribute("allowfullscreen", "");
+
+    host.dataset.mediaApp = appId;
+    host.dataset.mediaSrc = source;
+    host.appendChild(frame);
+    phone.dataset.persistentMediaActive = "1";
+
+    return frame;
+  }
+
+  function replacePersistentMediaForUserAction(embed, appId) {
+    const host = ensurePersistentMediaHost();
+    const source = String(embed || "").trim();
+    if (!source) return null;
+
+    const current = host.querySelector("iframe");
     if (
       current &&
       host.dataset.mediaApp === appId &&
@@ -689,6 +1298,10 @@
   }
 
   function startPersistentMedia(appId, rawUrl, options = {}) {
+    const bridge = mediaBridgeV12();
+    if (bridge?.start) {
+      return bridge.start(appId, rawUrl, options);
+    }
     const raw = String(rawUrl || "").trim();
     const embed = String(options.embed || mediaEmbedFromRaw(appId, raw) || "").trim();
     if (!embed) return false;
@@ -700,7 +1313,8 @@
       !!persistentMediaFrame();
 
     if (!sameMedia) {
-      createPersistentFrameFromEmbed(embed, appId);
+      // Only a direct user playback action may replace the persistent iframe.
+      replacePersistentMediaForUserAction(embed, appId);
       state.media.startedAt = Date.now();
     }
 
@@ -719,7 +1333,7 @@
     saveState();
 
     const shell = mediaShellForApp(appId);
-    if (shell && !root.querySelector(".quick-shade")) {
+    if (shell && !root.querySelector(".quick-shade, .axion-notification-shade")) {
       ensureMediaPlaceholder(shell, appId);
       positionPersistentMedia(shell);
     } else {
@@ -769,7 +1383,7 @@
   function positionPersistentMedia(shell) {
     const host = ensurePersistentMediaHost();
 
-    if (root.querySelector(".quick-shade")) {
+    if (root.querySelector(".quick-shade, .axion-notification-shade")) {
       parkPersistentMedia();
       return;
     }
@@ -861,6 +1475,11 @@
   }
 
   function syncPersistentMediaFromCurrentView() {
+    const bridge = mediaBridgeV12();
+    if (bridge?.sync) {
+      bridge.sync();
+      return;
+    }
     const appId = appIdFromCurrentMediaView();
 
     if (!appId) {
@@ -886,6 +1505,8 @@
 
       ensureMediaPlaceholder(shell, appId);
       positionPersistentMedia(shell);
+      renderIsland(true);
+      syncMediaNotification();
       return;
     }
 
@@ -933,6 +1554,10 @@
   }
 
   function dismissMedia() {
+    const bridge = mediaBridgeV12();
+    if (bridge?.isActive?.()) {
+      bridge.stop?.();
+    }
     state.media.playing = false;
     state.media.embed = "";
     state.media.title = "";
@@ -995,6 +1620,11 @@
   }
 
   function syncMediaNotification() {
+    const bridge = mediaBridgeV12();
+    if (bridge?.syncNotification) {
+      bridge.syncNotification();
+      return;
+    }
     const containers = [
       root.querySelector(".axion-notification-shade"),
       root.querySelector(".axion-separate-qs")
@@ -1224,20 +1854,73 @@
      OPEN CORE APP
      ========================================================= */
 
-  function openCoreApp(appId) {
-    const current = root.querySelector(`[data-open-app="${CSS.escape(appId)}"]`);
+  function nextFrame() {
+    return new Promise(resolve => requestAnimationFrame(resolve));
+  }
 
-    if (current) {
-      current.click();
-      return;
+  async function openCoreApp(appId) {
+    const targetApp = String(appId || "").trim();
+    if (!targetApp) return false;
+
+    const mediaVisible =
+      targetApp === "spotify"
+        ? !!root.querySelector(".spotify-live-app")
+        : (
+            targetApp === "youtube"
+              ? !!root.querySelector(".youtube-live-app:not(.music)")
+              : (
+                  targetApp === "youtube-music"
+                    ? !!root.querySelector(".youtube-live-app.music")
+                    : false
+                )
+          );
+
+    if (mediaVisible) {
+      const shell = mediaShellForApp(targetApp);
+      ensureMediaPlaceholder(shell, targetApp);
+      positionPersistentMedia(shell);
+      return true;
     }
 
-    document.querySelector('[data-sim-command="home"]')?.click();
+    /*
+     * Prefer the core navigation API. This works from Home, notifications,
+     * Quick Settings, Recents, or any other screen even when no matching
+     * [data-open-app] button exists in the current DOM.
+     */
+    const directOpen = window.__waifuAndroidSimOpenApp;
+    if (typeof directOpen === "function" && directOpen(targetApp)) {
+      await nextFrame();
+      await nextFrame();
+      syncPersistentMediaFromCurrentView();
+      return true;
+    }
 
-    requestAnimationFrame(() => {
-      const next = root.querySelector(`[data-open-app="${CSS.escape(appId)}"]`);
-      next?.click();
-    });
+    // Compatibility fallback for an older cached androidsim.js.
+    let button = root.querySelector(`[data-open-app="${CSS.escape(targetApp)}"]`);
+    if (button instanceof HTMLElement) {
+      button.click();
+      await nextFrame();
+      return true;
+    }
+
+    const home = document.querySelector('[data-sim-command="home"]');
+    if (home instanceof HTMLElement) home.click();
+
+    await nextFrame();
+    await nextFrame();
+
+    button = root.querySelector(`[data-open-app="${CSS.escape(targetApp)}"]`);
+    if (button instanceof HTMLElement) {
+      button.click();
+      await nextFrame();
+      return true;
+    }
+
+    /*
+     * Do not keep forcing Home if the app is not present on the current
+     * page. Media must continue in the persistent iframe regardless.
+     */
+    return false;
   }
 
   /* =========================================================
@@ -1278,10 +1961,11 @@
     }
 
     if (action === "open-media") {
+      const mediaApp = state.media.app || "spotify";
       state.islandExpanded = false;
       saveState();
-      openCoreApp(state.media.app || "spotify");
       renderIsland(true);
+      void openCoreApp(mediaApp);
       return;
     }
 
@@ -1330,6 +2014,7 @@
 
     event.preventDefault();
     event.stopPropagation();
+    event.stopImmediatePropagation();
 
     handleStableAction(action.dataset.stableAction || "");
   }, true);
@@ -1565,6 +2250,10 @@
    */
 
   const liveTimer = window.setInterval(() => {
+    if (state.media.playing && !document.getElementById("androidDynamicIsland")) {
+      renderIsland(true);
+    }
+
     if (dialog && !dialog.open) return;
 
     if (state.stopwatch.running || root.querySelector(".enhancer-stopwatch")) {
@@ -1575,7 +2264,7 @@
     if (state.media.playing) {
       const appId = appIdFromCurrentMediaView();
 
-      if (root.querySelector(".quick-shade")) {
+      if (root.querySelector(".quick-shade, .axion-notification-shade")) {
         parkPersistentMedia();
       } else if (appId === state.media.app) {
         ensureMediaPlaceholder(mediaShellForApp(appId), appId);
@@ -1605,7 +2294,48 @@
     mediaDuplicateObserver.disconnect();
   }, { once: true });
 
-  /* V6: boot/recovery is owned by feature-loader.js. */
+  const simulatorOpenButton = document.getElementById("phoneSimBtn");
+
+  simulatorOpenButton?.addEventListener("click", event => {
+    if (dialog?.open || !root.firstElementChild) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    try {
+      dialog.showModal();
+    } catch {
+      dialog.setAttribute("open", "");
+    }
+
+    renderIsland(true);
+    syncMediaNotification();
+
+    if (state.media.playing) {
+      const appId = appIdFromCurrentMediaView();
+
+      if (appId === state.media.app && !root.querySelector(".quick-shade, .axion-notification-shade")) {
+        ensureMediaPlaceholder(mediaShellForApp(appId), appId);
+        positionPersistentMedia(mediaShellForApp(appId));
+      } else {
+        parkPersistentMedia();
+      }
+    }
+  }, true);
+
+  window.__waifuMediaV11 = {
+    version: "12",
+    active() {
+      return !!state.media.playing;
+    },
+    app() {
+      return state.media.app || "";
+    },
+    iframeAlive() {
+      return !!persistentMediaFrame();
+    }
+  };
 
   ensureIsland();
   ensurePersistentMediaHost();
