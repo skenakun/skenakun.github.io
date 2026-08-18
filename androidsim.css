@@ -744,8 +744,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  height: 41px;
-  padding: 0 20px;
+  height: 34px;
+  padding: 0 27px;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -759,17 +759,17 @@
 }
 
 .pixel-three-button-nav button {
-  width: 56px;
-  height: 36px;
+  width: 44px;
+  height: 28px;
   border: 0;
   color: inherit;
   background: transparent;
   cursor: pointer;
-  font-size: 17px;
+  font-size: 13px;
 }
 
 .pixel-screen.three-button-mode .android-screen-root {
-  bottom: 41px;
+  bottom: 34px;
 }
 
 .pixel-screen.three-button-mode .pixel-gesture-pill {
@@ -948,7 +948,7 @@
 .sim-burst-preview::after{content:"";position:absolute;inset:auto 8px 9px;height:28px;border-radius:14px;background:linear-gradient(90deg,color-mix(in srgb,var(--burst-primary) 82%,#fff),color-mix(in srgb,var(--burst-secondary) 82%,#fff),color-mix(in srgb,var(--burst-tertiary) 82%,#fff));box-shadow:0 4px 11px rgba(20,16,35,.18)}
 .sim-burst-preview-clock{position:absolute;z-index:2;top:24px;left:50%;color:#fff;font-size:22px;font-weight:900;line-height:.83;letter-spacing:-.06em;text-align:center;text-shadow:0 2px 7px rgba(0,0,0,.35);transform:translateX(-50%)}
 .sim-burst-preview-dots{position:absolute;z-index:2;left:14px;right:14px;bottom:16px;display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.sim-burst-preview-dots i{height:13px;border-radius:7px;background:rgba(255,255,255,.86)}
-.sim-burst-live-palette{position:absolute;right:-2px;bottom:4px;padding:4px;display:flex;gap:2px;border-radius:13px;background:var(--android-card);box-shadow:0 4px 12px rgba(25,20,40,.18)}.sim-burst-live-palette i{width:13px;height:13px;border-radius:50%;background:var(--dot)}
+
 .sim-burst-card{padding:7px;border:1px solid var(--android-border);border-radius:23px;background:var(--android-card);box-shadow:0 10px 24px rgba(35,27,55,.05)}
 .sim-burst-tabs{padding:3px;display:grid;grid-template-columns:1fr 1fr;gap:3px;border-radius:17px;background:color-mix(in srgb,var(--android-blue) 7%,var(--android-card-2))}.sim-burst-tabs button{min-height:34px;border:0;border-radius:14px;color:var(--android-muted);background:transparent;cursor:pointer;font-size:8px;font-weight:900}.sim-burst-tabs button.active{color:color-mix(in srgb,var(--android-blue) 80%,var(--android-text));background:var(--android-blue-soft)}
 .sim-burst-extract{width:100%;min-height:55px;margin-top:7px;padding:8px;display:flex;align-items:center;gap:9px;border:1px solid var(--android-border);border-radius:17px;color:var(--android-text);background:color-mix(in srgb,var(--android-blue) 4%,var(--android-card));cursor:pointer;text-align:left}.sim-burst-extract-icon{width:36px;height:36px;flex:0 0 auto;display:grid;place-items:center;border-radius:13px;color:var(--android-blue);background:var(--android-blue-soft);font-size:16px}.sim-burst-extract strong,.sim-burst-extract small{display:block}.sim-burst-extract strong{font-size:9px}.sim-burst-extract small{margin-top:2px;color:var(--android-muted);font-size:6.5px;line-height:1.35}
@@ -1013,7 +1013,7 @@
 .record-home-page{padding:0!important;overflow:hidden!important;color:#fff;background:#15131d}
 .record-home-page .home-wall{position:absolute;inset:0;background:var(--home-wall) center/cover no-repeat;transform:scale(1.015)}
 .record-home-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,10,18,.06) 0%,rgba(8,9,15,.02) 46%,rgba(7,7,12,.25) 100%);pointer-events:none}
-.record-home-content{position:absolute;inset:0;padding:34px 9px 14px!important;display:flex!important;flex-direction:column;gap:7px;text-shadow:0 1px 6px rgba(0,0,0,.32)}
+.record-home-content{position:absolute;inset:0;padding:72px 9px 14px!important;display:flex!important;flex-direction:column;gap:7px;text-shadow:0 1px 6px rgba(0,0,0,.32)}
 .record-home-weather{padding:0 2px;color:#fff}.record-home-weather strong{display:block;font-size:8px;font-weight:900}.record-home-weather strong span{font-weight:800}.record-home-weather small{display:block;margin-top:3px;font-size:6.4px;font-weight:800;opacity:.95}
 .record-home-spacer{flex:1;min-height:80px}
 .record-home-main{display:grid;grid-template-columns:1fr 1.24fr;align-items:end;gap:8px}
@@ -1058,7 +1058,7 @@
 .layout-helper{margin:10px 10px 0;color:var(--android-muted);font-size:7px;line-height:1.35;text-align:center}
 .launcher-drawer-gesture{position:sticky;bottom:-13px;width:92px;height:3px;margin:8px auto -11px;border-radius:99px;background:rgba(35,35,42,.72)}
 
-@media(max-height:720px){.record-home-spacer{min-height:50px}.record-home-main{gap:5px}.record-screen-time{min-height:78px}.record-home-content{padding-top:31px!important}.launcher-drawer-grid{gap:10px 4px!important}}
+@media(max-height:720px){.record-home-spacer{min-height:42px}.record-home-main{gap:5px}.record-screen-time{min-height:74px}.record-home-content{padding-top:64px!important}.launcher-drawer-grid{gap:10px 4px!important}}
 
 
 /* Realtime Translate upgrade */
@@ -1082,9 +1082,34 @@
 .roleplay-link-card{position:relative;overflow:hidden}.roleplay-link-card:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--a)}
 .media-paste-title{display:flex;align-items:center;justify-content:space-between;gap:8px}.media-paste-title>span{padding:4px 7px;border-radius:999px;background:var(--a2);color:var(--a);font-size:7px;font-weight:900;white-space:nowrap}
 .roleplay-link-card p{margin:5px 0 8px;color:var(--muted);font-size:8.5px;line-height:1.45}.roleplay-link-card>small{display:block;margin-top:7px;color:var(--muted);font-size:7.5px;line-height:1.35}
-.media-paste-card .media-paste-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:5px}.media-paste-card .media-paste-row button{min-width:46px;height:36px;padding:0 8px}.media-paste-card .media-clip-btn{background:var(--a2);color:var(--a)}
+/*
+ * FIX 74abda6: the media form lives inside a narrow simulated phone even
+ * when the real desktop viewport is >560px. Always put the URL field on its
+ * own row; Tempel and Putar share the second row.
+ */
+.media-paste-card .media-paste-row{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px;
+}
+.media-paste-card .media-paste-row input{
+  grid-column:1/-1;
+  min-width:0;
+  width:100%;
+  box-sizing:border-box;
+  font-size:8px;
+}
+.media-paste-card .media-paste-row button{
+  min-width:0;
+  width:100%;
+  height:36px;
+  padding:0 8px;
+  font-size:8px;
+  line-height:1;
+  white-space:nowrap;
+}
+.media-paste-card .media-clip-btn{background:var(--a2);color:var(--a)}
 .spotify-live-app .roleplay-link-card .media-clip-btn{background:#173d25;color:#1ed760}.youtube-live-app.music .roleplay-link-card .media-clip-btn{background:#2b2b2e;color:#fff}
-@media(max-width:560px){.media-paste-card .media-paste-row{grid-template-columns:1fr auto}.media-paste-card .media-paste-row input{grid-column:1/-1}.media-paste-card .media-paste-row button{min-width:70px}}
 
 /* =========================================================
    FIX 0462ee1: YouTube / YouTube Music embedded playback
@@ -1542,4 +1567,1185 @@ html.performance-lite .axion-notification-shade{
       calc(100vw - 42px)
     );
   }
+}
+
+
+/* =========================================================
+   ABOUT PHONE BUILD INFO 721a694
+   Long baseband/kernel strings should wrap like Android Settings.
+   ========================================================= */
+.about-build-row .a17-copy {
+  min-width: 0;
+}
+.about-build-row .a17-copy span {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
+}
+.about-build-row .a17-copy span small {
+  display: inline;
+  color: inherit;
+  font-size: inherit;
+}
+
+
+/* =========================================================
+   ANDROID SIM + eSIM UPDATE 401538e
+   Dual-SIM primary selection and simulated Indonesian eSIM setup.
+   ========================================================= */
+.sim-settings-page .a17-section {
+  margin-top: 16px;
+}
+
+.sim-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 2px 10px;
+}
+
+.sim-profile-card {
+  min-width: 0;
+  min-height: 126px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--android-border);
+  border-radius: 24px;
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--sim-card-color) 9%, var(--android-card)),
+      var(--android-card));
+}
+
+.sim-profile-card.is-esim {
+  grid-column: 1 / -1;
+}
+
+.sim-profile-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.sim-profile-badge {
+  min-width: 38px;
+  height: 32px;
+  padding: 0 8px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  color: #fff;
+  background: var(--sim-card-color);
+  font-size: 9px;
+  font-weight: 1000;
+}
+
+.sim-profile-card > strong {
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sim-profile-card > small {
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+  color: var(--android-muted);
+  font-size: 7px;
+}
+
+.sim-profile-status {
+  margin-top: auto;
+  padding-top: 10px;
+  color: var(--android-blue);
+  font-size: 7px;
+  font-weight: 900;
+}
+
+.esim-add-card .a17-row {
+  border-bottom: 0;
+}
+
+.sim-esim-manage {
+  margin: 0 12px 12px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 16px;
+  color: #b3261e;
+  background: color-mix(in srgb, #ffdad6 78%, var(--android-card));
+  cursor: pointer;
+  font: inherit;
+  font-size: 8px;
+  font-weight: 900;
+}
+
+.sim-primary-card {
+  overflow: hidden;
+}
+
+.sim-primary-block {
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--android-border);
+}
+
+.sim-primary-block:last-child {
+  border-bottom: 0;
+}
+
+.sim-primary-copy strong,
+.sim-primary-copy span {
+  display: block;
+}
+
+.sim-primary-copy strong {
+  font-size: 12px;
+}
+
+.sim-primary-copy span {
+  margin-top: 3px;
+  color: var(--android-muted);
+  font-size: 8px;
+}
+
+.sim-primary-options {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sim-primary-chip {
+  min-height: 30px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid color-mix(in srgb, var(--android-muted) 28%, transparent);
+  border-radius: 16px;
+  color: var(--android-text);
+  background: var(--android-card-2);
+  cursor: pointer;
+  font: inherit;
+  font-size: 7px;
+  font-weight: 900;
+}
+
+.sim-primary-chip i {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--android-muted);
+  border-radius: 50%;
+}
+
+.sim-primary-chip.active {
+  color: var(--android-blue);
+  border-color: color-mix(in srgb, var(--android-blue) 55%, transparent);
+  background: var(--android-blue-soft);
+}
+
+.sim-primary-chip.active i {
+  border: 3px solid var(--android-blue);
+  background: #fff;
+}
+
+.esim-setup-hero {
+  margin: 8px 4px 16px;
+  padding: 18px 14px;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  border-radius: 27px;
+  color: var(--android-text);
+  background:
+    radial-gradient(circle at 50% 20%, color-mix(in srgb, var(--android-blue) 18%, transparent), transparent 80px),
+    var(--android-card);
+  text-align: center;
+}
+
+.esim-phone-orb {
+  width: 70px;
+  height: 70px;
+  display: grid;
+  place-items: center;
+  border-radius: 24px;
+  color: var(--android-blue);
+  background: var(--android-blue-soft);
+  font-size: 14px;
+  font-weight: 1000;
+}
+
+.esim-setup-hero strong {
+  margin-top: 4px;
+  font-size: 15px;
+}
+
+.esim-setup-hero span {
+  max-width: 260px;
+  color: var(--android-muted);
+  font-size: 8px;
+  line-height: 1.45;
+}
+
+.esim-provider-row {
+  gap: 10px;
+}
+
+.esim-provider-logo {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  color: #fff;
+  background: var(--provider);
+  font-size: 9px;
+  font-weight: 1000;
+}
+
+.esim-provider-logo.large {
+  width: 74px;
+  height: 74px;
+  margin: auto;
+  border-radius: 25px;
+  font-size: 15px;
+}
+
+.esim-confirm-hero {
+  margin: 10px 4px 15px;
+  text-align: center;
+}
+
+.esim-confirm-hero h3 {
+  margin: 10px 0 4px;
+  font-size: 18px;
+}
+
+.esim-confirm-hero p {
+  margin: 0 auto;
+  max-width: 260px;
+  color: var(--android-muted);
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.esim-install-button {
+  width: calc(100% - 16px);
+  min-height: 44px;
+  margin: 14px 8px 6px;
+  border: 0;
+  border-radius: 22px;
+  color: #fff;
+  background: var(--android-blue);
+  cursor: pointer;
+  font: inherit;
+  font-size: 9px;
+  font-weight: 1000;
+}
+
+.esim-install-button.is-loading {
+  opacity: .72;
+  cursor: wait;
+}
+
+.esim-disclaimer {
+  margin: 6px 14px 12px;
+  color: var(--android-muted);
+  font-size: 7px;
+  line-height: 1.45;
+  text-align: center;
+}
+
+
+/* =========================================================
+   SETTINGS SEARCH + 256 GB UPDATE b863a63
+   ========================================================= */
+.settings-search-live {
+  min-height: 43px;
+  padding: 0 9px 0 12px;
+  gap: 7px;
+  cursor: text;
+}
+
+.settings-search-icon {
+  flex: 0 0 auto;
+  color: var(--android-muted);
+  font-size: 11px;
+}
+
+.settings-search-live input {
+  min-width: 0;
+  flex: 1;
+  height: 38px;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  color: var(--android-text);
+  background: transparent;
+  font: inherit;
+  font-size: 9px;
+}
+
+.settings-search-live input::placeholder {
+  color: var(--android-muted);
+  opacity: 1;
+}
+
+.settings-search-live input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.settings-search-live #settingsSearchClear {
+  width: 27px;
+  height: 27px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: var(--android-text);
+  background: var(--android-blue-soft);
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.settings-search-live #settingsSearchClear[hidden] {
+  display: none;
+}
+
+.settings-search-results {
+  margin-top: 4px;
+}
+
+.settings-search-results[hidden],
+.settings-main-rows[hidden] {
+  display: none !important;
+}
+
+.settings-search-caption {
+  margin: 6px 8px 4px;
+  color: var(--android-muted);
+  font-size: 7px;
+  font-weight: 800;
+}
+
+.settings-search-card {
+  margin-top: 4px;
+}
+
+.settings-search-result {
+  min-height: 61px;
+}
+
+.settings-search-result-icon {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  color: var(--android-blue);
+  background: var(--android-blue-soft);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.settings-search-empty {
+  min-height: 185px;
+  padding: 24px 14px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 6px;
+  color: var(--android-muted);
+  text-align: center;
+}
+
+.settings-search-empty > span {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  color: var(--android-blue);
+  background: var(--android-blue-soft);
+  font-size: 22px;
+}
+
+.settings-search-empty strong {
+  color: var(--android-text);
+  font-size: 11px;
+}
+
+.settings-search-empty small {
+  max-width: 250px;
+  font-size: 7px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   SIM TOOLKIT + FINANCIAL BIOMETRICS 5749b7f
+   ========================================================= */
+
+/* Financial app fingerprint prompt */
+.finance-biometric-page {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 18%, color-mix(in srgb, var(--android-accent) 16%, transparent), transparent 130px),
+    var(--android-bg);
+}
+
+.finance-biometric-scrim {
+  position: absolute;
+  z-index: 4;
+  inset: 48px 0 0;
+  display: grid;
+  align-content: end;
+  padding: 12px;
+  background: color-mix(in srgb, #15131b 18%, transparent);
+}
+
+.finance-biometric-sheet {
+  position: relative;
+  padding: 20px 16px 34px;
+  display: grid;
+  justify-items: center;
+  border: 1px solid var(--android-border);
+  border-radius: 30px;
+  background: color-mix(in srgb, var(--android-card) 95%, transparent);
+  box-shadow: 0 22px 50px rgba(14, 11, 24, .24);
+  text-align: center;
+}
+
+.finance-auth-app-icon {
+  margin-bottom: 8px;
+}
+
+.finance-biometric-sheet > small:first-of-type {
+  color: var(--android-muted);
+  font-size: 7px;
+  font-weight: 850;
+}
+
+.finance-biometric-sheet h3 {
+  margin: 5px 0 5px;
+  color: var(--android-text);
+  font-size: 16px;
+}
+
+.finance-biometric-sheet p {
+  max-width: 235px;
+  margin: 0 0 13px;
+  color: var(--android-muted);
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.finance-fingerprint-button {
+  width: 78px;
+  height: 78px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: var(--android-blue);
+  background:
+    radial-gradient(circle, color-mix(in srgb, var(--android-blue) 16%, #fff), var(--android-blue-soft));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--android-blue) 24%, transparent),
+    0 10px 24px color-mix(in srgb, var(--android-blue) 16%, transparent);
+  cursor: pointer;
+}
+
+.finance-fingerprint-glyph {
+  position: relative;
+  width: 42px;
+  height: 48px;
+  display: block;
+}
+
+.finance-fingerprint-glyph i {
+  position: absolute;
+  left: 50%;
+  border: 2px solid currentColor;
+  border-bottom-color: transparent;
+  border-radius: 50% 50% 45% 45%;
+  transform: translateX(-50%);
+}
+
+.finance-fingerprint-glyph i:nth-child(1) {
+  top: 3px;
+  width: 34px;
+  height: 40px;
+}
+
+.finance-fingerprint-glyph i:nth-child(2) {
+  top: 9px;
+  width: 24px;
+  height: 31px;
+}
+
+.finance-fingerprint-glyph i:nth-child(3) {
+  top: 16px;
+  width: 14px;
+  height: 20px;
+}
+
+.finance-fingerprint-glyph i:nth-child(4) {
+  top: 22px;
+  width: 4px;
+  height: 11px;
+  border-left: 0;
+  border-right: 0;
+}
+
+.finance-fingerprint-button.scanning,
+.finance-display-fingerprint.scanning {
+  animation: financeFingerprintScan .72s ease-in-out infinite alternate;
+}
+
+@keyframes financeFingerprintScan {
+  from {
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--android-blue) 30%, transparent),
+                0 0 8px color-mix(in srgb, var(--android-blue) 30%, transparent);
+  }
+  to {
+    box-shadow: 0 0 0 7px color-mix(in srgb, var(--android-blue) 9%, transparent),
+                0 0 28px color-mix(in srgb, var(--android-blue) 62%, transparent);
+  }
+}
+
+.finance-biometric-status {
+  margin-top: 10px;
+  color: var(--android-text);
+  font-size: 8px;
+}
+
+.finance-biometric-device {
+  margin-top: 3px;
+  color: var(--android-muted);
+  font-size: 6.5px;
+}
+
+.finance-biometric-cancel {
+  margin-top: 13px;
+  padding: 7px 15px;
+  border: 0;
+  border-radius: 16px;
+  color: var(--android-blue);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: 8px;
+  font-weight: 900;
+}
+
+.finance-display-fingerprint {
+  position: absolute;
+  z-index: 8;
+  left: 50%;
+  bottom: 16px;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--android-blue) 38%, transparent);
+  border-radius: 50%;
+  color: var(--android-blue);
+  background: color-mix(in srgb, var(--android-blue-soft) 84%, transparent);
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+.finance-fingerprint-glyph.compact {
+  width: 24px;
+  height: 28px;
+  transform: scale(.58);
+  transform-origin: center;
+}
+
+/* SIM Toolkit */
+.sim-toolkit-app {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--android-blue) 5%, var(--android-bg)), var(--android-bg));
+}
+
+.simtk-hero {
+  margin: 4px 0 12px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border-radius: 24px;
+  background: var(--android-card);
+}
+
+.simtk-hero-icon {
+  width: 53px;
+  height: 53px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 19px;
+  color: #fff;
+  background: #737985;
+  box-shadow: 0 6px 16px rgba(20, 22, 29, .16);
+  font-size: 14px;
+  font-weight: 1000;
+}
+
+.simtk-hero strong,
+.simtk-hero small {
+  display: block;
+}
+
+.simtk-hero strong {
+  color: var(--android-text);
+  font-size: 13px;
+}
+
+.simtk-hero small {
+  margin-top: 3px;
+  color: var(--android-muted);
+  font-size: 7px;
+  line-height: 1.4;
+}
+
+.simtk-section-label {
+  margin: 12px 6px 6px;
+  color: var(--android-blue);
+  font-size: 7px;
+  font-weight: 1000;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.simtk-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.simtk-profile {
+  min-width: 0;
+  min-height: 92px;
+  padding: 8px 5px;
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 3px;
+  border: 1px solid var(--android-border);
+  border-radius: 20px;
+  color: var(--android-text);
+  background: var(--android-card);
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+}
+
+.simtk-profile.active {
+  border-color: color-mix(in srgb, var(--android-blue) 54%, transparent);
+  background: var(--android-blue-soft);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--android-blue) 15%, transparent);
+}
+
+.simtk-profile-badge {
+  min-width: 34px;
+  height: 30px;
+  padding: 0 5px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: #fff;
+  background: #6f7581;
+  font-size: 8px;
+  font-weight: 1000;
+}
+
+.simtk-profile:nth-child(1) .simtk-profile-badge {
+  background: #202027;
+}
+
+.simtk-profile:nth-child(2) .simtk-profile-badge {
+  background: #eda900;
+}
+
+.simtk-profile.esim .simtk-profile-badge {
+  background: var(--android-blue);
+}
+
+.simtk-profile strong {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.simtk-profile small {
+  min-height: 20px;
+  color: var(--android-muted);
+  font-size: 5.8px;
+  line-height: 1.25;
+}
+
+.simtk-profile > i {
+  position: absolute;
+  right: 7px;
+  top: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #9b9ba3;
+}
+
+.simtk-profile > i.on {
+  background: #2f9e5b;
+  box-shadow: 0 0 0 2px color-mix(in srgb, #2f9e5b 15%, transparent);
+}
+
+.simtk-card {
+  overflow: hidden;
+  border: 1px solid var(--android-border);
+  border-radius: 23px;
+  background: var(--android-card);
+}
+
+.simtk-profile-title {
+  min-height: 66px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border-bottom: 1px solid var(--android-border);
+}
+
+.simtk-large-badge {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  color: #fff;
+  background: #747a86;
+  font-size: 9px;
+  font-weight: 1000;
+}
+
+.simtk-profile-title > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.simtk-profile-title strong,
+.simtk-profile-title small {
+  display: block;
+}
+
+.simtk-profile-title strong {
+  font-size: 10px;
+}
+
+.simtk-profile-title small {
+  margin-top: 2px;
+  color: var(--android-muted);
+  font-size: 6.5px;
+}
+
+.simtk-info-row {
+  min-height: 46px;
+  padding: 8px 12px;
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--android-border);
+}
+
+.simtk-info-row span {
+  color: var(--android-muted);
+  font-size: 7px;
+}
+
+.simtk-info-row strong {
+  overflow-wrap: anywhere;
+  font-size: 7.5px;
+  text-align: right;
+}
+
+.simtk-switch-row {
+  min-height: 58px;
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--android-border);
+}
+
+.simtk-switch-row:last-child {
+  border-bottom: 0;
+}
+
+.simtk-switch-row > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.simtk-switch-row strong,
+.simtk-switch-row small {
+  display: block;
+}
+
+.simtk-switch-row strong {
+  font-size: 9px;
+}
+
+.simtk-switch-row small {
+  margin-top: 2px;
+  color: var(--android-muted);
+  font-size: 6px;
+  line-height: 1.35;
+}
+
+.simtk-empty-esim {
+  padding: 16px 12px;
+  text-align: center;
+}
+
+.simtk-empty-esim p {
+  margin: 0 0 10px;
+  color: var(--android-muted);
+  font-size: 7px;
+}
+
+.simtk-primary-action,
+.simtk-system-settings {
+  min-height: 38px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 19px;
+  color: #fff;
+  background: var(--android-blue);
+  cursor: pointer;
+  font: inherit;
+  font-size: 8px;
+  font-weight: 900;
+}
+
+.simtk-primary-settings {
+  overflow: hidden;
+}
+
+.simtk-primary-row {
+  min-height: 57px;
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--android-border);
+}
+
+.simtk-primary-row:last-child {
+  border-bottom: 0;
+}
+
+.simtk-primary-row > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.simtk-primary-row strong,
+.simtk-primary-row small {
+  display: block;
+}
+
+.simtk-primary-row strong {
+  font-size: 9px;
+}
+
+.simtk-primary-row small {
+  margin-top: 2px;
+  color: var(--android-muted);
+  font-size: 6px;
+}
+
+.simtk-primary-row button {
+  min-width: 46px;
+  min-height: 29px;
+  border: 1px solid color-mix(in srgb, var(--android-blue) 25%, transparent);
+  border-radius: 15px;
+  color: var(--android-blue);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: 7px;
+  font-weight: 900;
+}
+
+.simtk-primary-row button.active {
+  color: color-mix(in srgb, var(--android-blue) 88%, #111);
+  background: var(--android-blue-soft);
+}
+
+.simtk-system-settings {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.simtk-disclaimer {
+  display: block;
+  margin: 7px 10px 14px;
+  color: var(--android-muted);
+  font-size: 5.8px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+
+/* =========================================================
+   THREE BUTTON HOME FIX 3b3f79b
+   On Home, let the wallpaper continue behind the 3-button navigation bar,
+   reserve the navigation-bar area inside the launcher layout, and remove
+   the gesture-only hint. Other Android pages keep the normal opaque navbar.
+   ========================================================= */
+
+/* The launcher wallpaper must extend beneath the transparent navigation bar. */
+.pixel-screen.three-button-mode:has(.record-home-page) .android-screen-root {
+  bottom: 0;
+}
+
+/* Reserve the compact 34px system navbar + a small visual gap.
+   This moves the Google search bar above Back/Home/Recents instead of
+   allowing the buttons to cover it. */
+.pixel-screen.three-button-mode:has(.record-home-page) .record-home-content {
+  padding-bottom: 42px !important;
+}
+
+/* The gesture hint belongs only to gesture navigation. */
+.pixel-screen.three-button-mode:has(.record-home-page) .record-home-gesture-hint {
+  display: none !important;
+}
+
+/* Home-screen 3-button navigation: transparent over the wallpaper. */
+.pixel-screen.three-button-mode:has(.record-home-page) .pixel-three-button-nav {
+  border-top-color: transparent;
+  color: #fff;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Keep the navigation symbols readable over bright and dark wallpapers. */
+.pixel-screen.three-button-mode:has(.record-home-page) .pixel-three-button-nav button {
+  color: #fff;
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, .78),
+    0 0 8px rgba(0, 0, 0, .34);
+}
+
+/* Give the flex layout permission to shrink its empty middle area on shorter
+   simulator viewports instead of clipping the search bar. */
+.pixel-screen.three-button-mode:has(.record-home-page) .record-home-spacer {
+  min-height: 0;
+}
+
+@media (max-height: 720px) {
+  .pixel-screen.three-button-mode:has(.record-home-page) .record-home-content {
+    padding-bottom: 41px !important;
+  }
+
+  .pixel-screen.three-button-mode:has(.record-home-page) .record-home-spacer {
+    min-height: 0;
+  }
+
+  .pixel-screen.three-button-mode:has(.record-home-page) .record-home-main {
+    gap: 5px;
+  }
+}
+
+
+/* =========================================================
+   LANGUAGE REGION + DEVELOPER OPTIONS 628c7f9
+   ========================================================= */
+.developer-master-card{min-height:66px;margin:6px 0 4px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:28px;color:color-mix(in srgb,var(--android-text) 88%,var(--android-blue));background:color-mix(in srgb,var(--android-blue) 27%,var(--android-card));font-size:12px;font-weight:850}
+.developer-section-label{margin:15px 7px 6px;color:color-mix(in srgb,var(--android-blue) 78%,var(--android-text));font-size:7px;font-weight:1000}
+.developer-card{overflow:hidden}.developer-card .a17-row{min-height:61px}.developer-card .a17-copy strong{font-size:9px}.developer-card .a17-copy span{margin-top:3px;font-size:6.4px;line-height:1.4}.developer-oem-row{background:color-mix(in srgb,var(--android-blue) 5%,transparent)}
+.developer-disabled-state{min-height:260px;display:grid;place-items:center;align-content:center;gap:8px;color:var(--android-muted);text-align:center}.developer-disabled-state>span{width:66px;height:66px;display:grid;place-items:center;border-radius:24px;color:var(--android-blue);background:var(--android-blue-soft);font-size:25px}.developer-disabled-state strong{color:var(--android-text);font-size:12px}.developer-disabled-state small{max-width:250px;font-size:7px;line-height:1.45}
+.developer-memory-period{width:max-content;margin:5px auto 10px;padding:7px 15px;border-radius:18px;color:var(--android-text);background:var(--android-blue-soft);font-size:8px;font-weight:900}.developer-memory-summary,.developer-running-memory{margin-top:10px;padding:13px;border-radius:23px;background:var(--android-card)}.developer-memory-summary>span,.developer-running-memory>strong{display:block;color:var(--android-muted);font-size:7px}.developer-memory-summary>strong{display:block;margin:5px 0;font-size:18px}.developer-memory-summary small,.developer-running-memory small{color:var(--android-muted);font-size:6px;line-height:1.45}
+.developer-memory-bar,.developer-running-bar{height:8px;margin:8px 0;overflow:hidden;border-radius:5px;background:color-mix(in srgb,var(--android-muted) 18%,transparent)}.developer-memory-bar i{display:block;height:100%;background:var(--android-blue)}.developer-running-bar{display:flex}.developer-running-bar i:first-child{width:43%;background:var(--android-blue)}.developer-running-bar i:last-child{width:16%;background:var(--android-secondary)}.developer-service-memory{color:var(--android-muted);font-size:6px}.developer-empty-debug-app{margin:10px 0;padding:18px 13px;border-top:1px solid var(--android-border);border-bottom:1px solid var(--android-border);color:var(--android-muted);font-size:8px}
+.developer-dialog-backdrop{position:absolute;z-index:500;inset:0;display:grid;place-items:center;padding:16px;background:rgba(18,17,24,.54)}.developer-dialog{width:min(280px,calc(100% - 18px));max-height:82%;padding:15px;overflow:auto;border:1px solid var(--android-border);border-radius:23px;color:var(--android-text);background:var(--android-card);box-shadow:0 22px 60px rgba(12,10,20,.28)}.developer-dialog h4{margin:0 0 12px;font-size:13px}.developer-dialog-copy{margin:0 0 14px;color:var(--android-muted);font-size:7px;line-height:1.5}.developer-dialog-options{display:grid;gap:5px}.developer-dialog-options button{min-height:35px;padding:6px 10px;display:flex;align-items:center;gap:8px;border:0;border-radius:15px;color:var(--android-text);background:transparent;cursor:pointer;font:inherit;font-size:8px;text-align:left}.developer-dialog-options button::before{content:"";width:12px;height:12px;flex:0 0 auto;border:2px solid var(--android-muted);border-radius:50%}.developer-dialog-options button.active{background:var(--android-blue-soft)}.developer-dialog-options button.active::before{border:4px solid var(--android-blue)}
+.developer-dialog-close{margin-top:10px;padding:7px 12px;border:0;border-radius:15px;color:var(--android-blue);background:transparent;cursor:pointer;font:inherit;font-size:8px;font-weight:900}.developer-dialog-actions{margin-top:14px;display:flex;justify-content:flex-end;gap:7px}.developer-dialog-actions button{min-width:55px;min-height:30px;padding:0 10px;border:0;border-radius:15px;color:var(--android-blue);background:transparent;cursor:pointer;font:inherit;font-size:8px;font-weight:900}.developer-dialog-actions button.primary{color:#fff;background:var(--android-blue)}
+.developer-number-field{display:flex;align-items:center;gap:7px}.developer-number-field input{min-width:0;width:100%;height:39px;padding:0 10px;border:1px solid var(--android-border);border-radius:14px;color:var(--android-text);background:var(--android-bg);font:inherit;font-size:10px}.developer-number-field span{color:var(--android-muted);font-size:8px}
+.developer-tap-indicator{position:absolute;z-index:999;width:20px;height:20px;border:2px solid var(--android-blue);border-radius:50%;background:color-mix(in srgb,var(--android-blue) 15%,transparent);transform:translate(-50%,-50%);pointer-events:none;animation:developerTap .42s ease-out forwards}@keyframes developerTap{from{opacity:1;transform:translate(-50%,-50%) scale(.7)}to{opacity:0;transform:translate(-50%,-50%) scale(1.45)}}
+.pixel-screen.developer-show-layout-bounds .android-screen-root *{outline:1px solid rgba(255,0,80,.22)}.pixel-screen.developer-force-rtl .android-screen-root{direction:rtl}.pixel-screen.developer-transparent-navigation .pixel-three-button-nav{border-top-color:transparent;background:transparent!important;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}.pixel-screen.developer-show-refresh-rate::after{content:"120 Hz";position:absolute;z-index:210;right:9px;top:29px;padding:3px 5px;border-radius:6px;color:#8cff90;background:rgba(0,0,0,.74);font:700 6px ui-monospace,monospace;pointer-events:none}.browser-region-row .setting-leading-icon{color:var(--android-blue)}
+
+
+/* =========================================================
+   DEVELOPER OPTIONS MEMORY 8 GB + FUNCTIONAL SIMULATION 7eb3580
+   ========================================================= */
+button.developer-memory-period{border:0;cursor:pointer;font:inherit}
+button.developer-memory-period:focus-visible{outline:2px solid color-mix(in srgb,var(--android-blue) 45%,transparent)}
+.developer-memory-detail-grid{margin-top:12px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.developer-memory-detail-grid span{padding:8px;display:grid;gap:2px;border-radius:14px;color:var(--android-muted);background:color-mix(in srgb,var(--android-blue) 5%,var(--android-bg));font-size:6px}
+.developer-memory-detail-grid b{color:var(--android-text);font-size:9px}
+.developer-dialog-switches{overflow:hidden;border-radius:18px;background:var(--android-bg)}
+.developer-bugreport-box{padding:10px;border-radius:14px;color:#d5f8d8;background:#161a17;font:600 7px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace}
+.developer-debug-app .sim-app-icon{width:32px;height:32px;flex:0 0 auto;font-size:8px}
+.developer-pointer-overlay{position:absolute;z-index:270;left:5px;top:27px;padding:3px 6px;border-radius:6px;color:#fff;background:rgba(0,0,0,.8);pointer-events:none;font:700 5.5px ui-monospace,monospace}
+.android-screen-root.developer-surface-flash{box-shadow:inset 0 0 0 999px rgba(255,0,170,.13)}
+.pixel-screen.developer-custom-density .android-screen-root{transform:scale(var(--dev-density-scale));transform-origin:top left;width:calc(100% / var(--dev-density-scale));height:calc(100% / var(--dev-density-scale))}
+.pixel-screen .a17-page,.pixel-screen .a17-card,.pixel-screen button{transition-duration:calc(160ms * var(--dev-transition-scale,1))}
+.pixel-screen .toast,.pixel-screen .volume-toast,.pixel-screen .camera-pro-flash{animation-duration:calc(420ms * var(--dev-animator-scale,1))}
+.pixel-screen.developer-force-gpu .android-screen-root{filter:saturate(1.035)}
+.pixel-screen.developer-disable-hw-overlays .android-screen-root{backface-visibility:hidden}
+.pixel-screen.developer-angle .android-screen-root{image-rendering:auto}
+
+/* PIXEL LAUNCHER WIDGETS + EDITABLE HOME a57826d */
+.record-home-main.home-widget-side-right{grid-template-columns:1fr 1.24fr}.record-home-main.home-widget-side-left{grid-template-columns:1.24fr 1fr}.record-home-main.home-widget-side-left .record-home-apps{grid-column:2;grid-row:1}.record-home-main.home-widget-side-left .record-home-widget-stack{grid-column:1;grid-row:1}.record-home-widget-stack{position:relative;min-width:0;align-self:stretch;display:grid}.record-home-widget-card{width:100%;min-width:0;min-height:88px;padding:0;overflow:hidden;border:0;border-radius:22px;color:#292631;background:rgba(247,246,250,.91);box-shadow:0 5px 16px rgba(10,8,20,.14);backdrop-filter:blur(16px);cursor:pointer;text-align:left}.record-home-widget-stack.widget-size-small .record-home-widget-card{min-height:58px}.record-home-widget-stack.widget-size-large .record-home-widget-card{min-height:118px}.pixel-widget{box-sizing:border-box;width:100%;height:100%;min-height:inherit}.widget-screen-time{padding:11px 12px;position:relative;display:grid;align-content:space-between}.widget-screen-time>span{font-size:6.5px;line-height:1.35}.widget-screen-time>i{position:absolute;right:12px;top:11px;font-size:9px;font-style:normal}.widget-screen-time>strong{margin-top:8px;font-size:17px}.widget-at-a-glance{padding:10px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:7px;background:linear-gradient(145deg,#eef5ff,#f7f2ff)}.widget-at-a-glance>b{width:25px;height:25px;display:grid;place-items:center;border-radius:9px;color:#4285f4;background:#fff;font-size:12px}.widget-at-a-glance strong,.widget-at-a-glance small{display:block}.widget-at-a-glance strong{font-size:8px}.widget-at-a-glance small{font-size:5.5px;opacity:.68}.widget-at-a-glance>i{font-size:17px;font-style:normal}.widget-clock{display:grid;place-items:center;align-content:center;color:var(--android-blue);background:var(--android-blue-soft)}.widget-clock strong{font-size:24px}.widget-clock small{font-size:6px}.widget-weather{padding:10px;display:flex;align-items:center;gap:8px;background:linear-gradient(145deg,#dceeff,#f4f1ff)}.widget-weather>i{font-size:25px;font-style:normal}.widget-weather strong,.widget-weather span,.widget-weather small{display:block}.widget-weather strong{font-size:20px}.widget-weather span{font-size:7px;font-weight:900}.widget-weather small{font-size:5px;opacity:.65}.widget-battery{padding:8px 10px;display:grid;grid-template-columns:auto 1fr;align-items:center;gap:7px}.widget-battery>b{width:28px;height:28px;display:grid;place-items:center;border-radius:10px;color:var(--android-blue);background:var(--android-blue-soft)}.widget-battery strong,.widget-battery small{display:block}.widget-battery strong{font-size:11px}.widget-battery small{font-size:5px}.widget-battery>i{grid-column:1/-1;height:4px;border-radius:4px;background:linear-gradient(90deg,var(--android-blue) var(--battery),rgba(30,30,40,.12) var(--battery))}.widget-calendar{padding:9px;display:grid;grid-template-columns:42px 1fr;align-items:center;gap:8px}.widget-calendar>b{overflow:hidden;border-radius:10px;background:#fff;text-align:center;font-size:15px}.widget-calendar>b span{display:block;padding:2px;color:#fff;background:#d93025;font-size:5px}.widget-calendar strong,.widget-calendar small{display:block}.widget-calendar strong{font-size:7px}.widget-calendar small{font-size:5px}.widget-photos{position:relative;background:#111}.widget-photos>i{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.58),transparent 55%),var(--photo) center/cover}.widget-photos>strong{position:absolute;left:8px;bottom:7px;color:#fff;font-size:7px}.widget-contacts{padding:8px 10px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:7px}.widget-contacts>b{width:30px;height:30px;display:grid;place-items:center;border-radius:50%;color:#fff;background:var(--android-blue)}.widget-contacts strong,.widget-contacts small{display:block}.widget-contacts strong{font-size:8px}.widget-contacts small{font-size:5px}.widget-contacts>i{font-size:13px;color:var(--android-blue);font-style:normal}.home-widget-pager{position:absolute;z-index:8;left:50%;bottom:4px;display:flex;gap:3px;transform:translateX(-50%)}.home-widget-pager button{width:4px;height:4px;padding:0;border:0;border-radius:50%;background:rgba(40,38,48,.28)}.home-widget-pager button.active{width:10px;border-radius:4px;background:rgba(40,38,48,.68)}.home-layout-editing .home-edit-draggable{position:relative;touch-action:none;user-select:none}.home-edit-grip{position:absolute;right:-1px;top:-3px;width:13px;height:13px;display:grid;place-items:center;border-radius:7px;color:#fff;background:rgba(35,33,42,.8);font-size:5px;font-style:normal}.home-edit-dragging{z-index:160!important;opacity:.88;transform:translate(var(--drag-x,0),var(--drag-y,0)) scale(1.06)!important;filter:drop-shadow(0 8px 12px rgba(0,0,0,.25))}.record-home-widget-card.is-editing{outline:2px solid rgba(255,255,255,.9);outline-offset:-3px}.home-widget-edit-tools{position:absolute;z-index:12;left:50%;bottom:-14px;min-width:132px;height:28px;padding:0 4px;display:flex;align-items:center;justify-content:center;gap:3px;border-radius:15px;color:#fff;background:rgba(32,30,39,.92);transform:translateX(-50%)}.home-widget-edit-tools button{width:23px;height:23px;padding:0;border:0;border-radius:50%;color:#fff;background:rgba(255,255,255,.15);font-size:11px;font-weight:900}.home-widget-edit-tools button.danger{background:#ba1a1a}.home-widget-edit-tools span{min-width:33px;font-size:5.3px;text-align:center}.home-edit-toolbar{position:absolute;z-index:170;left:8px;right:8px;top:27px;min-height:37px;padding:4px 5px;display:flex;align-items:center;gap:5px;border-radius:20px;color:#282631;background:rgba(249,248,252,.95);box-shadow:0 5px 18px rgba(0,0,0,.18)}.home-edit-toolbar>span{min-width:0;flex:1;text-align:center}.home-edit-toolbar b,.home-edit-toolbar small{display:block}.home-edit-toolbar b{font-size:6.6px}.home-edit-toolbar small{font-size:4.6px}.home-edit-toolbar button{min-height:26px;padding:0 8px;border:0;border-radius:13px;background:#ece9f3;font:inherit;font-size:5.8px;font-weight:900}.home-edit-toolbar button.primary{color:#fff;background:var(--android-blue)}.widget-picker-page{padding-bottom:22px!important}.widget-picker-hero{margin:4px 0 12px;padding:12px;display:flex;align-items:center;gap:9px;border-radius:24px;background:var(--android-card)}.widget-picker-hero>span{width:42px;height:42px;display:grid;place-items:center;border-radius:15px;color:var(--android-blue);background:var(--android-blue-soft);font-size:15px}.widget-picker-hero strong,.widget-picker-hero small{display:block}.widget-picker-hero strong{font-size:11px}.widget-picker-hero small{font-size:6.3px}.widget-provider-section{margin-top:13px}.widget-provider-title{margin:0 7px 6px;color:var(--android-blue);font-size:7px;font-weight:1000}.widget-picker-grid{display:grid;gap:8px}.widget-picker-card{padding:9px;display:grid;grid-template-columns:98px minmax(0,1fr);gap:9px;align-items:center;border:1px solid var(--android-border);border-radius:24px;background:var(--android-card)}.widget-picker-card.installed{border-color:var(--android-blue)}.widget-picker-preview{height:76px;overflow:hidden;border-radius:17px;background:var(--home-wall) center/cover}.widget-picker-preview .pixel-widget{min-height:76px;background-color:rgba(247,246,250,.92)}.widget-picker-copy strong,.widget-picker-copy span{display:block}.widget-picker-copy strong{font-size:9px}.widget-picker-copy span{margin-top:3px;color:var(--android-muted);font-size:5.8px}.widget-picker-card>button{grid-column:2;width:max-content;min-height:29px;padding:0 10px;border:0;border-radius:15px;color:#fff;background:var(--android-blue);font:inherit;font-size:6.5px;font-weight:900}.widget-picker-card.installed>button{color:var(--android-blue);background:var(--android-blue-soft)}
+
+
+/* =========================================================
+   FIX 7f1586b — SWIPE, DEVELOPER OPTIONS, DYNAMIC SYSTEM BARS
+   ========================================================= */
+.pixel-statusbar{
+  color:var(--system-status-fg,currentColor);
+  text-shadow:0 1px 3px var(--system-status-shadow,rgba(0,0,0,.38));
+  transition:color .18s ease,text-shadow .18s ease;
+}
+.pixel-status-right{color:var(--system-status-fg,currentColor)}
+.pixel-battery{
+  color:var(--system-battery-fg,#fff);
+  background:var(--system-battery-bg,#34343a);
+  transition:color .18s ease,background .18s ease;
+}
+.pixel-gesture-pill{
+  color:var(--system-nav-fg,currentColor);
+  background:var(--system-nav-fg,currentColor);
+  box-shadow:0 1px 4px var(--system-nav-shadow,rgba(0,0,0,.42));
+  opacity:.9;
+  transition:color .18s ease,background .18s ease,box-shadow .18s ease;
+}
+.pixel-three-button-nav{color:var(--system-nav-fg,#38373d);transition:color .18s ease}
+.pixel-screen.system-status-light-icons .pixel-statusbar,
+.pixel-screen.system-nav-light-icons .pixel-three-button-nav button{text-shadow:0 1px 4px rgba(0,0,0,.55)}
+.pixel-screen.system-status-dark-icons .pixel-statusbar,
+.pixel-screen.system-nav-dark-icons .pixel-three-button-nav button{text-shadow:0 1px 2px rgba(255,255,255,.2)}
+
+.record-home-page{touch-action:pan-x pan-y}
+.record-home-page .record-home-search,
+.record-home-page .record-home-dock,
+.record-home-page .record-home-main{touch-action:pan-y}
+.home-layout-editing,
+.home-layout-editing .record-home-search,
+.home-layout-editing .record-home-dock,
+.home-layout-editing .record-home-main{touch-action:none}
+
+.developer-usb-options button{align-items:flex-start}
+.developer-usb-options button>span{display:block;min-width:0}
+.developer-usb-options button b,.developer-usb-options button small{display:block}
+.developer-usb-options button b{font-size:8px}
+.developer-usb-options button small{margin-top:2px;color:var(--android-muted);font-size:5.8px;line-height:1.35}
+
+.developer-option-hud{
+  position:absolute;z-index:252;left:50%;bottom:45px;max-width:86%;
+  padding:3px 7px;overflow:hidden;border-radius:7px;color:#d9ffe1;background:rgba(12,18,14,.82);
+  transform:translateX(-50%);pointer-events:none;font:700 5px/1.3 ui-monospace,monospace;
+  text-align:center;text-overflow:ellipsis;white-space:nowrap
+}
+.developer-secondary-display{
+  position:absolute;z-index:250;right:7px;bottom:52px;width:91px;height:60px;
+  display:grid;place-items:center;align-content:center;border:2px solid #25262d;border-radius:11px;
+  color:#fff;background:linear-gradient(145deg,#375779,#101824);box-shadow:0 8px 22px rgba(0,0,0,.35);
+  pointer-events:none;text-align:center
+}
+.developer-secondary-display b{font-size:6.8px}.developer-secondary-display span{font-size:6px}.developer-secondary-display small{opacity:.65;font-size:4.8px}
+.developer-settings-overlay{position:absolute;z-index:255;right:6px;top:34px;padding:3px 6px;border-radius:7px;color:#fff;background:rgba(117,70,190,.86);pointer-events:none;font-size:5px;font-weight:900}
+.developer-stay-awake-badge{position:absolute;z-index:254;left:6px;bottom:44px;padding:3px 6px;border-radius:7px;color:#241f13;background:rgba(255,220,120,.93);pointer-events:none;font-size:5px;font-weight:900}
+
+.developer-pointer-overlay{inset:0!important;padding:0!important;border-radius:0!important;background:transparent!important;pointer-events:none}
+.developer-pointer-overlay>span{position:absolute;left:4px;top:28px;padding:3px 5px;border-radius:5px;color:#fff;background:rgba(0,0,0,.82);font:700 5px ui-monospace,monospace}
+.developer-pointer-overlay>i,.developer-pointer-overlay>b{position:absolute;display:block;opacity:.74;background:#ff335f}
+.developer-pointer-overlay>i{left:0;right:0;top:var(--pointer-y);height:1px}
+.developer-pointer-overlay>b{top:0;bottom:0;left:var(--pointer-x);width:1px}
+
+.pixel-screen.developer-show-hardware-key::after{
+  content:"KEY " attr(data-developer-pressed-key);position:absolute;z-index:300;left:50%;top:39px;
+  padding:4px 8px;border-radius:8px;color:#fff;background:rgba(0,0,0,.84);transform:translateX(-50%);
+  font:800 5.5px ui-monospace,monospace
+}
+
+.pixel-screen.developer-cutout-hidden .pixel-camera-hole{opacity:0}
+.pixel-screen.developer-cutout-corner .pixel-camera-hole{left:21px;transform:none}
+.pixel-screen.developer-cutout-double .pixel-camera-hole{width:29px;border-radius:99px}
+.pixel-screen.developer-cutout-hole .pixel-camera-hole{width:8px;height:8px}
+.pixel-screen.developer-cutout-tall .pixel-camera-hole{width:12px;height:25px;border-radius:0 0 10px 10px}
+.pixel-screen.developer-cutout-waterfall{border-radius:25px}
+.pixel-screen.developer-cutout-under .pixel-statusbar{background:transparent}
+
+.developer-debugger-wait-card{
+  min-height:340px;padding:20px;display:grid;place-items:center;align-content:center;gap:8px;text-align:center
+}
+.developer-debugger-wait-card>span{width:64px;height:64px;display:grid;place-items:center;border-radius:22px;color:var(--android-blue);background:var(--android-blue-soft);font-size:25px}
+.developer-debugger-wait-card strong{font-size:15px}
+.developer-debugger-wait-card p{max-width:220px;margin:0;color:var(--android-muted);font-size:7px;line-height:1.5}
+.developer-debugger-wait-card button{min-height:38px;padding:0 14px;border:0;border-radius:19px;color:#fff;background:var(--android-blue);font:inherit;font-size:8px;font-weight:900}
+
+
+/* =========================================================
+   DEVELOPER SELECT DIALOGS 8e2538b
+   ========================================================= */
+.developer-radio-options button{
+  min-height:48px;
+  align-items:center;
+}
+.developer-radio-options .developer-choice-copy{
+  min-width:0;
+  display:block;
+  flex:1;
+}
+.developer-radio-options .developer-choice-copy b,
+.developer-radio-options .developer-choice-copy small{
+  display:block;
+}
+.developer-radio-options .developer-choice-copy b{
+  color:var(--android-text);
+  font-size:8px;
+  font-weight:850;
+}
+.developer-radio-options .developer-choice-copy small{
+  margin-top:3px;
+  color:var(--android-muted);
+  font-size:5.7px;
+  line-height:1.4;
+}
+
+
+/* =========================================================
+   HOME TAP / SWIPE FIX b10e8cf
+   ========================================================= */
+/*
+ * Pixel Launcher handles its own vertical gestures. `touch-action:none`
+ * keeps mobile browsers from cancelling the pointer stream as a page-pan,
+ * while ordinary button clicks remain native and fully clickable.
+ */
+.record-home-page {
+  touch-action: none !important;
+}
+.record-home-page .record-home-main,
+.record-home-page .record-home-apps,
+.record-home-page .record-home-widget-stack,
+.record-home-page .record-home-dock,
+.record-home-page .record-home-search,
+.record-home-page [data-home-slot],
+.record-home-page .record-home-widget-card {
+  touch-action: none;
 }

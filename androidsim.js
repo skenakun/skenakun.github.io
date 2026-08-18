@@ -36,10 +36,108 @@
     { id: "ice", accent: "#3e8ab8", soft: "#d9eef8", parts: ["#3e8ab8", "#85bdda", "#d4ecf8", "#255e7b"] }
   ];
 
-  const SIM_APPS = [{"id":"youtube","name":"YouTube","glyph":"▶","tone":"red","category":"media"},{"id":"youtube-music","name":"YouTube Music","glyph":"◉","tone":"red","category":"media"},{"id":"play-store","name":"Play Store","glyph":"▶","tone":"multi","category":"store"},{"id":"translate","name":"Terjemah","glyph":"文","tone":"blue","category":"utility"},{"id":"digi-bank","name":"DIGI bank bjb","glyph":"D","tone":"blue","category":"finance"},{"id":"dana","name":"DANA","glyph":"D","tone":"blue","category":"finance"},{"id":"bcr","name":"BCR","glyph":"☎","tone":"green","category":"finance"},{"id":"brimo","name":"BRImo","glyph":"B","tone":"blue","category":"finance"},{"id":"canva","name":"Canva","glyph":"C","tone":"purple","category":"creative"},{"id":"capcut","name":"CapCut","glyph":"✂","tone":"dark","category":"creative"},{"id":"chrome","name":"Chrome","glyph":"●","tone":"multi","category":"browser"},{"id":"weather","name":"Cuaca","glyph":"☀","tone":"yellow","category":"utility"},{"id":"dolby","name":"Dolby Atmos","glyph":"D","tone":"blue","category":"utility"},{"id":"drive","name":"Drive","glyph":"▲","tone":"multi","category":"files"},{"id":"facebook","name":"Facebook","glyph":"f","tone":"blue","category":"social"},{"id":"files","name":"Files","glyph":"▤","tone":"blue","category":"files"},{"id":"photos","name":"Foto","glyph":"✿","tone":"multi","category":"files"},{"id":"gamebar","name":"GameBar","glyph":"🎮","tone":"blue","category":"game"},{"id":"gemini","name":"Gemini","glyph":"✦","tone":"multi","category":"ai"},{"id":"gmail","name":"Gmail","glyph":"M","tone":"multi","category":"mail"},{"id":"google","name":"Google","glyph":"G","tone":"multi","category":"search"},{"id":"grab","name":"Grab","glyph":"G","tone":"green","category":"maps"},{"id":"instagram","name":"Instagram","glyph":"◎","tone":"multi","category":"social"},{"id":"clock","name":"Jam","glyph":"◷","tone":"blue","category":"utility"},{"id":"calendar","name":"Kalender","glyph":"18","tone":"blue","category":"utility"},{"id":"calculator","name":"Kalkulator","glyph":"±","tone":"dark","category":"calculator"},{"id":"camera","name":"Kamera","glyph":"◉","tone":"dark","category":"camera"},{"id":"keep","name":"Keep","glyph":"●","tone":"yellow","category":"notes"},{"id":"personal-safety","name":"Keselamatan Pribadi","glyph":"✚","tone":"multi","category":"utility"},{"id":"contacts","name":"Kontak","glyph":"●","tone":"blue","category":"contacts"},{"id":"m365","name":"M365 Copilot","glyph":"M","tone":"multi","category":"ai"},{"id":"maps","name":"Maps","glyph":"⌖","tone":"multi","category":"maps"},{"id":"meet","name":"Meet","glyph":"▰","tone":"yellow","category":"communication"},{"id":"message","name":"Message","glyph":"✉","tone":"blue","category":"communication"},{"id":"messenger","name":"Messenger","glyph":"➤","tone":"blue","category":"communication"},{"id":"nekogram","name":"Nekogram","glyph":"N","tone":"blue","category":"communication"},{"id":"ovo","name":"OVO","glyph":"O","tone":"purple","category":"finance"},{"id":"recorder","name":"Perekam Suara","glyph":"▥","tone":"red","category":"utility"},{"id":"pinterest","name":"Pinterest","glyph":"P","tone":"red","category":"social"},{"id":"game-space-app","name":"Ruang Game","glyph":"🎮","tone":"yellow","category":"game"},{"id":"sandbox","name":"Sandbox","glyph":"◆","tone":"dark","category":"utility"},{"id":"settings-app","name":"Setelan","glyph":"⚙","tone":"blue","category":"settings"},{"id":"sim-toolkit","name":"SIM Toolkit","glyph":"SIM","tone":"slate","category":"utility"},{"id":"spotify","name":"Spotify","glyph":"◉","tone":"green","category":"media"},{"id":"phone","name":"Telepon","glyph":"☎","tone":"blue","category":"phone"},{"id":"threads","name":"Threads","glyph":"@","tone":"dark","category":"social"},{"id":"tiktok","name":"TikTok","glyph":"♪","tone":"dark","category":"social"},{"id":"wa-business","name":"WA Business","glyph":"W","tone":"green","category":"communication"},{"id":"x","name":"X","glyph":"X","tone":"dark","category":"social"}];
+  const SIM_APPS = [{"id":"youtube","name":"YouTube","glyph":"▶","tone":"red","category":"media"},{"id":"youtube-music","name":"YouTube Music","glyph":"◉","tone":"red","category":"media"},{"id":"play-store","name":"Play Store","glyph":"▶","tone":"multi","category":"store"},{"id":"translate","name":"Terjemah","glyph":"文","tone":"blue","category":"utility"},{"id":"digi-bank","name":"DIGI bank bjb","glyph":"D","tone":"blue","category":"finance"},{"id":"dana","name":"DANA","glyph":"D","tone":"blue","category":"finance"},{"id":"bcr","name":"BCR","glyph":"☎","tone":"green","category":"finance"},{"id":"brimo","name":"BRImo","glyph":"B","tone":"blue","category":"finance"},{"id":"canva","name":"Canva","glyph":"C","tone":"purple","category":"creative"},{"id":"capcut","name":"CapCut","glyph":"✂","tone":"dark","category":"creative"},{"id":"chrome","name":"Chrome","glyph":"●","tone":"multi","category":"browser"},{"id":"weather","name":"Cuaca","glyph":"☀","tone":"yellow","category":"utility"},{"id":"dolby","name":"Dolby Atmos","glyph":"D","tone":"blue","category":"utility"},{"id":"drive","name":"Drive","glyph":"▲","tone":"multi","category":"files"},{"id":"facebook","name":"Facebook","glyph":"f","tone":"blue","category":"social"},{"id":"files","name":"Files","glyph":"▤","tone":"blue","category":"files"},{"id":"photos","name":"Foto","glyph":"✿","tone":"multi","category":"files"},{"id":"gemini","name":"Gemini","glyph":"✦","tone":"multi","category":"ai"},{"id":"gmail","name":"Gmail","glyph":"M","tone":"multi","category":"mail"},{"id":"google","name":"Google","glyph":"G","tone":"multi","category":"search"},{"id":"grab","name":"Grab","glyph":"G","tone":"green","category":"maps"},{"id":"instagram","name":"Instagram","glyph":"◎","tone":"multi","category":"social"},{"id":"clock","name":"Jam","glyph":"◷","tone":"blue","category":"utility"},{"id":"calendar","name":"Kalender","glyph":"18","tone":"blue","category":"utility"},{"id":"calculator","name":"Kalkulator","glyph":"±","tone":"dark","category":"calculator"},{"id":"camera","name":"Kamera","glyph":"◉","tone":"dark","category":"camera"},{"id":"keep","name":"Keep","glyph":"●","tone":"yellow","category":"notes"},{"id":"personal-safety","name":"Keselamatan Pribadi","glyph":"✚","tone":"multi","category":"utility"},{"id":"contacts","name":"Kontak","glyph":"●","tone":"blue","category":"contacts"},{"id":"m365","name":"M365 Copilot","glyph":"M","tone":"multi","category":"ai"},{"id":"maps","name":"Maps","glyph":"⌖","tone":"multi","category":"maps"},{"id":"meet","name":"Meet","glyph":"▰","tone":"yellow","category":"communication"},{"id":"message","name":"Message","glyph":"✉","tone":"blue","category":"communication"},{"id":"messenger","name":"Messenger","glyph":"➤","tone":"blue","category":"communication"},{"id":"nekogram","name":"Nekogram","glyph":"N","tone":"blue","category":"communication"},{"id":"ovo","name":"OVO","glyph":"O","tone":"purple","category":"finance"},{"id":"recorder","name":"Perekam Suara","glyph":"▥","tone":"red","category":"utility"},{"id":"pinterest","name":"Pinterest","glyph":"P","tone":"red","category":"social"},{"id":"game-space-app","name":"Ruang Game","glyph":"🎮","tone":"yellow","category":"game"},{"id":"sandbox","name":"Sandbox","glyph":"◆","tone":"dark","category":"utility"},{"id":"settings-app","name":"Setelan","glyph":"⚙","tone":"blue","category":"settings"},{"id":"sim-toolkit","name":"SIM Toolkit","glyph":"SIM","tone":"slate","category":"utility"},{"id":"spotify","name":"Spotify","glyph":"◉","tone":"green","category":"media"},{"id":"phone","name":"Telepon","glyph":"☎","tone":"blue","category":"phone"},{"id":"threads","name":"Threads","glyph":"@","tone":"dark","category":"social"},{"id":"tiktok","name":"TikTok","glyph":"♪","tone":"dark","category":"social"},{"id":"wa-business","name":"WA Business","glyph":"W","tone":"green","category":"communication"},{"id":"x","name":"X","glyph":"X","tone":"dark","category":"social"}];
   const SYSTEM_APPS = [{"id":"sys-amplifier-suara","name":"Amplifier Suara","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-accessibility-suite","name":"Android Accessibility Suite","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-auto","name":"Android Auto","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-switch","name":"Android Switch","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-system-key-verifier","name":"Android System Key Verifier","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-system-safetycore","name":"Android System SafetyCore","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-system-webview","name":"Android System WebView","glyph":"◆","tone":"system","category":"system"},{"id":"sys-carrier-services","name":"Carrier Services","glyph":"◆","tone":"system","category":"system"},{"id":"sys-device-health-services","name":"Device Health Services","glyph":"◆","tone":"system","category":"system"},{"id":"sys-digital-wellbeing","name":"Digital Wellbeing","glyph":"◆","tone":"system","category":"system"},{"id":"sys-google-play-services","name":"Google Play services","glyph":"◆","tone":"system","category":"system"},{"id":"sys-pixel-launcher","name":"Pixel Launcher","glyph":"◆","tone":"system","category":"system"},{"id":"sys-private-compute-services","name":"Private Compute Services","glyph":"◆","tone":"system","category":"system"},{"id":"sys-system-ui","name":"System UI","glyph":"◆","tone":"system","category":"system"},{"id":"sys-permission-controller","name":"Permission Controller","glyph":"◆","tone":"system","category":"system"},{"id":"sys-settings-services","name":"Settings Services","glyph":"◆","tone":"system","category":"system"},{"id":"sys-speech-recognition-synthesis","name":"Speech Recognition & Synthesis","glyph":"◆","tone":"system","category":"system"},{"id":"sys-android-shared-library","name":"Android Shared Library","glyph":"◆","tone":"system","category":"system"},{"id":"sys-documentsui","name":"DocumentsUI","glyph":"◆","tone":"system","category":"system"},{"id":"sys-package-installer","name":"Package Installer","glyph":"◆","tone":"system","category":"system"},{"id":"sys-captiveportallogin","name":"CaptivePortalLogin","glyph":"◆","tone":"system","category":"system"},{"id":"sys-emergency-information","name":"Emergency Information","glyph":"◆","tone":"system","category":"system"},{"id":"sys-google-one-time-init","name":"Google One Time Init","glyph":"◆","tone":"system","category":"system"},{"id":"sys-google-services-framework","name":"Google Services Framework","glyph":"◆","tone":"system","category":"system"},{"id":"sys-google-partner-setup","name":"Google Partner Setup","glyph":"◆","tone":"system","category":"system"},{"id":"sys-sim-manager","name":"SIM Manager","glyph":"◆","tone":"system","category":"system"},{"id":"sys-storage-manager","name":"Storage Manager","glyph":"◆","tone":"system","category":"system"},{"id":"sys-device-policy","name":"Device Policy","glyph":"◆","tone":"system","category":"system"},{"id":"sys-download-manager","name":"Download Manager","glyph":"◆","tone":"system","category":"system"}];
   const ALL_APPS = [...SIM_APPS, ...SYSTEM_APPS];
   const SIM_BALANCE = "Rp1.000.000.000.000.000";
+  const SETTINGS_SEARCH_INDEX = [
+    { title:"Internet", desc:"Wi-Fi dan jaringan yang tersedia", group:"Jaringan & internet", nav:"internetSettings", keywords:"wifi wi-fi jaringan internet hotspot" },
+    { title:"SIM", desc:"3, Indosat, SIM utama dan data seluler", group:"Jaringan & internet", nav:"simSettings", keywords:"sim kartu sim dual sim 3 tri indosat im3 data seluler panggilan sms" },
+    { title:"Tambahkan eSIM", desc:"Siapkan SIM digital dari operator Indonesia", group:"Jaringan & internet › SIM", nav:"eSimSetup", keywords:"esim e-sim telkomsel im3 xl tri smartfren operator qr" },
+    { title:"Hotspot & tethering", desc:"Bagikan koneksi internet", group:"Jaringan & internet", nav:"hotspotSettings", keywords:"hotspot tether tethering usb bluetooth ethernet" },
+    { title:"Penghemat Data", desc:"Batasi penggunaan data latar belakang", group:"Jaringan & internet", nav:"dataSaverSettings", keywords:"data saver hemat kuota seluler" },
+    { title:"VPN", desc:"VPN dari Google", group:"Jaringan & internet", nav:"vpnSettings", keywords:"vpn virtual private network" },
+    { title:"DNS Pribadi", desc:"Atur DNS aman", group:"Jaringan & internet", nav:"privateDnsSettings", keywords:"dns private dns pribadi google dns" },
+
+    { title:"Bluetooth", desc:"Perangkat Bluetooth dan nama perangkat", group:"Perangkat terhubung", nav:"bluetoothSettings", keywords:"bluetooth bt google pixel 10 perangkat" },
+    { title:"Sambungkan perangkat baru", desc:"Cari perangkat Bluetooth di sekitar", group:"Perangkat terhubung", nav:"pairNewDevice", keywords:"pair pairing bluetooth headset perangkat baru" },
+    { title:"Preferensi koneksi", desc:"Bluetooth, NFC, Cast, pencetakan", group:"Perangkat terhubung", nav:"connectionPreferences", keywords:"koneksi nfc cast printing chromebook quick share android auto" },
+    { title:"NFC", desc:"Komunikasi jarak dekat dan pembayaran", group:"Perangkat terhubung", nav:"nfcSettings", keywords:"nfc pembayaran tap" },
+    { title:"Google Cast", desc:"Cast layar ke perangkat lain", group:"Perangkat terhubung", nav:"castSettings", keywords:"cast chromecast screen layar" },
+    { title:"Pencetakan", desc:"Layanan cetak Android", group:"Perangkat terhubung", nav:"printingSettings", keywords:"printer printing cetak pencetakan" },
+    { title:"Quick Share", desc:"Kirim dan terima file", group:"Perangkat terhubung", nav:"quickShareSettings", keywords:"quick share nearby share berbagi file" },
+    { title:"Android Auto", desc:"Hubungkan ke layar kendaraan", group:"Perangkat terhubung", nav:"androidAutoSettings", keywords:"android auto mobil kendaraan" },
+
+    { title:"Semua aplikasi", desc:"Lihat aplikasi yang terinstal", group:"Aplikasi", nav:"allApps", keywords:"apps aplikasi terinstal daftar aplikasi" },
+    { title:"Aplikasi default", desc:"Browser, telepon, SMS dan asisten", group:"Aplikasi", nav:"defaultApps", keywords:"default browser chrome telepon sms asisten" },
+    { title:"Aplikasi Clone", desc:"Gunakan dua akun aplikasi", group:"Aplikasi", nav:"cloneApps", keywords:"clone klon aplikasi dual app" },
+    { title:"Ruang Game", desc:"Optimisasi permainan", group:"Aplikasi", nav:"gameSpace", keywords:"game ruang game gaming optimisasi" },
+    { title:"Asisten", desc:"Google dan Asisten digital", group:"Aplikasi", nav:"assistantSettings", keywords:"assistant asisten google gemini" },
+    { title:"Waktu pemakaian perangkat", desc:"Digital Wellbeing", group:"Aplikasi", nav:"digitalWellbeing", keywords:"digital wellbeing screen time waktu pemakaian" },
+    { title:"Setelan media cloud", desc:"Google Foto dan pemilih media", group:"Aplikasi", nav:"mediaCloudSettings", keywords:"media cloud google foto photos" },
+    { title:"Bilah Sisi", desc:"Panel samping aplikasi", group:"Aplikasi", nav:"sideBarSettings", keywords:"sidebar bilah sisi" },
+    { title:"Penyimpanan kontak", desc:"Perangkat dan Google", group:"Aplikasi", nav:"contactStorageSettings", keywords:"kontak contacts storage penyimpanan" },
+    { title:"Penggunaan baterai aplikasi", desc:"Atur konsumsi baterai per aplikasi", group:"Aplikasi", nav:"appBatteryUsage", keywords:"battery baterai aplikasi background" },
+    { title:"Akses aplikasi khusus", desc:"Izin khusus Android", group:"Aplikasi", nav:"specialAppAccess", keywords:"izin permission akses khusus overlay picture in picture" },
+
+    { title:"Notifikasi aplikasi", desc:"Kontrol notifikasi setiap aplikasi", group:"Notifikasi", nav:"notificationApps", keywords:"notification notifikasi aplikasi" },
+    { title:"Histori notifikasi", desc:"Riwayat notifikasi", group:"Notifikasi", nav:"notificationHistory", keywords:"history histori riwayat notifikasi" },
+    { title:"Percakapan", desc:"Notifikasi percakapan", group:"Notifikasi", nav:"notificationConversations", keywords:"conversation percakapan chat" },
+    { title:"Balon", desc:"Bubble notification", group:"Notifikasi", nav:"notificationBubbles", keywords:"bubble bubbles balon notifikasi" },
+    { title:"Akses notifikasi", desc:"Aplikasi yang dapat membaca notifikasi", group:"Notifikasi", nav:"notificationAccess", keywords:"akses notification listener baca notifikasi" },
+    { title:"Notifikasi flash", desc:"Flash kamera dan layar", group:"Notifikasi", nav:"flashNotifications", keywords:"flash notification kamera layar kedip" },
+    { title:"Peringatan darurat nirkabel", desc:"Emergency alerts", group:"Notifikasi", nav:"emergencyAlerts", keywords:"emergency darurat amber alert" },
+
+    { title:"Baterai", desc:"Penggunaan dan penghemat baterai", group:"Baterai", nav:"batterySettings", keywords:"battery baterai persen charge" },
+    { title:"Penggunaan baterai", desc:"Statistik penggunaan baterai", group:"Baterai", nav:"batteryUsage", keywords:"battery usage penggunaan baterai grafik" },
+    { title:"Penghemat Baterai", desc:"Standar dan ekstrem", group:"Baterai", nav:"batterySaverSettings", keywords:"battery saver penghemat baterai extreme ekstrem" },
+    { title:"Pengelola Baterai", desc:"Baterai Adaptif", group:"Baterai", nav:"batteryManagerSettings", keywords:"adaptive battery baterai adaptif manager" },
+    { title:"Kontrol pengisian daya", desc:"Atur perilaku charging", group:"Baterai", nav:"chargingControl", keywords:"charging charge pengisian daya" },
+
+    { title:"Penyimpanan", desc:"256 GB • aplikasi, video, gambar dan dokumen", group:"Penyimpanan", nav:"storageSettings", keywords:"storage penyimpanan 256 gb ruang memori file" },
+    { title:"Pengelola penyimpanan", desc:"Kosongkan ruang secara otomatis", group:"Penyimpanan", nav:"storageSettings", keywords:"storage manager pengelola penyimpanan kosongkan ruang" },
+
+    { title:"Wallpaper & gaya", desc:"Wallpaper, warna dan ikon", group:"Personalisasi", nav:"wallpaperStyle", keywords:"wallpaper style gaya warna ikon tema material" },
+    { title:"Layar & sentuhan", desc:"Kecerahan, tema, refresh rate dan sentuhan", group:"Layar", nav:"displaySettings", keywords:"display layar touch sentuhan brightness kecerahan" },
+    { title:"Kecerahan adaptif", desc:"Sesuaikan kecerahan otomatis", group:"Layar & sentuhan", nav:"adaptiveBrightnessSettings", keywords:"brightness adaptive kecerahan otomatis" },
+    { title:"Ekstra redup", desc:"Kurangi kecerahan minimum", group:"Layar & sentuhan", nav:"extraDimSettings", keywords:"extra dim ekstra redup gelap" },
+    { title:"Layar always-on", desc:"Always-on display", group:"Layar & sentuhan", nav:"alwaysOnSettings", keywords:"always on aod layar selalu aktif" },
+    { title:"Layar mati", desc:"Waktu tunggu layar", group:"Layar & sentuhan", nav:"screenTimeoutSettings", keywords:"screen timeout layar mati waktu tunggu" },
+    { title:"Tema gelap", desc:"Dark theme", group:"Layar & sentuhan", nav:"darkThemeSettings", keywords:"dark theme tema gelap malam" },
+    { title:"Ukuran tampilan & teks", desc:"Ukuran font dan tampilan", group:"Layar & sentuhan", nav:"displaySizeText", keywords:"font text teks ukuran display scale" },
+    { title:"Cahaya Malam", desc:"Night Light", group:"Layar & sentuhan", nav:"nightLightSettings", keywords:"night light cahaya malam blue light" },
+    { title:"Kecepatan refresh layar", desc:"Refresh rate layar", group:"Layar & sentuhan", nav:"refreshRateSettings", keywords:"refresh rate hz 60 120 layar" },
+    { title:"Potongan layar", desc:"Display cutout", group:"Layar & sentuhan", nav:"cutoutSettings", keywords:"cutout punch hole potongan layar" },
+    { title:"Aplikasi layar penuh", desc:"Fullscreen per aplikasi", group:"Layar & sentuhan", nav:"fullscreenApps", keywords:"fullscreen full screen layar penuh" },
+    { title:"Screensaver", desc:"Screen saver", group:"Layar & sentuhan", nav:"screensaverSettings", keywords:"screensaver screen saver" },
+
+    { title:"Suara & getaran", desc:"Volume, ringtone dan haptik", group:"Suara", nav:"soundSettings", keywords:"sound suara volume vibration getaran ringtone" },
+    { title:"Getaran & haptik", desc:"Kontrol intensitas getaran", group:"Suara & getaran", nav:"vibrationHaptics", keywords:"vibration haptic getaran haptik" },
+    { title:"Nada dering", desc:"Pilih ringtone", group:"Suara & getaran", nav:"ringtonePicker", keywords:"ringtone nada dering telepon" },
+    { title:"Live Caption", desc:"Teks otomatis untuk audio", group:"Suara & getaran", nav:"liveCaption", keywords:"live caption subtitle teks audio" },
+    { title:"Now Playing", desc:"Kenali lagu di sekitar", group:"Suara & getaran", nav:"nowPlayingSettings", keywords:"now playing lagu musik song" },
+    { title:"Dolby Atmos", desc:"Profil audio Dolby", group:"Suara & getaran", nav:"dolbyAtmos", keywords:"dolby atmos audio equalizer" },
+    { title:"Equalizer", desc:"Atur karakter suara", group:"Dolby Atmos", nav:"equalizer", keywords:"equalizer eq bass treble audio" },
+
+    { title:"Keamanan & privasi", desc:"Kunci layar dan sidik jari", group:"Keamanan", nav:"securityPrivacy", keywords:"security privacy keamanan privasi lock" },
+    { title:"Buka kunci perangkat", desc:"PIN, pola, sidik jari dan wajah", group:"Keamanan & privasi", nav:"deviceUnlock", keywords:"unlock buka kunci pin pola fingerprint sidik jari wajah face" },
+    { title:"Sidik jari", desc:"Daftarkan fingerprint", group:"Keamanan & privasi", nav:"fingerprintSettings", keywords:"fingerprint sidik jari biometric" },
+    { title:"Kunci layar", desc:"PIN atau pola", group:"Keamanan & privasi", nav:"screenLockSettings", keywords:"screen lock kunci layar pin pola password" },
+
+    { title:"Sistem", desc:"Bahasa, gestur dan navigasi", group:"Sistem", nav:"system", keywords:"system sistem language bahasa gesture gestur navigasi" },
+    { title:"Bahasa & wilayah", desc:"Bahasa dan preferensi regional", group:"Sistem", nav:"languageRegion", keywords:"language bahasa region wilayah temperature suhu" },
+    { title:"Mode navigasi", desc:"Gestur atau 3 tombol", group:"Sistem", nav:"navigationMode", keywords:"navigation navigasi gesture gestur 3 tombol button" },
+    { title:"Opsi developer", desc:"Debugging, jaringan, input, gambar dan rendering", group:"Sistem", nav:"developerOptions", keywords:"developer options opsi developer debug usb adb wireless oem unlock animasi gpu" },
+    { title:"Pembukaan kunci OEM", desc:"Izinkan bootloader untuk dibuka kuncinya", group:"Sistem › Opsi developer", nav:"developerOptions", keywords:"oem unlock unlocking bootloader fastboot" },
+    { title:"Proses debug USB", desc:"Mode debug saat USB terhubung", group:"Sistem › Opsi developer", nav:"developerOptions", keywords:"usb debugging adb debug" },
+    { title:"Proses debug nirkabel", desc:"Mode debug saat Wi-Fi terhubung", group:"Sistem › Opsi developer", nav:"developerWirelessDebugging", keywords:"wireless debugging debug nirkabel wifi adb" },
+    { title:"Penggunaan memori", desc:"RAM sistem dan aplikasi", group:"Sistem › Opsi developer", nav:"developerMemory", keywords:"memory memori ram penggunaan" },
+    { title:"Layanan yang sedang berjalan", desc:"Proses dan layanan aktif", group:"Sistem › Opsi developer", nav:"developerRunningServices", keywords:"running services layanan berjalan proses" },
+    { title:"Navigasi gestur", desc:"Sensitivitas dan animasi kembali", group:"Sistem › Mode navigasi", nav:"gestureNavigation", keywords:"gesture navigation gestur back kembali sensitivity" },
+    { title:"Navigasi 3 tombol", desc:"Urutan tombol Android", group:"Sistem › Mode navigasi", nav:"buttonNavigation", keywords:"3 button tombol back home recents" },
+
+    { title:"Tentang ponsel", desc:"Google Pixel 10 • Android 17", group:"Sistem", nav:"about", keywords:"about phone tentang ponsel model frankel android version build kernel baseband" },
+    { title:"Versi kernel", desc:"6.12.25 Android 16 GKI WaifuKernel Simulator", group:"Tentang ponsel", nav:"about", keywords:"kernel gki waifukernel 6.12.25 android16" },
+    { title:"Versi pita basis", desc:"Informasi baseband simulator", group:"Tentang ponsel", nav:"about", keywords:"baseband pita basis modem" },
+    { title:"Pembaruan keamanan", desc:"Patch keamanan Android", group:"Tentang ponsel", nav:"about", keywords:"security update patch keamanan vendor" }
+  ];
+  const ESIM_PROVIDERS = [
+    { id: "telkomsel", name: "Telkomsel", short: "TSEL", color: "#e60012" },
+    { id: "im3", name: "IM3", short: "IM3", color: "#f3aa00" },
+    { id: "xl", name: "XL Axiata", short: "XL", color: "#1767b0" },
+    { id: "tri", name: "Tri (3)", short: "3", color: "#25242d" },
+    { id: "smartfren", name: "Smartfren", short: "SF", color: "#d90b73" }
+  ];
 
   function appById(id) { return ALL_APPS.find(app => app.id === id) || SIM_APPS[0]; }
   function makeRandomIndoNumber() {
@@ -77,6 +175,12 @@
     iconStyle: "circle",
     homeCols: 5,
     layoutDraft: 5,
+    homeAppOrder: ["instagram", "tiktok", "wa-business", "nekogram"],
+    homeDockOrder: ["phone", "message", "chrome", "contacts", "camera"],
+    homeWidgets: ["screen-time"],
+    homeWidgetActive: 0,
+    homeWidgetSide: "right",
+    homeWidgetSizes: { "screen-time": "medium" },
     clockStyle: 0,
     leftShortcut: "flashlight",
     rightShortcut: "camera",
@@ -118,6 +222,91 @@
     temperatureUnit: "default",
     measurementSystem: "default",
     firstDayOfWeek: "default",
+    autoDateTime: true,
+    autoTimeZone: true,
+    manualTime: "20:30",
+    regionDetectionStatus: "idle",
+    regionDetected: false,
+    regionManuallySelected: false,
+    detectedTimeZone: "",
+
+    /* Pixel Developer options */
+    developerOptionsEnabled: true,
+    oemUnlockAllowed: false,
+    bootloaderUnlocked: false,
+    devUsbDebugging: false,
+    devWirelessDebugging: false,
+    devDisableAdbTimeout: false,
+    devVerboseVendorLogging: false,
+    devViewAttributeInspection: false,
+    devWaitForDebugger: false,
+    devVerifyAppsUsb: true,
+    devVerifyDebugBytecode: true,
+    devGpuDebugLayers: false,
+    devExperimentalAngle: false,
+    devDisableDefaultFrameRate: true,
+    devShowRefreshRate: false,
+    devAllowOverlaySettings: false,
+    devMockModem: false,
+    devWirelessDisplayCertification: false,
+    devWifiVerboseLogging: false,
+    devWifiScanThrottling: true,
+    devWifiNonPersistentMac: false,
+    devCellularAlwaysActive: true,
+    devHardwareTethering: true,
+    devBluetoothUnnamed: false,
+    devBluetoothA2dpOffload: false,
+    devBluetoothHdAudio: false,
+    devNfcVerboseLogging: false,
+    devNfcNciVerboseLogging: false,
+    devShowTaps: false,
+    devPointerLocation: false,
+    devShowButtonPresses: false,
+    devTouchpadPointer: false,
+    devSurfaceUpdates: false,
+    devLayoutBounds: false,
+    devForceRtl: false,
+    devTransparentNavigation: false,
+    devForceGpuRendering: false,
+    devDisableHwOverlays: false,
+    devWindowAnimationScale: "1.0x",
+    devTransitionAnimationScale: "1.0x",
+    devAnimatorDurationScale: "1.0x",
+    devSecondaryDisplay: "Tidak ada",
+    devSmallestWidth: 392,
+    devDisplayCutout: "Default perangkat",
+    devLoggerBuffer: "256 KB/buffer log",
+    devUsbDefault: "Tidak ada transfer data",
+    devUsbFileSharing: false,
+    devUsbMidiActive: false,
+    devUsbAndroidAutoActive: false,
+    devUsbPtpActive: false,
+    devWifiRandomMac: "02:16:3E:7A:9C:41",
+    devBluetoothHciPackets: 0,
+    devNfcLogEntries: 0,
+    devAttributeInspectCount: 0,
+    devAvrcpVersion: "AVRCP 1.5 (Default)",
+    devMapVersion: "MAP 1.2 (Default)",
+    devBluetoothCodec: "Gunakan Pilihan Sistem (Default)",
+    devBluetoothSampleRate: "Gunakan Pilihan Sistem (Default)",
+    devBluetoothBits: "Gunakan Pilihan Sistem (Default)",
+    devBluetoothChannel: "Gunakan Pilihan Sistem (Default)",
+    devBluetoothMaxDevices: "5",
+    devTextCursorBlink: 5,
+    devMemoryProfiling: false,
+    devMemoryInterval: 3,
+    devDebugApp: "",
+    devUsbAuthorizationCount: 2,
+    devFeaturePredictiveBack: true,
+    devFeatureDesktopWindowing: false,
+    devFeatureNewMediaControls: true,
+    devShowStatusHud: false,
+    devGraphicsDriver: "Default sistem",
+    devAppCompatMode: "Default",
+    devBugReportCount: 0,
+    devSystemUiDemo: false,
+    devStayAwake: false,
+    devBluetoothHciSnoop: false,
 
     navigationMode: "gesture",
     navigationHint: true,
@@ -142,6 +331,17 @@
     mobileData: false,
     sim1Enabled: true,
     sim2Enabled: true,
+    primaryCallSim: "ask",
+    primarySmsSim: "sim1",
+    primaryDataSim: "sim1",
+    eSimInstalled: false,
+    eSimEnabled: false,
+    eSimProvider: "",
+    eSimPhone: "",
+    eSimIccid: "",
+    eSimInstalling: false,
+    simToolkitSelected: "sim1",
+    simToolkitRoaming: { sim1: false, sim2: false, esim: false },
     autoDataSwitch: false,
     hotspot: false,
     usbTether: false,
@@ -335,7 +535,7 @@
       iconDefault: "Default", iconCircle: "Lingkaran", iconMinimal: "Minimal", chooseLayout: "Tata letak",
       settings: "Setelan", searchSettings: "Telusuri setelan", aboutPhone: "Tentang ponsel",
       deviceName: "Nama perangkat", model: "Model", androidVersion: "Versi Android", build: "Nomor build simulator",
-      securityUpdate: "Pembaruan keamanan", appList: "Daftar aplikasi", homeSettings: "Setelan layar utama", widgets: "Widget",
+      securityUpdate: "Pembaruan keamanan", vendorSecurityPatch: "Tingkat patch keamanan vendor", basebandVersion: "Versi pita basis", kernelVersion: "Versi kernel", buildDate: "Tanggal pembuatan", appList: "Daftar aplikasi", homeSettings: "Setelan layar utama", widgets: "Widget",
       wifi: "Wi-Fi", bluetooth: "Bluetooth", airplane: "Mode pesawat", saver: "Penghemat baterai", screenRecord: "Rekam layar",
       brightness: "Kecerahan", unlock: "Geser ke atas untuk membuka", rebooting: "Memulai ulang", volume: "Volume",
       camera: "Kamera", flashlight: "Senter", wallet: "Dompet", noShortcut: "Tidak ada", compact: "Ringkas",
@@ -385,7 +585,7 @@
       iconDefault: "Default", iconCircle: "Circle", iconMinimal: "Minimal", chooseLayout: "Layout",
       settings: "Settings", searchSettings: "Search settings", aboutPhone: "About phone",
       deviceName: "Device name", model: "Model", androidVersion: "Android version", build: "Simulator build number",
-      securityUpdate: "Security update", appList: "App list", homeSettings: "Home settings", widgets: "Widgets",
+      securityUpdate: "Security update", vendorSecurityPatch: "Vendor security patch level", basebandVersion: "Baseband version", kernelVersion: "Kernel version", buildDate: "Build date", appList: "App list", homeSettings: "Home settings", widgets: "Widgets",
       wifi: "Wi-Fi", bluetooth: "Bluetooth", airplane: "Airplane mode", saver: "Battery Saver", screenRecord: "Screen record",
       brightness: "Brightness", unlock: "Swipe up to unlock", rebooting: "Restarting", volume: "Volume",
       camera: "Camera", flashlight: "Flashlight", wallet: "Wallet", noShortcut: "None", compact: "Compact",
@@ -431,14 +631,43 @@
     catch { return { ...defaultState }; }
   }
   let state = loadState();
+  {
+    const languageHint = state.deviceLanguage === "en" ? "en" :
+      state.deviceLanguage === "id" ? "id" :
+      (document.documentElement.lang?.toLowerCase().startsWith("en") ? "en" : "id");
+    if (languageHint === "id" && state.region === "United States" &&
+        !state.regionManuallySelected && !state.regionDetected) {
+      state.region = "Indonesia";
+    }
+  }
   if (!state.simPhone1) state.simPhone1 = makeRandomIndoNumber();
   if (!state.simPhone2) state.simPhone2 = makeRandomIndoNumber();
   if (state.sideKeyConfigured && !state.fingerprintEnrolled) state.fingerprintEnrolled = true;
   if (!Array.isArray(state.screenLockPattern) || state.screenLockPattern.length < 4) state.screenLockPattern = [0, 1, 2, 5];
   if (!state.screenLockPin || String(state.screenLockPin).length < 4) state.screenLockPin = "2580";
   if (!Array.isArray(state.simContacts) || !state.simContacts.length) state.simContacts = makeSimContacts();
+  {
+    const validApps = new Set(SIM_APPS.map(app => app.id));
+    const normalize = (value, fallback, count) => {
+      const out=[];
+      for(const id of Array.isArray(value)?value:[]) if(validApps.has(id)&&!out.includes(id)) out.push(id);
+      for(const id of fallback) if(validApps.has(id)&&!out.includes(id)) out.push(id);
+      return out.slice(0,count);
+    };
+    state.homeAppOrder=normalize(state.homeAppOrder,["instagram","tiktok","wa-business","nekogram"],4);
+    state.homeDockOrder=normalize(state.homeDockOrder,["phone","message","chrome","contacts","camera"],5);
+    const validWidgets=new Set(["screen-time","at-a-glance","clock","weather","battery","calendar","photos","contacts"]);
+    state.homeWidgets=(Array.isArray(state.homeWidgets)?state.homeWidgets:["screen-time"]).filter((id,i,a)=>validWidgets.has(id)&&a.indexOf(id)===i);
+    if(!state.homeWidgets.length) state.homeWidgets=["screen-time"];
+    state.homeWidgetActive=Math.max(0,Math.min(state.homeWidgets.length-1,Number(state.homeWidgetActive)||0));
+    state.homeWidgetSide=state.homeWidgetSide==="left"?"left":"right";
+    state.homeWidgetSizes=state.homeWidgetSizes&&typeof state.homeWidgetSizes==="object"?state.homeWidgetSizes:{};
+    for(const id of state.homeWidgets) if(!["small","medium","large"].includes(state.homeWidgetSizes[id])) state.homeWidgetSizes[id]=(id==="battery"||id==="contacts")?"small":"medium";
+  }
   localStorage.setItem(STORE, JSON.stringify(state));
   let longPressTimer = null;
+  let homeEditMode = false;
+  let homeDragState = null;
   let toastTimer = null;
   let volumeTimer = null;
 
@@ -582,6 +811,9 @@
   }
 
   function formatTime() {
+    if (!state.autoDateTime && /^\d{2}:\d{2}$/.test(String(state.manualTime || ""))) {
+      return String(state.manualTime).replace(":", ".");
+    }
     return new Intl.DateTimeFormat(getLanguage() === "en" ? "en-US" : "id-ID", {
       hour: "2-digit", minute: "2-digit", hour12: false
     }).format(new Date()).replace(":", ".");
@@ -593,6 +825,101 @@
   }
   function escapeHtml(value = "") {
     return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+  }
+
+  function parseSystemBarColor(value) {
+    const match = String(value || "").match(/rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)(?:[,\s/]+([\d.]+))?/i);
+    if (!match) return null;
+    return { r:Number(match[1]), g:Number(match[2]), b:Number(match[3]), a:match[4]==null?1:Number(match[4]) };
+  }
+  function systemBarLuminance(color) {
+    if (!color) return .5;
+    const linear = value => {
+      const c = Math.max(0, Math.min(255, value)) / 255;
+      return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4);
+    };
+    return .2126*linear(color.r)+.7152*linear(color.g)+.0722*linear(color.b);
+  }
+  function setSystemBarContrast(topLuma, bottomLuma=topLuma) {
+    const topDark = Number(topLuma) > .52;
+    const bottomDark = Number(bottomLuma) > .52;
+    phone.style.setProperty("--system-status-fg", topDark ? "#17171b" : "#ffffff");
+    phone.style.setProperty("--system-status-shadow", topDark ? "rgba(255,255,255,.16)" : "rgba(0,0,0,.52)");
+    phone.style.setProperty("--system-battery-bg", topDark ? "rgba(30,30,35,.92)" : "rgba(255,255,255,.94)");
+    phone.style.setProperty("--system-battery-fg", topDark ? "#ffffff" : "#17171b");
+    phone.style.setProperty("--system-nav-fg", bottomDark ? "#17171b" : "#ffffff");
+    phone.style.setProperty("--system-nav-shadow", bottomDark ? "rgba(255,255,255,.16)" : "rgba(0,0,0,.52)");
+    phone.classList.toggle("system-status-dark-icons", topDark);
+    phone.classList.toggle("system-status-light-icons", !topDark);
+    phone.classList.toggle("system-nav-dark-icons", bottomDark);
+    phone.classList.toggle("system-nav-light-icons", !bottomDark);
+  }
+  function solidSystemSurfaceLuminance(element, fallback=.9) {
+    let current=element;
+    while(current && current!==phone){
+      const color=parseSystemBarColor(getComputedStyle(current).backgroundColor);
+      if(color && color.a>.72) return systemBarLuminance(color);
+      current=current.parentElement;
+    }
+    return fallback;
+  }
+  function sampleWallpaperSystemBars(src) {
+    const token=++systemBarContrastToken;
+    const image=new Image();
+    image.decoding="async";
+    image.onload=()=>{
+      if(token!==systemBarContrastToken)return;
+      try{
+        const canvas=document.createElement("canvas");
+        canvas.width=18; canvas.height=36;
+        const ctx=canvas.getContext("2d",{willReadFrequently:true});
+        ctx.drawImage(image,0,0,canvas.width,canvas.height);
+        const sample=(from,to)=>{
+          const y1=Math.floor(from*canvas.height), y2=Math.ceil(to*canvas.height);
+          const data=ctx.getImageData(0,y1,canvas.width,Math.max(1,y2-y1)).data;
+          let r=0,g=0,b=0,count=0;
+          for(let i=0;i<data.length;i+=4){
+            if(data[i+3]<80)continue;
+            r+=data[i];g+=data[i+1];b+=data[i+2];count++;
+          }
+          return count?systemBarLuminance({r:r/count,g:g/count,b:b/count,a:1}):.5;
+        };
+        setSystemBarContrast(sample(0,.14),sample(.86,1));
+      }catch{setSystemBarContrast(.35,.35)}
+    };
+    image.onerror=()=>token===systemBarContrastToken&&setSystemBarContrast(.35,.35);
+    image.src=src;
+  }
+  function syncDynamicSystemBars() {
+    if(state.screenOff||state.poweredOff)return;
+    if(state.view==="home"){sampleWallpaperSystemBars(wallpaperById(state.homeWallpaper).src);return}
+    if(state.view==="lock"){sampleWallpaperSystemBars(wallpaperById(state.lockWallpaper).src);return}
+    if(state.view==="apps"){
+      /* App drawer keeps wallpaper at the status area while the sheet occupies the bottom. */
+      const token=++systemBarContrastToken;
+      const image=new Image();
+      image.onload=()=>{
+        if(token!==systemBarContrastToken)return;
+        try{
+          const canvas=document.createElement("canvas");canvas.width=16;canvas.height=16;
+          const ctx=canvas.getContext("2d",{willReadFrequently:true});ctx.drawImage(image,0,0,16,16);
+          const data=ctx.getImageData(0,0,16,4).data;let r=0,g=0,b=0,c=0;
+          for(let i=0;i<data.length;i+=4){r+=data[i];g+=data[i+1];b+=data[i+2];c++}
+          setSystemBarContrast(systemBarLuminance({r:r/c,g:g/c,b:b/c,a:1}),state.dark?.12:.91);
+        }catch{setSystemBarContrast(.35,state.dark?.12:.91)}
+      };
+      image.src=wallpaperById(state.homeWallpaper).src;
+      return;
+    }
+    if(["camera","boot","recovery","bootloader"].includes(state.view)){setSystemBarContrast(.08,.08);return}
+    if(state.view==="simApp"&&["youtube","youtube-music","spotify","bcr"].includes(state.activeSimApp)){setSystemBarContrast(.08,.08);return}
+    const page=root.querySelector(".a17-page,.camera-pro-page,.youtube-live-app,.spotify-live-app,.recovery-screen,.bootloader-screen");
+    const fallback=state.dark?.12:.91;
+    const top=solidSystemSurfaceLuminance(page,fallback);
+    const rect=phone.getBoundingClientRect();
+    const hit=document.elementFromPoint(rect.left+rect.width/2,rect.bottom-18);
+    const bottom=solidSystemSurfaceLuminance(hit&&phone.contains(hit)?hit:page,top);
+    setSystemBarContrast(top,bottom);
   }
 
   function applyTheme() {
@@ -608,6 +935,26 @@
     phone.style.setProperty("--drawer-cols", String(state.homeCols));
     phone.classList.toggle("android-dark", !!state.dark);
     phone.classList.toggle("screen-off-active", !!state.screenOff);
+    const devActive = !!state.developerOptionsEnabled;
+    phone.classList.toggle("developer-show-layout-bounds", devActive && !!state.devLayoutBounds);
+    phone.classList.toggle("developer-force-rtl", devActive && !!state.devForceRtl);
+    phone.classList.toggle("developer-transparent-navigation", devActive && !!state.devTransparentNavigation);
+    phone.classList.toggle("developer-show-refresh-rate", devActive && !!state.devShowRefreshRate);
+    phone.classList.toggle("developer-force-gpu", devActive && !!state.devForceGpuRendering);
+    phone.classList.toggle("developer-disable-hw-overlays", devActive && !!state.devDisableHwOverlays);
+    phone.classList.toggle("developer-angle", devActive && !!state.devExperimentalAngle);
+    phone.classList.toggle("developer-surface-updates", devActive && !!state.devSurfaceUpdates);
+    phone.classList.toggle("developer-pointer-location", devActive && !!state.devPointerLocation);
+    const scaleValue=v=>v==="Animasi nonaktif"?0:(Number.parseFloat(String(v))||1);
+    phone.style.setProperty("--dev-window-scale",String(scaleValue(state.devWindowAnimationScale)));
+    phone.style.setProperty("--dev-transition-scale",String(scaleValue(state.devTransitionAnimationScale)));
+    phone.style.setProperty("--dev-animator-scale",String(scaleValue(state.devAnimatorDurationScale)));
+    const density=Math.max(.84,Math.min(1.16,392/Math.max(320,Number(state.devSmallestWidth)||392)));
+    phone.style.setProperty("--dev-density-scale",String(density));
+    phone.classList.toggle("developer-custom-density",devActive&&Math.abs(density-1)>.015);
+    const cutoutMap={"Render aplikasi di bawah area potongan":"developer-cutout-under","Potongan sudut":"developer-cutout-corner","Potongan ganda":"developer-cutout-double","Potongan Lubang Kertas":"developer-cutout-hole","Sembunyikan":"developer-cutout-hidden","Potongan tinggi":"developer-cutout-tall","Potongan waterfall":"developer-cutout-waterfall"};
+    ["developer-cutout-under","developer-cutout-corner","developer-cutout-double","developer-cutout-hole","developer-cutout-hidden","developer-cutout-tall","developer-cutout-waterfall"].forEach(cls=>phone.classList.remove(cls));
+    if(devActive&&cutoutMap[state.devDisplayCutout])phone.classList.add(cutoutMap[state.devDisplayCutout]);
     const androidSystemMode = state.poweredOff
       ? "power-off"
       : (["boot", "recovery", "bootloader"].includes(state.view) ? state.view : "");
@@ -620,8 +967,8 @@
     const batteryEl = $("#androidBatteryText");
     const wifiEl = $("#androidWifiIcon");
     const signalEl = $("#androidSignalIcon");
-    if (timeEl) timeEl.textContent = formatTime();
-    if (batteryEl) batteryEl.textContent = state.battery;
+    if (timeEl) timeEl.textContent = devActive&&state.devSystemUiDemo?"10.00":formatTime();
+    if (batteryEl) batteryEl.textContent = devActive&&state.devSystemUiDemo?"100":state.battery;
     if (wifiEl) wifiEl.style.opacity = state.wifi && !state.airplane ? "1" : ".25";
     if (signalEl) signalEl.style.opacity = state.airplane ? ".25" : "1";
 
@@ -696,6 +1043,17 @@
   let easterLoopToken = 0;
   let spaceGameLoopToken = 0;
   let android16AutoPilot = false;
+  let settingsSearchQuery = "";
+  let developerDialog = "";
+  let developerPointerLast = { x: 0, y: 0, type: "mouse" };
+  let developerDebuggerAttachedApp = "";
+  let systemBarContrastToken = 0;
+
+  /* Financial-app biometric session.
+   * Kept outside localStorage so DIGI/BRImo/DANA/OVO request a fingerprint
+   * again the next time the user leaves and re-opens the app. */
+  let financialAuthSession = "";
+  let financialAuthBusy = false;
 
   function toast(message) {
     $(".toast", root)?.remove();
@@ -737,6 +1095,14 @@
   }
 
   function navigate(view, keepPrevious = true) {
+    if (
+      state.view === "simApp" &&
+      view !== "simApp" &&
+      ["brimo", "digi-bank", "dana", "ovo"].includes(state.activeSimApp)
+    ) {
+      financialAuthSession = "";
+      financialAuthBusy = false;
+    }
     if (keepPrevious && state.view !== view) state.previous = state.view;
     state.view = view;
     state.longPressMenu = false;
@@ -754,6 +1120,11 @@
   function openSimAppDirect(appId) {
     const id = String(appId || "").trim();
     if (!id || !SIM_APPS.some(app => app.id === id)) return false;
+
+    if (["brimo", "digi-bank", "dana", "ovo"].includes(id)) {
+      financialAuthSession = "";
+      financialAuthBusy = false;
+    }
 
     state.activeSimApp = id;
     state.recentSimApps = [
@@ -779,10 +1150,13 @@
       wallpaperStyle: "home", color: "wallpaperStyle", icons: "wallpaperStyle", layout: "wallpaperStyle",
       clock: "wallpaperStyle", shortcuts: "wallpaperStyle", notifications: "wallpaperStyle", lockMore: "wallpaperStyle",
       wallpaperPicker: "wallpaperStyle", settings: "home", about: "settings", apps: "home", camera: "home", cameraSettings: "camera",
-      homeSettings: "home", system: "settings", languageRegion: "system", navigationMode: "system",
+      homeSettings: "home", widgetPicker: "home", system: "settings", languageRegion: "system", navigationMode: "system",
+      developerOptions: "system", developerMemory: "developerOptions", developerRunningServices: "developerOptions",
+      developerWirelessDebugging: "developerOptions", developerSelectDebugApp: "developerOptions",
       gestureNavigation: "navigationMode", buttonNavigation: "navigationMode", recents: "home",
 
       networkInternet: "settings", internetSettings: "networkInternet", simSettings: "networkInternet",
+      eSimSetup: "simSettings", eSimConfirm: "eSimSetup",
       hotspotSettings: "networkInternet", dataSaverSettings: "networkInternet", vpnSettings: "networkInternet",
       privateDnsSettings: "networkInternet",
 
@@ -843,103 +1217,71 @@
     if (key === "homeWallpaper") applyWallpaperColorBurst();
   }
 
-  function renderHome() {
-    const homeApps = [
-      appById("instagram"), appById("tiktok"), appById("wa-business"), appById("nekogram")
-    ];
-    const dockApps = [
-      appById("phone"), appById("message"), appById("chrome"), appById("contacts"), appById("camera")
-    ];
-    const now = new Date();
-    const locale = getLanguage() === "en" ? "en-US" : "id-ID";
-    const dayLabel = new Intl.DateTimeFormat(locale, { weekday:"short", day:"numeric", month:"short" }).format(now);
-    const appButton = (app, cls="home-app") => `<button class="${cls}" type="button" data-open-app="${app.id}" aria-label="${escapeHtml(app.name)}"><span class="record-home-icon drawer-app-icon tone-${app.tone}">${app.glyph}</span><small>${escapeHtml(app.name === "WA Business" ? "WA Busin..." : app.name)}</small></button>`;
-
-    root.innerHTML = `<div class="a17-page home-page record-home-page" id="homePressSurface">
-      <div class="home-wall"></div>
-      <div class="record-home-scrim"></div>
-      <div class="home-content record-home-content">
-        <div class="record-home-weather">
-          <strong>${escapeHtml(dayLabel)} <span>• 26°C</span></strong>
-          <small>Hari ini 32°C / 24°C • Sebagian cerah</small>
-        </div>
-        <div class="record-home-spacer"></div>
-        <div class="record-home-main">
-          <div class="record-home-apps">${homeApps.map(a => appButton(a)).join("")}</div>
-          <button class="record-screen-time" type="button" data-nav="digitalWellbeing" aria-label="Waktu pemakaian perangkat">
-            <span>Waktu pemakaian<br>perangkat</span><i>◔</i><strong id="homeUsageTime">${formatUsageDuration()}</strong>
-          </button>
-        </div>
-        <div class="home-dock record-home-dock">${dockApps.map(a => appButton(a,"record-dock-app")).join("")}</div>
-        <button class="home-search record-home-search" type="button" data-open-app="google" aria-label="Google Search"><b>G</b><span>Telusuri</span><i>⌕ &nbsp; 🎙 &nbsp; ◉</i></button>
-        <div class="record-home-gesture-hint"></div>
-      </div>
-      ${state.longPressMenu ? renderLongPressMenu() : ""}
-    </div>`;
-
-    if (!state.longPressMenu) {
-      const surface = $("#homePressSurface");
-      let startY = null;
-      let startX = null;
-      let moved = false;
-      let homePointerId = null;
-      surface?.addEventListener("pointerdown", e => {
-        if (e.pointerType === "mouse" && e.button !== 0) return;
-        if (e.target.closest("button")) return;
-        startY = e.clientY;
-        startX = e.clientX;
-        moved = false;
-        homePointerId = e.pointerId;
-        try { surface.setPointerCapture(e.pointerId); } catch {}
-        clearTimeout(longPressTimer);
-        longPressTimer = setTimeout(() => {
-          if (moved) return;
-          state.longPressMenu = true;
-          vibrate(12);
-          render();
-        }, 520);
-      });
-      surface?.addEventListener("pointermove", e => {
-        if (startY == null) return;
-        if (Math.abs(e.clientY - startY) > 12 || Math.abs(e.clientX - startX) > 12) {
-          moved = true;
-          clearTimeout(longPressTimer);
-        }
-      });
-      surface?.addEventListener("pointerup", e => {
-        clearTimeout(longPressTimer);
-        if (homePointerId != null && e.pointerId !== homePointerId) return;
-        if (startY == null) return;
-        const dy = e.clientY - startY;
-        const dx = e.clientX - startX;
-        try {
-          if (surface.hasPointerCapture?.(e.pointerId)) surface.releasePointerCapture(e.pointerId);
-        } catch {}
-        startY = null;
-        startX = null;
-        homePointerId = null;
-
-        if (dy < -44 && Math.abs(dy) > Math.abs(dx) * 1.15) {
-          vibrate(5);
-          navigate("apps");
-        }
-      });
-      surface?.addEventListener("pointercancel", e => {
-        clearTimeout(longPressTimer);
-        try {
-          if (surface.hasPointerCapture?.(e.pointerId)) surface.releasePointerCapture(e.pointerId);
-        } catch {}
-        startY = null;
-        startX = null;
-        homePointerId = null;
-      });
-      surface?.addEventListener("contextmenu", e => {
-        e.preventDefault();
-        state.longPressMenu = true;
-        render();
-      });
-    }
+  const HOME_WIDGET_CATALOG = [
+    {id:"at-a-glance",provider:"Google",name:"Sekilas Info",size:"4 × 2",desc:"Tanggal, cuaca, dan agenda Pixel."},
+    {id:"clock",provider:"Jam",name:"Jam Digital",size:"2 × 2",desc:"Jam Material You."},
+    {id:"weather",provider:"Cuaca",name:"Cuaca",size:"2 × 2",desc:"Suhu dan kondisi hari ini."},
+    {id:"battery",provider:"Setelan",name:"Baterai",size:"2 × 1",desc:"Baterai Pixel dan perangkat tersambung."},
+    {id:"calendar",provider:"Kalender",name:"Kalender",size:"2 × 2",desc:"Tanggal dan agenda berikutnya."},
+    {id:"screen-time",provider:"Digital Wellbeing",name:"Waktu pemakaian perangkat",size:"2 × 2",desc:"Durasi penggunaan simulator."},
+    {id:"photos",provider:"Google Foto",name:"Kenangan",size:"2 × 2",desc:"Foto dari wallpaper aktif."},
+    {id:"contacts",provider:"Kontak",name:"Kontak favorit",size:"2 × 1",desc:"Pintasan kontak favorit."}
+  ];
+  function homeWidgetDefinition(id){return HOME_WIDGET_CATALOG.find(w=>w.id===id)||HOME_WIDGET_CATALOG[0]}
+  function currentHomeWidgetId(){if(!state.homeWidgets?.length)return"screen-time";return state.homeWidgets[Math.max(0,Math.min(state.homeWidgets.length-1,Number(state.homeWidgetActive)||0))]}
+  function homeWidgetSize(id=currentHomeWidgetId()){const v=state.homeWidgetSizes?.[id];return["small","medium","large"].includes(v)?v:"medium"}
+  function cycleHomeWidgetSize(direction){const id=currentHomeWidgetId(),sizes=["small","medium","large"],i=sizes.indexOf(homeWidgetSize(id)),next=sizes[(i+direction+sizes.length)%sizes.length];state.homeWidgetSizes={...(state.homeWidgetSizes||{}),[id]:next};save();return next}
+  function homeWidgetTarget(id){
+    return ({
+      "screen-time":"nav:digitalWellbeing",
+      "at-a-glance":"app:weather",
+      "clock":"app:clock",
+      "weather":"app:weather",
+      "battery":"nav:batterySettings",
+      "calendar":"app:calendar",
+      "photos":"app:photos",
+      "contacts":"app:contacts"
+    })[id] || "";
   }
+
+  function homeWidgetActionAttributes(id) {
+    const target = homeWidgetTarget(id);
+    if (!target) return "";
+    if (target.startsWith("nav:")) {
+      return `data-nav="${target.slice(4)}"`;
+    }
+    if (target.startsWith("app:")) {
+      return `data-open-app="${target.slice(4)}"`;
+    }
+    return "";
+  }
+  function renderHomeWidgetBody(id,preview=false){
+    const now=new Date(),locale=getLanguage()==="en"?"en-US":"id-ID",date=new Intl.DateTimeFormat(locale,{weekday:"short",day:"numeric",month:"short"}).format(now),month=new Intl.DateTimeFormat(locale,{month:"short"}).format(now);
+    if(id==="at-a-glance")return`<div class="pixel-widget widget-at-a-glance"><b>G</b><div><strong>${escapeHtml(date)}</strong><small>26°C • Sebagian cerah</small></div><i>☀</i></div>`;
+    if(id==="clock")return`<div class="pixel-widget widget-clock"><strong>${escapeHtml(formatTime().replace(".",":"))}</strong><small>${escapeHtml(date)}</small></div>`;
+    if(id==="weather")return`<div class="pixel-widget widget-weather"><i>☀</i><div><strong>26°</strong><span>Sebagian cerah</span><small>32° / 24°</small></div></div>`;
+    if(id==="battery")return`<div class="pixel-widget widget-battery"><b>▰</b><div><strong>${state.battery}%</strong><small>Google Pixel 10</small></div><i style="--battery:${state.battery}%"></i></div>`;
+    if(id==="calendar")return`<div class="pixel-widget widget-calendar"><b><span>${escapeHtml(month)}</span>${now.getDate()}</b><div><strong>Tidak ada acara</strong><small>Buka Kalender</small></div></div>`;
+    if(id==="photos")return`<div class="pixel-widget widget-photos" style="--photo:url('${wallpaperById(state.homeWallpaper).src}')"><i></i><strong>Kenangan hari ini</strong></div>`;
+    if(id==="contacts")return`<div class="pixel-widget widget-contacts"><b>S</b><div><strong>Skenakun</strong><small>Kontak favorit</small></div><i>☎</i></div>`;
+    return`<div class="pixel-widget widget-screen-time"><span>Waktu pemakaian<br>perangkat</span><i>◔</i><strong${preview?"":' id="homeUsageTime"'}>${formatUsageDuration()}</strong></div>`;
+  }
+  function renderHomeWidgetStack(){
+    const id=currentHomeWidgetId(),size=homeWidgetSize(id);
+    return`<div class="record-home-widget-stack widget-size-${size} ${homeEditMode?"home-edit-draggable":""}" data-home-widget-zone="1"><button class="record-home-widget-card ${homeEditMode?"is-editing":""}" type="button" ${!homeEditMode ? homeWidgetActionAttributes(id) : ""}>${renderHomeWidgetBody(id)}</button>${state.homeWidgets.length>1?`<div class="home-widget-pager">${state.homeWidgets.map((x,i)=>`<button type="button" class="${i===Number(state.homeWidgetActive)?"active":""}" data-home-widget-index="${i}"></button>`).join("")}</div>`:""}${homeEditMode?`<div class="home-widget-edit-tools"><button data-action="home-widget-size-down">−</button><span>${size==="small"?"Kecil":size==="large"?"Besar":"Sedang"}</span><button data-action="home-widget-size-up">＋</button><button data-action="home-widget-move-side">⇄</button><button class="danger" data-action="home-widget-remove">×</button></div>`:""}</div>`;
+  }
+  function addHomeWidget(id){if(!HOME_WIDGET_CATALOG.some(w=>w.id===id))return;state.homeWidgets=[...(state.homeWidgets||[])];const old=state.homeWidgets.indexOf(id);if(old>=0)state.homeWidgetActive=old;else{state.homeWidgets.push(id);state.homeWidgetActive=state.homeWidgets.length-1}state.homeWidgetSizes={...(state.homeWidgetSizes||{}),[id]:state.homeWidgetSizes?.[id]||((id==="battery"||id==="contacts")?"small":"medium")};state.longPressMenu=false;save()}
+  function renderWidgetPicker(){const installed=new Set(state.homeWidgets||[]),providers=[...new Set(HOME_WIDGET_CATALOG.map(w=>w.provider))];root.innerHTML=`<div class="a17-page system-page widget-picker-page">${topbar("Widget")}<div class="widget-picker-hero"><span>▦</span><div><strong>Tambahkan widget</strong><small>Widget simulasi bergaya Android 16/17.</small></div></div>${providers.map(provider=>`<section class="widget-provider-section"><div class="widget-provider-title">${escapeHtml(provider)}</div><div class="widget-picker-grid">${HOME_WIDGET_CATALOG.filter(w=>w.provider===provider).map(w=>`<article class="widget-picker-card ${installed.has(w.id)?"installed":""}"><div class="widget-picker-preview">${renderHomeWidgetBody(w.id,true)}</div><div class="widget-picker-copy"><strong>${escapeHtml(w.name)}</strong><span>${escapeHtml(w.size)} • ${escapeHtml(w.desc)}</span></div><button type="button" data-add-home-widget="${w.id}">${installed.has(w.id)?"Tampilkan":"Tambahkan"}</button></article>`).join("")}</div></section>`).join("")}<div class="system-note">ⓘ <span>Tahan aplikasi atau widget di layar utama untuk masuk mode edit, memindahkan posisi, atau mengubah ukuran widget.</span></div></div>`}
+
+  function renderHome() {
+    const homeApps=(state.homeAppOrder||[]).map(appById),dockApps=(state.homeDockOrder||[]).map(appById),now=new Date(),locale=getLanguage()==="en"?"en-US":"id-ID",dayLabel=new Intl.DateTimeFormat(locale,{weekday:"short",day:"numeric",month:"short"}).format(now);
+    const appButton=(app,cls,zone,index)=>`<button class="${cls} ${homeEditMode?"home-edit-draggable":""}" type="button" data-home-slot="${zone}:${index}" data-home-app-id="${app.id}" ${homeEditMode?"":`data-open-app="${app.id}"`}><span class="record-home-icon drawer-app-icon tone-${app.tone}">${app.glyph}</span><small>${escapeHtml(app.name==="WA Business"?"WA Busin...":app.name)}</small>${homeEditMode?`<i class="home-edit-grip">⋮⋮</i>`:""}</button>`;
+    root.innerHTML=`<div class="a17-page home-page record-home-page ${homeEditMode?"home-layout-editing":""}" id="homePressSurface"><div class="home-wall"></div><div class="record-home-scrim"></div><div class="home-content record-home-content"><div class="record-home-weather"><strong>${escapeHtml(dayLabel)} <span>• 26°C</span></strong><small>Hari ini 32°C / 24°C • Sebagian cerah</small></div><div class="record-home-spacer"></div><div class="record-home-main home-widget-side-${state.homeWidgetSide==="left"?"left":"right"}"><div class="record-home-apps" data-home-zone="main">${homeApps.map((a,i)=>appButton(a,"home-app","main",i)).join("")}</div>${renderHomeWidgetStack()}</div><div class="home-dock record-home-dock" data-home-zone="dock">${dockApps.map((a,i)=>appButton(a,"record-dock-app","dock",i)).join("")}</div><button class="home-search record-home-search" type="button" ${homeEditMode?"":'data-open-app="google"'}><b>G</b><span>Telusuri</span><i>⌕ &nbsp; 🎙 &nbsp; ◉</i></button><div class="record-home-gesture-hint"></div></div>${homeEditMode?`<div class="home-edit-toolbar"><button data-action="home-edit-reset">Reset</button><span><b>Edit layar utama</b><small>Geser aplikasi/widget</small></span><button class="primary" data-action="home-edit-done">Selesai</button></div>`:""}${state.longPressMenu&&!homeEditMode?renderLongPressMenu():""}</div>`;
+    if(!homeEditMode&&!state.longPressMenu){const surface=$("#homePressSurface");let sx=null,sy=null,moved=false,pointer=null;surface?.addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"&&e.button!==0)return;if(e.target.closest("button"))return;sx=e.clientX;sy=e.clientY;moved=false;pointer=e.pointerId;try{surface.setPointerCapture(e.pointerId)}catch{}clearTimeout(longPressTimer);longPressTimer=setTimeout(()=>{if(moved)return;state.longPressMenu=true;vibrate(12);render()},520)});surface?.addEventListener("pointermove",e=>{if(sx==null)return;if(Math.abs(e.clientX-sx)>12||Math.abs(e.clientY-sy)>12){moved=true;clearTimeout(longPressTimer)}});const finish=()=>{clearTimeout(longPressTimer);try{if(pointer!=null&&surface.hasPointerCapture?.(pointer))surface.releasePointerCapture(pointer)}catch{}sx=sy=null;pointer=null};surface?.addEventListener("pointerup",finish);surface?.addEventListener("pointercancel",finish)}
+    bindHomeLayoutEditing();
+  }
+  function swapHomeAppSlots(sourceSlot,targetSlot){const parse=slot=>{const[zone,index]=String(slot).split(":");return{zone,index:Number(index)}};const a=parse(sourceSlot),b=parse(targetSlot);if(!["main","dock"].includes(a.zone)||!["main","dock"].includes(b.zone))return;const main=[...state.homeAppOrder],dock=[...state.homeDockOrder],list=z=>z==="main"?main:dock,la=list(a.zone),lb=list(b.zone),x=la[a.index],y=lb[b.index];if(!x||!y)return;la[a.index]=y;lb[b.index]=x;state.homeAppOrder=main;state.homeDockOrder=dock;save();vibrate(6);render()}
+  function bindHomeLayoutEditing(){const items=$$("[data-home-slot]",root),widget=$("[data-home-widget-zone]",root);if(!homeEditMode){[...items,widget].filter(Boolean).forEach(el=>{let timer=null,sx=0,sy=0;el.addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"&&e.button!==0)return;sx=e.clientX;sy=e.clientY;timer=setTimeout(()=>{homeEditMode=true;state.longPressMenu=false;vibrate([8,25,8]);render()},480)});el.addEventListener("pointermove",e=>{if(Math.abs(e.clientX-sx)>10||Math.abs(e.clientY-sy)>10)clearTimeout(timer)});["pointerup","pointercancel","pointerleave"].forEach(t=>el.addEventListener(t,()=>clearTimeout(timer)))});return}const begin=(e,el)=>{if(e.pointerType==="mouse"&&e.button!==0)return;if(e.target.closest(".home-widget-edit-tools"))return;homeDragState={el,pointerId:e.pointerId,x:e.clientX,y:e.clientY,moved:false};el.classList.add("home-edit-dragging");try{el.setPointerCapture(e.pointerId)}catch{}e.preventDefault()},move=e=>{if(!homeDragState)return;const dx=e.clientX-homeDragState.x,dy=e.clientY-homeDragState.y;if(Math.abs(dx)>6||Math.abs(dy)>6)homeDragState.moved=true;homeDragState.el.style.setProperty("--drag-x",`${dx}px`);homeDragState.el.style.setProperty("--drag-y",`${dy}px`)},finish=e=>{if(!homeDragState)return;const source=homeDragState.el;source.classList.remove("home-edit-dragging");source.style.removeProperty("--drag-x");source.style.removeProperty("--drag-y");if(homeDragState.moved){const hit=document.elementFromPoint(e.clientX,e.clientY),target=hit?.closest?.("[data-home-slot]"),targetWidget=hit?.closest?.("[data-home-widget-zone]"),targetZone=hit?.closest?.("[data-home-zone]");if(source.matches("[data-home-slot]")&&target&&source!==target)swapHomeAppSlots(source.dataset.homeSlot,target.dataset.homeSlot);else if(source.matches("[data-home-slot]")&&targetWidget){state.homeWidgetSide=state.homeWidgetSide==="left"?"right":"left";save();render()}else if(source.matches("[data-home-widget-zone]")&&(target||targetZone)){state.homeWidgetSide=state.homeWidgetSide==="left"?"right":"left";save();render()}}homeDragState=null};[...items,widget].filter(Boolean).forEach(el=>{el.addEventListener("pointerdown",e=>begin(e,el));el.addEventListener("pointermove",move);el.addEventListener("pointerup",finish);el.addEventListener("pointercancel",finish)})}
 
   function renderLongPressMenu() {
     const picks = [state.homeWallpaper, "waifu-13", "waifu-20", "waifu-26"];
@@ -947,7 +1289,7 @@
       <div class="home-longpress-menu">
         <div class="home-wall-strip">${picks.map(id => `<button class="home-wall-thumb ${id === state.homeWallpaper ? "active" : ""}" type="button" data-home-quick-wall="${id}" style="background-image:url('${wallpaperById(id).src}')"></button>`).join("")}</div>
         <button class="home-menu-item" type="button" data-action="openStyle"><span>◉</span><span>${t("style")}</span></button>
-        <button class="home-menu-item" type="button" data-action="widgetToast"><span>▦</span><span>${t("widgets")}</span></button>
+        <button class="home-menu-item" type="button" data-nav="widgetPicker"><span>▦</span><span>${t("widgets")}</span></button>
         <button class="home-menu-item" type="button" data-nav="apps"><span>▦</span><span>${t("appList")}</span></button>
         <button class="home-menu-item" type="button" data-nav="homeSettings"><span>⌂</span><span>${t("homeSettings")}</span></button>
       </div>`;
@@ -1004,7 +1346,6 @@
       </div>
       <div class="sim-burst-preview-wrap">
         <div class="color-preview-phone sim-burst-preview"><div class="sim-burst-preview-clock">12<br>48</div><div class="sim-burst-preview-dots"><i></i><i></i><i></i><i></i></div></div>
-        <div class="sim-burst-live-palette"><i style="--dot:${burst.primary}"></i><i style="--dot:${burst.secondary}"></i><i style="--dot:${burst.tertiary}"></i></div>
       </div>
 
       <div class="sim-burst-card">
@@ -1109,11 +1450,96 @@
   }
 
   function renderHomeSettings() {
-    root.innerHTML = `<div class="a17-page wallstyle-page">${topbar(t("homeSettings"))}<div class="a17-card">${[4,5,6].map(c => row({ title: `${t("layout")}: ${c} kolom`, desc: state.homeCols === c ? "Aktif" : "", trailing: `<span class="a17-trailing">${state.homeCols === c ? "✓" : layoutDots(Math.min(c,5))}</span>` })).join("")}</div></div>`;
-    const buttons = $$(".a17-row", root);
-    buttons.forEach((b, i) => b.addEventListener("click", () => {
-      state.homeCols = [4,5,6][i]; state.layoutDraft = state.homeCols; save(); render();
-    }));
+    root.innerHTML=`<div class="a17-page wallstyle-page">${topbar(t("homeSettings"))}<div class="a17-card home-settings-actions"><button class="a17-row" type="button" data-action="openHomeLayoutEditor"><span class="a17-copy"><strong>Edit tata letak layar utama</strong><span>Pindahkan aplikasi dan ubah ukuran widget</span></span><span class="a17-chevron">›</span></button><button class="a17-row" type="button" data-nav="widgetPicker"><span class="a17-copy"><strong>Widget</strong><span>${state.homeWidgets.length} widget ditambahkan</span></span><span class="a17-chevron">›</span></button></div><div class="a17-section">Kisi daftar aplikasi</div><div class="a17-card home-grid-settings">${[4,5,6].map(c=>row({title:`${t("layout")}: ${c} kolom`,desc:state.homeCols===c?"Aktif":"",trailing:`<span class="a17-trailing">${state.homeCols===c?"✓":layoutDots(Math.min(c,5))}</span>`})).join("")}</div></div>`;
+    $$(".home-grid-settings .a17-row",root).forEach((b,i)=>b.addEventListener("click",()=>{state.homeCols=[4,5,6][i];state.layoutDraft=state.homeCols;save();render()}));
+  }
+
+  function normalizeSettingsSearch(value = "") {
+    return String(value)
+      .toLocaleLowerCase("id-ID")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
+  }
+
+  function matchingSettings(query) {
+    const normalized = normalizeSettingsSearch(query);
+    if (!normalized) return [];
+
+    const tokens = normalized.split(/\s+/).filter(Boolean);
+    return SETTINGS_SEARCH_INDEX
+      .map((item, index) => {
+        const haystack = normalizeSettingsSearch(
+          `${item.title} ${item.desc || ""} ${item.group || ""} ${item.keywords || ""}`
+        );
+        if (!tokens.every(token => haystack.includes(token))) return null;
+
+        let score = 0;
+        const title = normalizeSettingsSearch(item.title);
+        const group = normalizeSettingsSearch(item.group || "");
+        if (title === normalized) score += 120;
+        if (title.startsWith(normalized)) score += 80;
+        if (title.includes(normalized)) score += 55;
+        if (group.includes(normalized)) score += 20;
+        tokens.forEach(token => {
+          if (title.startsWith(token)) score += 16;
+          else if (title.includes(token)) score += 9;
+          if (haystack.includes(token)) score += 3;
+        });
+        return { ...item, score, index };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.score - a.score || a.index - b.index)
+      .slice(0, 18);
+  }
+
+  function updateSettingsSearchUi(query = settingsSearchQuery) {
+    settingsSearchQuery = String(query || "");
+    const input = $("#settingsSearchInput", root);
+    const clear = $("#settingsSearchClear", root);
+    const mainRows = $("#settingsMainRows", root);
+    const resultBox = $("#settingsSearchResults", root);
+    if (!resultBox || !mainRows) return;
+
+    const normalized = normalizeSettingsSearch(settingsSearchQuery);
+    if (input && input.value !== settingsSearchQuery) input.value = settingsSearchQuery;
+    if (clear) clear.hidden = !normalized;
+
+    if (!normalized) {
+      resultBox.hidden = true;
+      resultBox.innerHTML = "";
+      mainRows.hidden = false;
+      return;
+    }
+
+    const results = matchingSettings(settingsSearchQuery);
+    mainRows.hidden = true;
+    resultBox.hidden = false;
+    resultBox.innerHTML = results.length
+      ? `<div class="settings-search-caption">${results.length} hasil untuk “${escapeHtml(settingsSearchQuery)}”</div>
+         <div class="a17-card settings-search-card">${results.map(item => `
+           <button class="a17-row settings-search-result" type="button" data-settings-result="${item.nav}">
+             <span class="settings-search-result-icon">⌕</span>
+             <span class="a17-copy">
+               <strong>${escapeHtml(item.title)}</strong>
+               <span>${escapeHtml(item.group)}${item.desc ? ` • ${escapeHtml(item.desc)}` : ""}</span>
+             </span>
+             <span class="a17-chevron">›</span>
+           </button>`).join("")}</div>`
+      : `<div class="settings-search-empty">
+           <span>⌕</span>
+           <strong>Tidak ada setelan yang cocok</strong>
+           <small>Coba kata seperti Wi-Fi, SIM, Bluetooth, baterai, penyimpanan, kernel, atau navigasi.</small>
+         </div>`;
+
+    $$("[data-settings-result]", resultBox).forEach(button => {
+      button.addEventListener("click", () => {
+        settingsSearchQuery = "";
+        vibrate(5);
+        navigate(button.dataset.settingsResult);
+      });
+    });
   }
 
   function renderSettings() {
@@ -1123,7 +1549,7 @@
       ["▦", "Aplikasi", "Aplikasi default", "appsSettings"],
       ["◉", "Notifikasi", "Kelola notifikasi aplikasi dan sistem", "notificationsSettings"],
       ["▰", "Baterai", `${state.battery}%`, "batterySettings"],
-      ["▥", "Penyimpanan", "128 GB", "storageSettings"],
+      ["▥", "Penyimpanan", "256 GB", "storageSettings"],
       ["✦", t("style"), "Material 3 Expressive", "wallpaperStyle"],
       ["▣", "Layar & sentuhan", state.dark ? "Tema gelap" : "Tema terang", "displaySettings"],
       ["♫", "Suara & getaran", `${t("volume")}: ${state.volume}%`, "soundSettings"],
@@ -1131,7 +1557,53 @@
       ["⚙", t("system"), t("systemDesc"), "system"],
       ["ⓘ", t("aboutPhone"), "Google Pixel 10 • Frankel", "about"]
     ];
-    root.innerHTML = `<div class="a17-page wallstyle-page settings-main-page"><div class="a17-topbar"><h3>${t("settings")}</h3></div><div class="settings-search">⌕ ${t("searchSettings")}</div><div class="a17-card">${rows.map(r => row({ title:r[1], desc:r[2], nav:r[3], icon:r[0] })).join("")}</div></div>`;
+
+    root.innerHTML = `<div class="a17-page wallstyle-page settings-main-page">
+      <div class="a17-topbar"><h3>${t("settings")}</h3></div>
+      <label class="settings-search settings-search-live" for="settingsSearchInput">
+        <span class="settings-search-icon">⌕</span>
+        <input id="settingsSearchInput" type="search" inputmode="search" autocomplete="off"
+          spellcheck="false" placeholder="${escapeHtml(t("searchSettings"))}"
+          value="${escapeHtml(settingsSearchQuery)}">
+        <button id="settingsSearchClear" type="button" aria-label="Hapus pencarian" hidden>×</button>
+      </label>
+      <div id="settingsSearchResults" class="settings-search-results" hidden></div>
+      <div id="settingsMainRows" class="a17-card settings-main-rows">
+        ${rows.map(r => row({ title:r[1], desc:r[2], nav:r[3], icon:r[0] })).join("")}
+      </div>
+    </div>`;
+
+    const input = $("#settingsSearchInput", root);
+    input?.addEventListener("input", () => updateSettingsSearchUi(input.value));
+    input?.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        settingsSearchQuery = "";
+        input.value = "";
+        updateSettingsSearchUi("");
+        return;
+      }
+      if (event.key === "Enter") {
+        const first = matchingSettings(input.value)[0];
+        if (!first) return;
+        event.preventDefault();
+        settingsSearchQuery = "";
+        navigate(first.nav);
+      }
+    });
+
+    $("#settingsSearchClear", root)?.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      settingsSearchQuery = "";
+      if (input) {
+        input.value = "";
+        input.focus();
+      }
+      updateSettingsSearchUi("");
+    });
+
+    updateSettingsSearchUi(settingsSearchQuery);
   }
 
   function sectionLabel(text) {
@@ -1192,26 +1664,181 @@
         ${state.wifi ? `<button class="a17-row" type="button" data-wifi-network="${escapeHtml(state.connectedWifi)}"><span class="a17-trailing setting-leading-icon">⌁</span><span class="a17-copy"><strong>${state.connectedWifi}</strong><span>Terhubung</span></span><span class="a17-chevron">⚙</span></button>` : ""}
       </div>
       ${state.wifi ? `${sectionLabel("Jaringan")}<div class="a17-card system-card">${networks.slice(1).map(n => `<button class="a17-row" type="button" data-wifi-network="${escapeHtml(n)}"><span class="a17-trailing setting-leading-icon">⌁</span><span class="a17-copy"><strong>${n}</strong></span><span class="a17-chevron">▣</span></button>`).join("")}</div>` : infoNote("Aktifkan Wi-Fi untuk melihat jaringan yang tersedia.")}
+      ${state.developerOptionsEnabled&&(state.devWifiVerboseLogging||state.devWifiNonPersistentMac||!state.devWifiScanThrottling)?`${sectionLabel("Info developer")}<div class="a17-card system-card">${state.devWifiVerboseLogging?plainRow("Logging Wi‑Fi","Panjang / verbose aktif"):""}${state.devWifiNonPersistentMac?plainRow("MAC Wi‑Fi acak",state.devWifiRandomMac):""}${!state.devWifiScanThrottling?plainRow("Pembatasan pemindaian","Nonaktif • pemindaian tanpa throttle"):""}</div>`:""}
+    </div>`;
+  }
+
+  function simProviderById(id) {
+    return ESIM_PROVIDERS.find(provider => provider.id === id) || null;
+  }
+
+  function simPrimaryLabel(value) {
+    if (value === "sim1") return "3";
+    if (value === "sim2") return "Indosat";
+    if (value === "esim" && state.eSimInstalled) return simProviderById(state.eSimProvider)?.name || "eSIM";
+    return "Selalu tanya";
+  }
+
+  function renderPrimarySimChoice(title, key, allowAsk = false) {
+    const options = [];
+    if (allowAsk) options.push(["ask", "Selalu tanya"]);
+    if (state.sim1Enabled) options.push(["sim1", "3"]);
+    if (state.sim2Enabled) options.push(["sim2", "Indosat"]);
+    if (state.eSimInstalled && state.eSimEnabled) {
+      options.push(["esim", simProviderById(state.eSimProvider)?.name || "eSIM"]);
+    }
+
+    return `<div class="sim-primary-block">
+      <div class="sim-primary-copy">
+        <strong>${title}</strong>
+        <span>${simPrimaryLabel(state[key])}</span>
+      </div>
+      <div class="sim-primary-options">
+        ${options.map(([value, label]) => `<button
+          class="sim-primary-chip ${state[key] === value ? "active" : ""}"
+          type="button"
+          data-state-value-key="${key}"
+          data-state-value="${value}"
+        ><i></i>${escapeHtml(label)}</button>`).join("")}
+      </div>
+    </div>`;
+  }
+
+  function renderSimProfileCard({ label, number, enabledKey, badge, color, esim = false }) {
+    return `<div class="sim-profile-card ${esim ? "is-esim" : ""}" style="--sim-card-color:${color}">
+      <div class="sim-profile-head">
+        <span class="sim-profile-badge">${badge}</span>
+        ${toggle(enabledKey)}
+      </div>
+      <strong>${escapeHtml(label)}</strong>
+      <small>${escapeHtml(number)}</small>
+      <span class="sim-profile-status">${state[enabledKey] ? "Aktif" : "Nonaktif"}</span>
     </div>`;
   }
 
   function renderSimSettings() {
-    root.innerHTML = `<div class="a17-page system-page">${topbar("SIM")}
-      <div class="a17-card system-card">
-        ${switchRow("3", maskSimNumber(state.simPhone1), "sim1Enabled")}
-        ${switchRow("Indosat Ooredoo", "+62 857-****-2843", "sim2Enabled")}
+    const esimProvider = simProviderById(state.eSimProvider);
+    const esimNumber = state.eSimPhone || "+62 8••• •••• ••••";
+
+    root.innerHTML = `<div class="a17-page system-page sim-settings-page">${topbar("SIM")}
+      ${sectionLabel("SIM terpasang")}
+      <div class="sim-profile-grid">
+        ${renderSimProfileCard({
+          label: "3",
+          number: maskSimNumber(state.simPhone1),
+          enabledKey: "sim1Enabled",
+          badge: "3",
+          color: "#131313"
+        })}
+        ${renderSimProfileCard({
+          label: "Indosat",
+          number: "+62 857-••••-2843",
+          enabledKey: "sim2Enabled",
+          badge: "IM3",
+          color: "#f0a900"
+        })}
+        ${state.eSimInstalled ? renderSimProfileCard({
+          label: esimProvider?.name || "eSIM",
+          number: maskSimNumber(esimNumber),
+          enabledKey: "eSimEnabled",
+          badge: esimProvider?.short || "eSIM",
+          color: esimProvider?.color || "#6750a4",
+          esim: true
+        }) : ""}
       </div>
+
+      <div class="a17-card system-card esim-add-card">
+        <div class="a17-row">
+          <span class="a17-trailing setting-leading-icon">＋</span>
+          <span class="a17-copy">
+            <strong>${state.eSimInstalled ? "eSIM terpasang" : "Tambahkan eSIM"}</strong>
+            <span>${state.eSimInstalled
+              ? `${escapeHtml(esimProvider?.name || "eSIM")} • SIM digital`
+              : "Unduh SIM digital dari operator Indonesia"}</span>
+          </span>
+          <button
+            class="a17-switch ${state.eSimInstalled && state.eSimEnabled ? "on" : ""}"
+            type="button"
+            data-action="${state.eSimInstalled ? "toggleEsim" : "beginEsimSetup"}"
+            aria-label="Tambahkan eSIM"
+          ></button>
+        </div>
+        ${state.eSimInstalled ? `<button class="sim-esim-manage" type="button" data-action="removeEsim">Hapus eSIM</button>` : ""}
+      </div>
+
       ${sectionLabel("Data seluler")}
       <div class="a17-card system-card">
         ${switchRow("Data seluler", "Akses data menggunakan jaringan seluler", "mobileData")}
-        ${switchRow("Pengalihan data otomatis", "Gunakan data dari salah satu SIM tergantung jangkauan dan ketersediaan", "autoDataSwitch")}
+        ${switchRow("Pengalihan data otomatis", "Gunakan data dari SIM lain saat SIM utama tidak tersedia", "autoDataSwitch")}
       </div>
+
       ${sectionLabel("SIM utama")}
-      <div class="a17-card system-card">
-        ${plainRow("Panggilan", "Selalu tanya", `<span class="a17-chevron">›</span>`)}
-        ${plainRow("Pesan teks", "3", `<span class="a17-chevron">›</span>`)}
-        ${plainRow("Data seluler", "3", `<span class="a17-chevron">›</span>`)}
+      <div class="a17-card system-card sim-primary-card">
+        ${renderPrimarySimChoice("Panggilan", "primaryCallSim", true)}
+        ${renderPrimarySimChoice("Pesan teks", "primarySmsSim")}
+        ${renderPrimarySimChoice("Data seluler", "primaryDataSim")}
       </div>
+    </div>`;
+  }
+
+  function renderEsimSetup() {
+    root.innerHTML = `<div class="a17-page system-page esim-setup-page">${topbar("Tambahkan eSIM")}
+      <div class="esim-setup-hero">
+        <div class="esim-phone-orb">eSIM</div>
+        <strong>Hubungkan ke jaringan seluler</strong>
+        <span>Pilih operator untuk mengunduh profil eSIM ke Google Pixel 10.</span>
+      </div>
+
+      <div class="a17-card system-card esim-qr-card">
+        <button class="a17-row" type="button" data-action="esimQrScanner">
+          <span class="a17-trailing setting-leading-icon">▦</span>
+          <span class="a17-copy"><strong>Pindai kode QR</strong><span>Gunakan kode aktivasi yang diberikan operator</span></span>
+          <span class="a17-chevron">›</span>
+        </button>
+      </div>
+
+      ${sectionLabel("Operator Indonesia")}
+      <div class="a17-card system-card esim-provider-list">
+        ${ESIM_PROVIDERS.map(provider => `<button
+          class="a17-row esim-provider-row"
+          type="button"
+          data-state-value-key="eSimProvider"
+          data-state-value="${provider.id}"
+          data-next-after-value="eSimConfirm"
+        >
+          <span class="esim-provider-logo" style="--provider:${provider.color}">${provider.short}</span>
+          <span class="a17-copy"><strong>${provider.name}</strong><span>Siapkan eSIM ${provider.name}</span></span>
+          <span class="a17-chevron">›</span>
+        </button>`).join("")}
+      </div>
+      ${infoNote("Ini adalah simulasi pendaftaran eSIM. Tidak ada profil operator nyata yang diunduh atau diaktifkan.")}
+    </div>`;
+  }
+
+  function renderEsimConfirm() {
+    const provider = simProviderById(state.eSimProvider) || ESIM_PROVIDERS[0];
+    const installText = state.eSimInstalling ? "Mengunduh profil eSIM…" : `Unduh eSIM ${provider.name}`;
+
+    root.innerHTML = `<div class="a17-page system-page esim-confirm-page">${topbar("Siapkan eSIM")}
+      <div class="esim-confirm-hero">
+        <span class="esim-provider-logo large" style="--provider:${provider.color}">${provider.short}</span>
+        <h3>${provider.name}</h3>
+        <p>Google Pixel 10 siap menambahkan paket seluler ${provider.name} sebagai eSIM.</p>
+      </div>
+
+      <div class="a17-card system-card">
+        ${plainRow("Jenis SIM", "eSIM")}
+        ${plainRow("Perangkat", "Google Pixel 10")}
+        ${plainRow("EID", "8904 9000 4015 3826 0719 1842")}
+        ${plainRow("Status", state.eSimInstalling ? "Mengunduh profil operator…" : "Siap diaktifkan")}
+      </div>
+
+      <button class="esim-install-button ${state.eSimInstalling ? "is-loading" : ""}"
+        type="button"
+        data-action="installEsim"
+        ${state.eSimInstalling ? "disabled" : ""}
+      >${installText}</button>
+      <p class="esim-disclaimer">Aktivasi ini hanya simulasi dan tidak terhubung ke operator nyata.</p>
     </div>`;
   }
 
@@ -1224,6 +1851,8 @@
         ${switchRow("Tethering bluetooth", "Bagikan koneksi internet ponsel melalui Bluetooth", "bluetoothTether")}
         ${switchRow("Tethering Ethernet", "Bagikan koneksi internet ponsel melalui Ethernet", "ethernetTether", true)}
         ${switchRow("Use VPN for connected devices", "When this device is using a VPN, connected devices use the same VPN", "hotspotUseVpn")}
+        ${state.developerOptionsEnabled?plainRow("Implementasi tethering",state.devHardwareTethering?"Akselerasi hardware aktif":"Jalur software"):""}
+        ${state.developerOptionsEnabled&&state.usbTether?plainRow("USB developer","Tethering USB aktif dari Konfigurasi USB default"):""}
       </div>
     </div>`;
   }
@@ -1277,25 +1906,33 @@
   function renderBluetoothSettings() {
     root.innerHTML = `<div class="a17-page system-page">${topbar("Bluetooth")}
       <div class="bluetooth-hero-switch">${switchRow("Gunakan Bluetooth", "", "bluetooth")}</div>
-      <div class="a17-card system-card">${plainRow("Nama perangkat", "POCO F3")}${navRow("Sambungkan perangkat baru", "", "pairNewDevice", "＋")}</div>
+      <div class="a17-card system-card">${plainRow("Nama perangkat", "Google Pixel 10")}${navRow("Sambungkan perangkat baru", "", "pairNewDevice", "＋")}</div>
       ${infoNote("Jika Bluetooth aktif, perangkat Anda dapat berkomunikasi dengan perangkat Bluetooth di sekitar.")}
     </div>`;
   }
 
   function renderPairNewDevice() {
     root.innerHTML = `<div class="a17-page system-page">${topbar("Sambungkan perangkat baru")}
-      <div class="a17-card system-card">${plainRow("Nama perangkat", "POCO F3")}</div>
+      <div class="a17-card system-card">${plainRow("Nama perangkat", "Google Pixel 10")}</div>
       ${sectionLabel("Perangkat yang tersedia")}
       <div class="scan-spinner">C</div>
-      <div class="a17-card system-card"><button class="a17-row" type="button" data-action="pairI12"><span class="a17-copy"><strong>i12</strong><span>Headset Bluetooth</span></span><span class="a17-chevron">›</span></button></div>
-      ${infoNote("Alamat Bluetooth ponsel: FF:DD:31:5F:XX:XX")}
+      <div class="a17-card system-card"><button class="a17-row" type="button" data-action="pairI12"><span class="a17-copy"><strong>i12</strong><span>Headset Bluetooth</span></span><span class="a17-chevron">›</span></button>
+        ${state.developerOptionsEnabled&&state.devBluetoothUnnamed?`<button class="a17-row" type="button" data-action="pairUnnamedBt"><span class="a17-copy"><strong>7C:91:22:AF:10:3D</strong><span>Perangkat Bluetooth tanpa nama</span></span><span class="a17-chevron">›</span></button>`:""}
+      </div>
+      ${infoNote(`Alamat Bluetooth ponsel: FF:DD:31:5F:XX:XX${state.devBluetoothHciSnoop?" • HCI snoop log aktif":""}`)}
     </div>`;
   }
 
   function renderBluetoothDeviceDetail() {
     root.innerHTML = `<div class="a17-page system-page">${topbar("Detail perangkat")}
       <div class="device-detail-hero"><h4>${state.pairedDevice || "i12"} ✎</h4><span>${state.pairedDeviceConnected ? "Menghubungkan" : "Tidak terhubung"}</span><div class="headphone-orb">◉</div><div class="device-actions"><button data-action="forgetDevice">▣<small>Lupakan</small></button><button data-action="connectDevice">＋<small>${state.pairedDeviceConnected ? "Putuskan" : "Hubungkan"}</small></button></div></div>
-      <div class="a17-card system-card">${switchRow("Audio Spasial", "Audio dari perangkat media yang kompatibel menjadi lebih imersif", "spatialAudio")}${switchRow("Izinkan akses ke kontak dan histori panggilan", "Info akan digunakan untuk pengumuman panggilan", "contactHistoryAccess", true)}${plainRow("Jenis perangkat audio", "Tidak disetel")}</div>
+      <div class="a17-card system-card">${switchRow("Audio Spasial", "Audio dari perangkat media yang kompatibel menjadi lebih imersif", "spatialAudio")}${switchRow("Izinkan akses ke kontak dan histori panggilan", "Info akan digunakan untuk pengumuman panggilan", "contactHistoryAccess", true)}${plainRow("Jenis perangkat audio", "Tidak disetel")}
+        ${state.developerOptionsEnabled?plainRow("Codec developer",`${state.devBluetoothCodec} • ${state.devBluetoothSampleRate} • ${state.devBluetoothBits}`):""}
+        ${state.developerOptionsEnabled?plainRow("A2DP",state.devBluetoothA2dpOffload?"Offload hardware dinonaktifkan":"Hardware offload aktif"):""}
+        ${state.developerOptionsEnabled?plainRow("Audio HD developer",state.devBluetoothHdAudio?"Diizinkan":"Default sistem"):""}
+        ${state.developerOptionsEnabled?plainRow("AVRCP / MAP",`${state.devAvrcpVersion} • ${state.devMapVersion}`):""}
+        ${state.developerOptionsEnabled?plainRow("Channel / perangkat maks",`${state.devBluetoothChannel} • maks ${state.devBluetoothMaxDevices}`):""}
+        ${state.developerOptionsEnabled&&state.devBluetoothHciSnoop?plainRow("HCI snoop",`${Number(state.devBluetoothHciPackets)||0} paket simulasi tercatat`):""}</div>
     </div>`;
   }
 
@@ -1307,11 +1944,12 @@
   }
 
   function renderNfcSettings() {
-    root.innerHTML = `<div class="a17-page system-page">${topbar("NFC")}<div class="a17-card system-card">${switchRow("Gunakan NFC", "", "nfc")}${plainRow("Pembayaran nirsentuh", state.nfc ? "Pilih aplikasi pembayaran" : "Tidak tersedia karena NFC nonaktif")}</div></div>`;
+    root.innerHTML = `<div class="a17-page system-page">${topbar("NFC")}<div class="a17-card system-card">${switchRow("Gunakan NFC", "", "nfc")}${plainRow("Pembayaran nirsentuh", state.nfc ? "Pilih aplikasi pembayaran" : "Tidak tersedia karena NFC nonaktif")}
+      ${state.developerOptionsEnabled&&(state.devNfcVerboseLogging||state.devNfcNciVerboseLogging)?plainRow("Log developer NFC",`${state.devNfcVerboseLogging?"Vendor verbose":""}${state.devNfcVerboseLogging&&state.devNfcNciVerboseLogging?" • ":""}${state.devNfcNciVerboseLogging?"NCI tanpa filter":""}`):""}</div></div>`;
   }
 
   function renderCastSettings() {
-    root.innerHTML = `<div class="a17-page system-page">${topbar("Google Cast")}<div class="cast-hero">◫</div><p class="empty-state-text">Tidak ditemukan perangkat di sekitar.</p></div>`;
+    root.innerHTML = `<div class="a17-page system-page">${topbar("Google Cast")}<div class="cast-hero">◫</div>${state.developerOptionsEnabled&&state.devWirelessDisplayCertification?`<div class="a17-card system-card">${plainRow("Sertifikasi layar nirkabel","Aktif")}${plainRow("Sesi WFD uji","1920 × 1080 • 60 Hz • simulasi")}</div>`:`<p class="empty-state-text">Tidak ditemukan perangkat di sekitar.</p>`}</div>`;
   }
 
   function renderPrintingSettings() {
@@ -1621,6 +2259,55 @@
     </div>`;
   }
 
+  function browserRegionFromCoordinates(latitude, longitude) {
+    const lat = Number(latitude), lon = Number(longitude);
+    if (lat >= -11.5 && lat <= 6.8 && lon >= 94 && lon <= 141.5) return "Indonesia";
+    if (lat >= 24 && lat <= 46.5 && lon >= 122 && lon <= 146) return "Japan";
+    if (lat >= 24 && lat <= 50 && lon >= -125 && lon <= -66) return "United States";
+    if (lat >= 0.5 && lat <= 7.8 && lon >= 99 && lon <= 120) return "Malaysia";
+    if (lat >= 1.1 && lat <= 1.6 && lon >= 103.5 && lon <= 104.2) return "Singapore";
+    if (lat >= -44.5 && lat <= -10 && lon >= 112 && lon <= 154.5) return "Australia";
+    try {
+      const code = new Intl.Locale(navigator.language || "id-ID").region;
+      const display = code ? new Intl.DisplayNames(["id"], { type: "region" }).of(code) : "";
+      if (display) return display;
+    } catch {}
+    return "Wilayah browser";
+  }
+
+  function regionDetectionDescription() {
+    if (state.regionDetectionStatus === "requesting") return "Menunggu izin lokasi browser…";
+    if (state.regionDetectionStatus === "granted") return `${state.region} • ${state.detectedTimeZone || "zona waktu browser"}`;
+    if (state.regionDetectionStatus === "denied") return "Izin lokasi ditolak browser";
+    if (state.regionDetectionStatus === "unavailable") return "Lokasi browser tidak tersedia";
+    return "Ketuk untuk meminta izin lokasi browser";
+  }
+
+  function detectRegionUsingBrowser() {
+    if (!navigator.geolocation) {
+      state.regionDetectionStatus = "unavailable";
+      save(); render(); toast("Browser tidak menyediakan Geolocation API");
+      return;
+    }
+    state.regionDetectionStatus = "requesting";
+    save(); render();
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        state.region = browserRegionFromCoordinates(position.coords.latitude, position.coords.longitude);
+        state.regionDetected = true;
+        state.regionManuallySelected = false;
+        state.regionDetectionStatus = "granted";
+        state.detectedTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+        save(); vibrate(8); render(); toast(`Wilayah terdeteksi: ${state.region}`);
+      },
+      error => {
+        state.regionDetectionStatus = error?.code === 1 ? "denied" : "unavailable";
+        save(); render(); toast(error?.code === 1 ? "Izin lokasi ditolak" : "Lokasi tidak dapat dideteksi");
+      },
+      { enableHighAccuracy: false, timeout: 9000, maximumAge: 300000 }
+    );
+  }
+
   function renderSystem() {
     root.innerHTML = `<div class="a17-page system-page">
       ${topbar(t("system"))}
@@ -1629,6 +2316,7 @@
       <div class="a17-card system-card">
         ${row({ title: t("languageRegion"), desc: state.region, nav: "languageRegion", trailing: `<span class="a17-trailing system-icon">A</span>` })}
         ${row({ title: t("navigationMode"), desc: state.navigationMode === "gesture" ? t("gestureNavigation") : t("threeButtonNavigation"), nav: "navigationMode", trailing: `<span class="a17-trailing system-icon">◁</span>` })}
+        ${row({ title: "Opsi developer", desc: state.developerOptionsEnabled ? "Aktif" : "Nonaktif", nav: "developerOptions", trailing: `<span class="a17-trailing system-icon">⌘</span>` })}
       </div>
 
 
@@ -1637,12 +2325,11 @@
 
   function renderLanguageRegion() {
     const installed = Array.isArray(state.installedLanguages) ? state.installedLanguages : ["id"];
-    const langName = code => code === "en" ? "English (United States)" : "Indonesia (Indonesia)";
+    const langName = code => code === "en" ? "English (United States)" : "Bahasa Indonesia (Indonesia)";
     const langSub = code => code === getLanguage() ? (getLanguage() === "en" ? "System language" : "Bahasa sistem") : "";
 
     root.innerHTML = `<div class="a17-page system-page language-region-page">
       ${topbar(t("languageRegion"))}
-
       <p class="system-description">${getLanguage() === "en"
         ? "The device, apps, and websites use the first supported language in your preferred-language list."
         : "Perangkat, aplikasi, dan situs menggunakan bahasa pertama yang didukung dari daftar bahasa pilihan Anda."}</p>
@@ -1655,26 +2342,452 @@
           ${code === getLanguage() ? `<span class="language-check">✓</span>` : ""}
         </button>`).join("")}
       </div>
-
       <button class="system-add-button" type="button" data-action="addLanguage"><b>＋</b>${t("addLanguage")}</button>
+
+      <div class="a17-section">Tanggal & waktu</div>
+      <div class="a17-card system-card">
+        ${switchRow("Atur waktu otomatis", state.autoDateTime ? `Waktu dari browser • ${formatTime().replace(".", ":")}` : "Gunakan waktu yang diatur manual", "autoDateTime")}
+        ${!state.autoDateTime ? `<button class="a17-row" type="button" data-action="setManualTime"><span class="a17-copy"><strong>Waktu</strong><span>${escapeHtml(state.manualTime || "20:30")}</span></span><span class="a17-chevron">›</span></button>` : ""}
+        ${switchRow("Atur zona waktu otomatis", state.autoTimeZone ? (state.detectedTimeZone || Intl.DateTimeFormat().resolvedOptions().timeZone || "Zona waktu browser") : "Pilih zona waktu secara manual", "autoTimeZone")}
+      </div>
+
+      <div class="a17-section">${t("regionalPreferences")}</div>
+      <div class="a17-card system-card regional-card">
+        <button class="a17-row" type="button" data-cycle-setting="region"><span class="a17-copy"><strong>${t("region")}</strong><span>${escapeHtml(state.region)}</span></span><span class="a17-chevron">›</span></button>
+        <button class="a17-row browser-region-row" type="button" data-action="detectBrowserRegion">
+          <span class="a17-trailing setting-leading-icon">⌖</span>
+          <span class="a17-copy"><strong>Deteksi wilayah otomatis</strong><span>${escapeHtml(regionDetectionDescription())}</span></span>
+          <span class="a17-chevron">›</span>
+        </button>
+        <button class="a17-row" type="button" data-cycle-setting="temperatureUnit"><span class="a17-copy"><strong>${t("temperature")}</strong><span>${state.temperatureUnit === "default" ? t("useDefault") : state.temperatureUnit}</span></span></button>
+        <button class="a17-row" type="button" data-cycle-setting="measurementSystem"><span class="a17-copy"><strong>${t("measurementSystem")}</strong><span>${state.measurementSystem === "default" ? t("useDefault") : state.measurementSystem}</span></span></button>
+        <button class="a17-row" type="button" data-cycle-setting="firstDayOfWeek"><span class="a17-copy"><strong>${t("firstDayWeek")}</strong><span>${state.firstDayOfWeek === "default" ? t("useDefault") : state.firstDayOfWeek}</span></span></button>
+      </div>
 
       <div class="a17-section">${t("otherLanguageSettings")}</div>
       <div class="a17-card system-card">
         <button class="a17-row" type="button" data-action="appLanguageToast"><span class="a17-copy"><strong>${t("appLanguages")}</strong><span>${t("appLanguagesDesc")}</span></span></button>
         <button class="a17-row" type="button" data-action="speechToast"><span class="a17-copy"><strong>${t("speech")}</strong><span>${t("speechDesc")}</span></span></button>
       </div>
+      <div class="system-note">ⓘ <span>Deteksi wilayah memakai Geolocation API browser. Browser akan meminta izin lokasi sebelum membaca posisi.</span></div>
+    </div>`;
+  }
 
-      <div class="a17-section">${t("regionalPreferences")}</div>
-      <div class="a17-card system-card regional-card">
-        <button class="a17-row" type="button" data-cycle-setting="region"><span class="a17-copy"><strong>${t("region")}</strong><span>${state.region}</span></span></button>
-        <button class="a17-row" type="button" data-cycle-setting="temperatureUnit"><span class="a17-copy"><strong>${t("temperature")}</strong><span>${state.temperatureUnit === "default" ? t("useDefault") : state.temperatureUnit}</span></span></button>
-        <button class="a17-row" type="button" data-cycle-setting="measurementSystem"><span class="a17-copy"><strong>${t("measurementSystem")}</strong><span>${state.measurementSystem === "default" ? t("useDefault") : state.measurementSystem}</span></span></button>
-        <button class="a17-row" type="button" data-cycle-setting="firstDayOfWeek"><span class="a17-copy"><strong>${t("firstDayWeek")}</strong><span>${state.firstDayOfWeek === "default" ? t("useDefault") : state.firstDayOfWeek}</span></span></button>
+  function developerCycleValue(key, values) {
+    const list = Array.isArray(values) ? values : [];
+    if (!list.length) return;
+    const current = list.indexOf(state[key]);
+    state[key] = list[(current + 1) % list.length];
+    save(); vibrate(5); render();
+  }
+
+  function developerRow(title, desc = "", action = "", nav = "") {
+    return `<button class="a17-row developer-value-row" type="button"
+      ${action ? `data-action="${action}"` : ""}${nav ? ` data-nav="${nav}"` : ""}>
+      <span class="a17-copy"><strong>${title}</strong>${desc ? `<span>${desc}</span>` : ""}</span>
+      <span class="a17-chevron">›</span>
+    </button>`;
+  }
+
+  function developerToggleRow(title, desc, key) {
+    return `<div class="a17-row developer-toggle-row">
+      <span class="a17-copy"><strong>${title}</strong>${desc ? `<span>${desc}</span>` : ""}</span>${toggle(key)}
+    </div>`;
+  }
+
+  function renderDeveloperOptions() {
+    const enabled = !!state.developerOptionsEnabled;
+    root.innerHTML = `<div class="a17-page system-page developer-options-page">
+      ${topbar("Opsi developer")}
+      <div class="developer-master-card"><span>Gunakan opsi developer</span>${toggle("developerOptionsEnabled")}</div>
+
+      ${enabled ? `
+      <div class="developer-section-label">Umum</div>
+      <div class="a17-card system-card developer-card">
+        ${developerRow("Penggunaan memori", `RAM sistem dan aplikasi • interval ${Number(state.devMemoryInterval)||3} jam`, "", "developerMemory")}
+        ${developerRow("Layanan yang sedang berjalan", "Lihat proses dan layanan aktif • RAM 8 GB", "", "developerRunningServices")}
+        ${developerRow("Ambil laporan bug", `${Number(state.devBugReportCount)||0} laporan simulasi`, "developer-bug-report")}
+        ${developerToggleRow("Mode demo UI Sistem", "Status bar bersih: 10.00, sinyal penuh, baterai 100%", "devSystemUiDemo")}
+        ${developerToggleRow("Tampilkan info status opsi developer", "Tampilkan ringkasan fitur developer aktif di bagian bawah layar", "devShowStatusHud")}
+        ${developerToggleRow("Tetap aktif", "Simulasikan layar tetap aktif ketika perangkat mengisi daya", "devStayAwake")}
+        ${developerToggleRow("Log snoop HCI Bluetooth", "Simulasikan pencatatan paket Bluetooth HCI", "devBluetoothHciSnoop")}
+        <div class="a17-row developer-toggle-row developer-oem-row">
+          <span class="a17-copy"><strong>Pembukaan kunci OEM</strong><span>${state.oemUnlockAllowed ? "Bootloader diizinkan untuk dibuka kuncinya" : "Izinkan bootloader dibuka kuncinya dari Fastboot"}</span></span>
+          <button class="a17-switch ${state.oemUnlockAllowed ? "on" : ""}" type="button" data-action="developer-oem-toggle"></button>
+        </div>
       </div>
 
-      <div class="system-note">ⓘ <span>${getLanguage() === "en"
-        ? "Apps that do not support regional preferences use their default locale settings."
-        : "Jika tidak mendukung preferensi regional, aplikasi akan menggunakan setelan lokalitas defaultnya."}</span></div>
+      <div class="developer-section-label">Proses debug</div>
+      <div class="a17-card system-card developer-card">
+        ${developerToggleRow("Proses debug USB", "Mode debug ketika USB terhubung", "devUsbDebugging")}
+        ${developerRow(
+          "Cabut otorisasi debug USB",
+          Number(state.devUsbAuthorizationCount) > 0
+            ? `${Number(state.devUsbAuthorizationCount)} komputer diotorisasi`
+            : "Tidak ada komputer yang diotorisasi",
+          "developer-revoke-usb"
+        )}
+        ${developerRow("Proses debug nirkabel", state.devWirelessDebugging ? "Aktif • debugging melalui Wi‑Fi" : "Mode debug saat Wi‑Fi terhubung", "", "developerWirelessDebugging")}
+        ${developerToggleRow("Nonaktifkan waktu tunggu otorisasi adb", "Jangan cabut otorisasi adb otomatis", "devDisableAdbTimeout")}
+        ${developerToggleRow("Logging cetak panjang", "Log debug tambahan, termasuk informasi vendor", "devVerboseVendorLogging")}
+        ${developerToggleRow("Aktifkan inspeksi atribut tampilan", "Izinkan pemeriksaan atribut UI", "devViewAttributeInspection")}
+        ${developerRow("Pilih aplikasi debug", state.devDebugApp ? (appById(state.devDebugApp)?.name || state.devDebugApp) : "Tidak ada aplikasi debug yang disetel", "", "developerSelectDebugApp")}
+        ${developerToggleRow("Tunggu debugger", "Aplikasi debug menunggu debugger sebelum berjalan", "devWaitForDebugger")}
+        ${developerToggleRow("Verifikasi aplikasi melalui USB", "Periksa aplikasi yang diinstal melalui ADB", "devVerifyAppsUsb")}
+        ${developerToggleRow("Verifikasi bytecode aplikasi yang dapat di-debug", "Izinkan ART memverifikasi bytecode aplikasi debug", "devVerifyDebugBytecode")}
+        ${developerRow("Ukuran buffer logger", state.devLoggerBuffer, "developer-open-logger-buffer")}
+        ${developerRow("Tanda fitur", "Feature flags simulasi", "developer-feature-flags")}
+        ${developerToggleRow("Aktifkan lapisan debug GPU", "Lapisan debug GPU untuk aplikasi debug", "devGpuDebugLayers")}
+      </div>
+
+      <div class="developer-section-label">Grafis dan aplikasi</div>
+      <div class="a17-card system-card developer-card">
+        ${developerToggleRow("Eksperimental: Aktifkan ANGLE", "Gunakan ANGLE eksperimental", "devExperimentalAngle")}
+        ${developerToggleRow("Nonaktifkan kecepatan frame default untuk game", "Nonaktifkan pembatas frame default", "devDisableDefaultFrameRate")}
+        ${developerRow("Preferensi Driver Grafis", "Ubah setelan driver grafis", "developer-driver-preferences")}
+        ${developerRow("Perubahan Kompatibilitas Aplikasi", "Ubah kompatibilitas aplikasi", "developer-app-compat")}
+        ${developerToggleRow("Tampilkan kecepatan refresh", "Tampilkan refresh rate di sudut layar", "devShowRefreshRate")}
+        ${developerToggleRow("Izinkan overlay layar pada Setelan", "Izinkan overlay saat Setelan terbuka", "devAllowOverlaySettings")}
+        ${developerToggleRow("Izinkan Modem Simulasi", "Jalankan layanan modem simulasi", "devMockModem")}
+      </div>
+
+      <div class="developer-section-label">Jaringan</div>
+      <div class="a17-card system-card developer-card">
+        ${developerToggleRow("Sertifikasi layar nirkabel", "Tampilkan opsi sertifikasi layar nirkabel", "devWirelessDisplayCertification")}
+        ${developerToggleRow("Aktifkan Pencatatan Log Panjang Wi‑Fi", "Tingkatkan level log Wi‑Fi", "devWifiVerboseLogging")}
+        ${developerToggleRow("Pembatasan pemindaian Wi‑Fi", "Kurangi konsumsi baterai akibat pemindaian", "devWifiScanThrottling")}
+        ${developerToggleRow("Pengacakan tidak tetap MAC Wi‑Fi", "Gunakan MAC acak yang berubah", "devWifiNonPersistentMac")}
+        ${developerToggleRow("Data seluler selalu aktif", "Pertahankan data seluler saat Wi‑Fi aktif", "devCellularAlwaysActive")}
+        ${developerToggleRow("Akselerasi hardware tethering", "Gunakan akselerasi tethering bila tersedia", "devHardwareTethering")}
+        ${developerRow("Konfigurasi USB default", state.devUsbDefault, "developer-open-usb-config")}
+        ${developerToggleRow("Tampilkan perangkat Bluetooth tanpa nama", "Tampilkan perangkat dengan alamat MAC saja", "devBluetoothUnnamed")}
+      </div>
+
+      <div class="developer-section-label">Bluetooth</div>
+      <div class="a17-card system-card developer-card">
+        ${developerToggleRow("Nonaktifkan offload hardware Bluetooth A2DP", "Gunakan jalur audio software", "devBluetoothA2dpOffload")}
+        ${developerRow("Versi AVRCP Bluetooth", state.devAvrcpVersion, "developer-open-avrcp")}
+        ${developerRow("Versi MAP Bluetooth", state.devMapVersion, "developer-open-map")}
+        ${developerToggleRow("Audio HD", "Gunakan audio Bluetooth HD jika tersedia", "devBluetoothHdAudio")}
+        ${developerRow("Codec Audio Bluetooth", state.devBluetoothCodec, "developer-open-bt-codec")}
+        ${developerRow("Frekuensi Sampel Audio Bluetooth", state.devBluetoothSampleRate, "developer-open-bt-rate")}
+        ${developerRow("Bit Per Sampel Audio Bluetooth", state.devBluetoothBits, "developer-open-bt-bits")}
+        ${developerRow("Mode Channel Audio Bluetooth", state.devBluetoothChannel, "developer-open-bt-channel")}
+        ${developerRow("Jumlah maksimum perangkat audio Bluetooth yang terhubung", state.devBluetoothMaxDevices, "developer-open-bt-max")}
+        ${developerToggleRow("Log debug vendor panjang NFC", "Log tambahan vendor NFC", "devNfcVerboseLogging")}
+        ${developerToggleRow("Log tanpa filter NCI NFC", "Catat paket NFC detail", "devNfcNciVerboseLogging")}
+      </div>
+
+      <div class="developer-section-label">Input</div>
+      <div class="a17-card system-card developer-card">
+        ${developerToggleRow("Tampilkan ketukan", "Tampilkan efek visual untuk ketukan", "devShowTaps")}
+        ${developerToggleRow("Lokasi kursor", "Overlay koordinat dan lintasan sentuh", "devPointerLocation")}
+        ${developerToggleRow("Tampilkan penekanan tombol", "Tampilkan respons visual tombol fisik", "devShowButtonPresses")}
+        ${developerToggleRow("Tampilkan input touchpad", "Overlay data input touchpad", "devTouchpadPointer")}
+      </div>
+
+      <div class="developer-section-label">Gambar</div>
+      <div class="a17-card system-card developer-card">
+        ${developerToggleRow("Tampilkan pembaruan permukaan", "Buat permukaan berkedip saat diperbarui", "devSurfaceUpdates")}
+        ${developerToggleRow("Tampilkan batas tata letak", "Tampilkan batas klip, margin, dan lainnya", "devLayoutBounds")}
+        ${developerToggleRow("Paksa arah tata letak RTL", "Paksa RTL untuk semua lokalitas", "devForceRtl")}
+        ${developerRow("Skala animasi jendela", state.devWindowAnimationScale, "developer-open-window-scale")}
+        ${developerRow("Skala animasi transisi", state.devTransitionAnimationScale, "developer-open-transition-scale")}
+        ${developerRow("Skala durasi animator", state.devAnimatorDurationScale, "developer-open-animator-scale")}
+        ${developerRow("Simulasikan layar sekunder", state.devSecondaryDisplay, "developer-open-secondary-display")}
+        ${developerRow("Lebar terkecil", `${state.devSmallestWidth} dp`, "developer-open-smallest-width")}
+        ${developerRow("Potongan layar", state.devDisplayCutout, "developer-open-display-cutout")}
+        ${developerToggleRow("Menu navigasi transparan", "Buat latar navigation bar transparan secara default", "devTransparentNavigation")}
+      </div>
+
+      <div class="developer-section-label">Percepatan render oleh hardware</div>
+      <div class="a17-card system-card developer-card">
+        ${developerToggleRow("Paksa rendering GPU", "Gunakan akselerasi GPU untuk gambar 2D", "devForceGpuRendering")}
+        ${developerToggleRow("Nonaktifkan overlay HW", "Selalu gunakan GPU untuk komposisi layar", "devDisableHwOverlays")}
+      </div>
+      ` : `
+      <div class="developer-disabled-state"><span>⌘</span><strong>Opsi developer dinonaktifkan</strong><small>Aktifkan tombol di atas untuk menggunakan fitur debugging dan simulasi developer.</small></div>`}
+      ${developerDialogMarkup()}
+    </div>`;
+  }
+
+  function developerChoiceDialog(title, key, values, description = "") {
+    const normalized = values.map(value => typeof value === "string" ? { value, label:value, desc:"" } : value);
+    return `<div class="developer-dialog-backdrop"><section class="developer-dialog developer-dialog-tall">
+      <h4>${escapeHtml(title)}</h4>
+      ${description ? `<p class="developer-dialog-copy">${escapeHtml(description)}</p>` : ""}
+      <div class="developer-dialog-options developer-radio-options">
+        ${normalized.map(item => `<button class="${String(state[key])===String(item.value)?"active":""}" type="button"
+          data-developer-value-key="${key}" data-developer-value="${escapeHtml(String(item.value))}">
+          <span class="developer-choice-copy">
+            <b>${escapeHtml(item.label || String(item.value))}</b>
+            ${item.desc ? `<small>${escapeHtml(item.desc)}</small>` : ""}
+          </span>
+        </button>`).join("")}
+      </div>
+      <button class="developer-dialog-close" type="button" data-action="developer-dialog-close">Batal</button>
+    </section></div>`;
+  }
+
+  function developerDialogMarkup() {
+    const dialog = developerDialog;
+    if (!dialog) return "";
+    const scales = {
+      "window-scale": ["devWindowAnimationScale", "Skala animasi jendela"],
+      "transition-scale": ["devTransitionAnimationScale", "Skala animasi transisi"],
+      "animator-scale": ["devAnimatorDurationScale", "Skala durasi animator"]
+    };
+    if (scales[dialog]) {
+      const [key,title] = scales[dialog];
+      const values = ["Animasi nonaktif","0.5x","1.0x","1.5x","2.0x","5.0x","10.0x"];
+      return `<div class="developer-dialog-backdrop"><section class="developer-dialog"><h4>${title}</h4><div class="developer-dialog-options">${values.map(value=>`<button class="${state[key]===value?"active":""}" type="button" data-developer-value-key="${key}" data-developer-value="${value}">${value}</button>`).join("")}</div><button class="developer-dialog-close" type="button" data-action="developer-dialog-close">Batal</button></section></div>`;
+    }
+    if (dialog === "memory-period") {
+      const values=[3,6,9,12];
+      return `<div class="developer-dialog-backdrop"><section class="developer-dialog"><h4>Rentang penggunaan memori</h4><div class="developer-dialog-options">${values.map(value=>`<button class="${Number(state.devMemoryInterval)===value?"active":""}" type="button" data-developer-value-key="devMemoryInterval" data-developer-value="${value}">${value} jam</button>`).join("")}</div><button class="developer-dialog-close" type="button" data-action="developer-dialog-close">Batal</button></section></div>`;
+    }
+    if (dialog === "feature-flags") {
+      return `<div class="developer-dialog-backdrop"><section class="developer-dialog developer-dialog-tall"><h4>Tanda fitur</h4><div class="developer-dialog-switches">${developerToggleRow("Predictive back","Pratinjau tujuan gestur kembali","devFeaturePredictiveBack")}${developerToggleRow("Desktop windowing","Mode jendela desktop eksperimental","devFeatureDesktopWindowing")}${developerToggleRow("Kontrol media baru","Kontrol media generasi terbaru","devFeatureNewMediaControls")}</div><button class="developer-dialog-close" type="button" data-action="developer-dialog-close">Selesai</button></section></div>`;
+    }
+    if (dialog === "graphics-driver") {
+      const values=["Default sistem","Driver sistem","ANGLE","Driver native simulasi"];
+      return `<div class="developer-dialog-backdrop"><section class="developer-dialog"><h4>Preferensi Driver Grafis</h4><div class="developer-dialog-options">${values.map(value=>`<button class="${state.devGraphicsDriver===value?"active":""}" type="button" data-developer-value-key="devGraphicsDriver" data-developer-value="${value}">${value}</button>`).join("")}</div><button class="developer-dialog-close" type="button" data-action="developer-dialog-close">Batal</button></section></div>`;
+    }
+    if (dialog === "app-compat") {
+      const values=["Default","Perilaku Android 16","Paksa resizeable","Nonaktifkan pembatasan kompatibilitas"];
+      return `<div class="developer-dialog-backdrop"><section class="developer-dialog"><h4>Perubahan Kompatibilitas Aplikasi</h4><div class="developer-dialog-options">${values.map(value=>`<button class="${state.devAppCompatMode===value?"active":""}" type="button" data-developer-value-key="devAppCompatMode" data-developer-value="${value}">${value}</button>`).join("")}</div><button class="developer-dialog-close" type="button" data-action="developer-dialog-close">Batal</button></section></div>`;
+    }
+    if (dialog === "bug-report") {
+      return `<div class="developer-dialog-backdrop"><section class="developer-dialog"><h4>Laporan bug simulator siap</h4><p class="developer-dialog-copy">Bugreport #${Number(state.devBugReportCount)||1} • RAM 8 GB • Kernel 6.12.25-android16-GKI-waifukernel-simulator</p><div class="developer-bugreport-box">USB DEBUG: ${state.devUsbDebugging?"enabled":"disabled"}<br>WIRELESS DEBUG: ${state.devWirelessDebugging?"enabled":"disabled"}<br>OEM UNLOCK ALLOWED: ${state.oemUnlockAllowed?"yes":"no"}<br>GRAPHICS: ${escapeHtml(state.devGraphicsDriver)}</div><button class="developer-dialog-close" type="button" data-action="developer-dialog-close">Tutup</button></section></div>`;
+    }
+    if (dialog === "secondary-display") {
+      const values=["Tidak ada","480p","480p (aman)","720p","720p (aman)","1080p","1080p (aman)","4K","4K (aman)","4K (ditingkatkan)","4K (ditingkatkan, aman)","720p, 1080p (Dual Screen)"];
+      return `<div class="developer-dialog-backdrop"><section class="developer-dialog developer-dialog-tall"><h4>Simulasikan layar sekunder</h4><div class="developer-dialog-options">${values.map(value=>`<button class="${state.devSecondaryDisplay===value?"active":""}" type="button" data-developer-value-key="devSecondaryDisplay" data-developer-value="${value}">${value}</button>`).join("")}</div><button class="developer-dialog-close" type="button" data-action="developer-dialog-close">Batal</button></section></div>`;
+    }
+    if (dialog === "smallest-width") {
+      return `<div class="developer-dialog-backdrop"><section class="developer-dialog"><h4>Lebar terkecil</h4><label class="developer-number-field"><input id="developerSmallestWidthInput" type="number" min="320" max="720" value="${Number(state.devSmallestWidth)||392}"><span>dp</span></label><div class="developer-dialog-actions"><button type="button" data-action="developer-dialog-close">Batal</button><button class="primary" type="button" data-action="developer-save-smallest-width">Oke</button></div></section></div>`;
+    }
+    if (dialog === "usb-config") {
+      const values=[
+        ["Tidak ada transfer data","Hanya pengisian daya"],
+        ["File Sharing","Transfer file melalui MTP"],
+        ["Tethering USB","Bagikan koneksi data melalui USB"],
+        ["MIDI","Gunakan Pixel sebagai antarmuka MIDI"],
+        ["Android Auto","Hubungkan ke Android Auto melalui USB"],
+        ["PTP","Transfer foto sebagai kamera (PTP)"]
+      ];
+      return `<div class="developer-dialog-backdrop"><section class="developer-dialog developer-dialog-tall">
+        <h4>Konfigurasi USB default</h4>
+        <p class="developer-dialog-copy">Pilih fungsi USB default untuk Google Pixel 10.</p>
+        <div class="developer-dialog-options developer-usb-options">
+          ${values.map(([value,desc])=>`<button class="${state.devUsbDefault===value?"active":""}" type="button" data-developer-usb-value="${value}"><span><b>${value}</b><small>${desc}</small></span></button>`).join("")}
+        </div>
+        <button class="developer-dialog-close" type="button" data-action="developer-dialog-close">Batal</button>
+      </section></div>`;
+    }
+
+    if (dialog === "usb-revoke-confirm") {
+      return `<div class="developer-dialog-backdrop"><section class="developer-dialog">
+        <h4>Cabut otorisasi debug USB?</h4>
+        <p class="developer-dialog-copy">
+          Semua komputer yang sebelumnya dipercaya untuk ADB melalui USB akan dilupakan.
+          Saat tersambung lagi, perangkat akan meminta konfirmasi kunci RSA baru.
+        </p>
+        <div class="developer-dialog-actions">
+          <button type="button" data-action="developer-dialog-close">Batal</button>
+          <button class="primary" type="button" data-action="developer-revoke-usb-confirm">Cabut</button>
+        </div>
+      </section></div>`;
+    }
+
+    if (dialog === "logger-buffer") {
+      return developerChoiceDialog(
+        "Ukuran buffer logger",
+        "devLoggerBuffer",
+        [
+          {value:"Nonaktif",label:"Nonaktif",desc:"Nonaktifkan buffer log persistensi simulator"},
+          {value:"64 KB/buffer log",label:"64 KB/buffer log",desc:"Buffer kecil, penggunaan RAM paling rendah"},
+          {value:"256 KB/buffer log",label:"256 KB/buffer log",desc:"Default simulator"},
+          {value:"1 MB/buffer log",label:"1 MB/buffer log",desc:"Simpan lebih banyak log"},
+          {value:"4 MB/buffer log",label:"4 MB/buffer log",desc:"Buffer besar untuk debugging"},
+          {value:"16 MB/buffer log",label:"16 MB/buffer log",desc:"Buffer maksimum simulasi"}
+        ],
+        "Mengubah kapasitas logcat simulasi untuk setiap buffer log."
+      );
+    }
+
+    if (dialog === "avrcp-version") {
+      return developerChoiceDialog(
+        "Versi AVRCP Bluetooth",
+        "devAvrcpVersion",
+        [
+          {value:"AVRCP 1.3",label:"AVRCP 1.3",desc:"Kontrol media dasar"},
+          {value:"AVRCP 1.4",label:"AVRCP 1.4",desc:"Browsing metadata lebih lengkap"},
+          {value:"AVRCP 1.5 (Default)",label:"AVRCP 1.5 (Default)",desc:"Pilihan default Google Pixel simulator"},
+          {value:"AVRCP 1.6",label:"AVRCP 1.6",desc:"Versi AVRCP terbaru pada daftar simulasi"}
+        ],
+        "Versi ini digunakan saat perangkat media Bluetooth terhubung kembali."
+      );
+    }
+
+    if (dialog === "map-version") {
+      return developerChoiceDialog(
+        "Versi MAP Bluetooth",
+        "devMapVersion",
+        [
+          {value:"MAP 1.2 (Default)",label:"MAP 1.2 (Default)",desc:"Profil pesan default"},
+          {value:"MAP 1.3",label:"MAP 1.3",desc:"Kompatibilitas MAP yang lebih baru"},
+          {value:"MAP 1.4",label:"MAP 1.4",desc:"Versi MAP tertinggi pada simulator"}
+        ],
+        "Mengatur versi Bluetooth Message Access Profile untuk sesi berikutnya."
+      );
+    }
+
+    if (dialog === "bt-codec") {
+      return developerChoiceDialog(
+        "Codec Audio Bluetooth",
+        "devBluetoothCodec",
+        [
+          {value:"Gunakan Pilihan Sistem (Default)",label:"Gunakan Pilihan Sistem (Default)",desc:"Negosiasikan codec terbaik yang didukung kedua perangkat"},
+          {value:"SBC",label:"SBC",desc:"Codec A2DP dasar dan paling kompatibel"},
+          {value:"AAC",label:"AAC",desc:"Codec audio AAC"},
+          {value:"aptX",label:"aptX",desc:"Codec Qualcomm aptX simulasi"},
+          {value:"aptX HD",label:"aptX HD",desc:"Codec aptX HD simulasi"},
+          {value:"LDAC",label:"LDAC",desc:"Codec audio resolusi tinggi simulasi"},
+          {value:"LC3",label:"LC3",desc:"Codec LC3 simulasi"}
+        ],
+        "Codec akan terlihat pada detail perangkat audio Bluetooth yang terhubung."
+      );
+    }
+
+    if (dialog === "bt-rate") {
+      return developerChoiceDialog(
+        "Frekuensi Sampel Audio Bluetooth",
+        "devBluetoothSampleRate",
+        [
+          "Gunakan Pilihan Sistem (Default)","44.1 kHz","48.0 kHz","88.2 kHz","96.0 kHz"
+        ],
+        "Paksa sample rate Bluetooth untuk simulasi sesi audio berikutnya."
+      );
+    }
+
+    if (dialog === "bt-bits") {
+      return developerChoiceDialog(
+        "Bit Per Sampel Audio Bluetooth",
+        "devBluetoothBits",
+        [
+          "Gunakan Pilihan Sistem (Default)","16 bit/sample","24 bit/sample","32 bit/sample"
+        ],
+        "Mengatur bit depth audio Bluetooth simulasi."
+      );
+    }
+
+    if (dialog === "bt-channel") {
+      return developerChoiceDialog(
+        "Mode Channel Audio Bluetooth",
+        "devBluetoothChannel",
+        [
+          "Gunakan Pilihan Sistem (Default)","Mono","Stereo"
+        ],
+        "Mengatur mode channel untuk audio Bluetooth simulasi."
+      );
+    }
+
+    if (dialog === "bt-max") {
+      return developerChoiceDialog(
+        "Jumlah maksimum perangkat audio Bluetooth yang terhubung",
+        "devBluetoothMaxDevices",
+        [
+          {value:"1",label:"1 perangkat",desc:"Hanya satu perangkat audio aktif"},
+          {value:"2",label:"2 perangkat",desc:"Dua perangkat audio Bluetooth"},
+          {value:"3",label:"3 perangkat",desc:"Maksimum tiga perangkat"},
+          {value:"4",label:"4 perangkat",desc:"Maksimum empat perangkat"},
+          {value:"5",label:"5 perangkat",desc:"Maksimum lima perangkat"}
+        ],
+        "Batas ini diterapkan oleh Bluetooth simulator pada sesi pairing berikutnya."
+      );
+    }
+
+    if (dialog === "display-cutout") {
+      const values=["Default perangkat","Render aplikasi di bawah area potongan","Potongan sudut","Potongan ganda","Potongan Lubang Kertas","Sembunyikan","Potongan tinggi","Potongan waterfall"];
+      return `<div class="developer-dialog-backdrop"><section class="developer-dialog developer-dialog-tall"><h4>Potongan layar</h4><div class="developer-dialog-options">${values.map(value=>`<button class="${state.devDisplayCutout===value?"active":""}" type="button" data-developer-value-key="devDisplayCutout" data-developer-value="${value}">${value}</button>`).join("")}</div><button class="developer-dialog-close" type="button" data-action="developer-dialog-close">Batal</button></section></div>`;
+    }
+    if (dialog === "oem-confirm") {
+      return `<div class="developer-dialog-backdrop"><section class="developer-dialog"><h4>Izinkan pembukaan kunci OEM?</h4><p class="developer-dialog-copy">Mengaktifkan opsi ini mengizinkan bootloader perangkat dibuka kuncinya dari Fastboot. Opsi ini tidak langsung membuka bootloader.</p><div class="developer-dialog-actions"><button type="button" data-action="developer-dialog-close">Batal</button><button class="primary" type="button" data-action="developer-oem-confirm">Aktifkan</button></div></section></div>`;
+    }
+    return "";
+  }
+
+  function developerMemoryStats(hours = Number(state.devMemoryInterval) || 3) {
+    const table={
+      3:{avg:3.12,used:39,free:4.88,system:2.75,apps:1.18,cached:.72},
+      6:{avg:3.46,used:43,free:4.54,system:2.82,apps:1.31,cached:.76},
+      9:{avg:3.71,used:46,free:4.29,system:2.86,apps:1.46,cached:.79},
+      12:{avg:3.88,used:49,free:4.12,system:2.91,apps:1.59,cached:.83}
+    };
+    return table[hours]||table[3];
+  }
+
+  function renderDeveloperMemory() {
+    const hours=[3,6,9,12].includes(Number(state.devMemoryInterval))?Number(state.devMemoryInterval):3;
+    const s=developerMemoryStats(hours);
+    root.innerHTML=`<div class="a17-page system-page developer-subpage">
+      ${topbar("Penggunaan memori")}
+      <button class="developer-memory-period" type="button" data-action="developer-memory-period">${hours} jam⌄</button>
+      <div class="a17-card system-card">${developerToggleRow("Aktifkan profiling penggunaan memori","Profiling memori memerlukan resource sistem tambahan.","devMemoryProfiling")}</div>
+      <div class="developer-memory-summary">
+        <span>Rata-rata penggunaan memori</span>
+        <strong>${s.avg.toFixed(2).replace(".",",")} GB</strong>
+        <div class="developer-memory-bar"><i style="width:${s.used}%"></i></div>
+        <small>Performa: Normal • Total memori: 8,00 GB • Bebas: ${s.free.toFixed(2).replace(".",",")} GB</small>
+        <div class="developer-memory-detail-grid">
+          <span><b>${s.system.toFixed(2).replace(".",",")} GB</b>Sistem</span>
+          <span><b>${s.apps.toFixed(2).replace(".",",")} GB</b>Aplikasi</span>
+          <span><b>${s.cached.toFixed(2).replace(".",",")} GB</b>Cache</span>
+          <span><b>${s.free.toFixed(2).replace(".",",")} GB</b>Bebas</span>
+        </div>
+      </div>
+      ${developerDialogMarkup()}
+    </div>`;
+  }
+
+  function renderDeveloperRunningServices() {
+    const s=developerMemoryStats(Number(state.devMemoryInterval)||3);
+    const services=[["Setelan","6 proses dan 1 layanan","86 MB"],["com.qualcomm.qcrilmsgtunnel","1 proses dan layanan","14 MB"],["com.qualcomm.atfwd","1 proses dan layanan","11 MB"],["Gboard","1 proses dan layanan","112 MB"],["Google Play services","4 proses dan 3 layanan","286 MB"],["System UI","2 proses dan 4 layanan","194 MB"],["Pixel Launcher","1 proses dan 2 layanan","148 MB"]];
+    const systemPct=Math.round(s.system/8*100), appsPct=Math.round(s.apps/8*100);
+    root.innerHTML=`<div class="a17-page system-page developer-subpage">
+      ${topbar("Layanan yang sedang berjalan")}
+      <div class="developer-running-memory">
+        <strong>Memori perangkat • Total 8,00 GB</strong>
+        <div class="developer-running-bar"><i style="width:${systemPct}%"></i><i style="width:${appsPct}%"></i></div>
+        <small>Sistem ${s.system.toFixed(2).replace(".",",")} GB RAM • Aplikasi ${s.apps.toFixed(2).replace(".",",")} GB RAM • Cache ${s.cached.toFixed(2).replace(".",",")} GB • Kosong ${s.free.toFixed(2).replace(".",",")} GB RAM</small>
+      </div>
+      <div class="developer-section-label">Penggunaan RAM aplikasi</div>
+      <div class="a17-card system-card">${services.map(x=>`<div class="a17-row"><span class="a17-trailing setting-leading-icon">⚙</span><span class="a17-copy"><strong>${x[0]}</strong><span>${x[1]}</span></span><span class="developer-service-memory">${x[2]}</span></div>`).join("")}</div>
+    </div>`;
+  }
+
+  function renderDeveloperWirelessDebugging() {
+    const port=37100 + (Number(state.battery)||0);
+    root.innerHTML=`<div class="a17-page system-page developer-subpage">${topbar("Proses debug nirkabel")}
+      <div class="developer-master-card"><span>Gunakan proses debug nirkabel</span>${toggle("devWirelessDebugging")}</div>
+      ${state.devWirelessDebugging?`<div class="a17-card system-card">
+        ${plainRow("Nama perangkat","Google Pixel 10")}
+        ${plainRow("Alamat IP & Port",`192.168.1.10:${port}`)}
+        ${plainRow("Kode penyambungan","482 731")}
+        ${plainRow("Perangkat tersambung","Android Studio • simulasi")}
+      </div>`:""}
+      <div class="system-note">ⓘ <span>${state.devWirelessDebugging?"ADB nirkabel simulasi aktif.":"Aktifkan untuk menampilkan IP, port, dan kode pairing simulasi."} Tidak ada port ADB nyata yang dibuka.</span></div>
+    </div>`;
+  }
+
+  function renderDeveloperSelectDebugApp() {
+    const apps=SIM_APPS.filter(app=>app.id!=="settings-app").slice(0,24);
+    root.innerHTML=`<div class="a17-page system-page developer-subpage">${topbar("Pilih aplikasi")}
+      <div class="a17-card system-card">
+        <button class="a17-row developer-debug-app" type="button" data-developer-debug-app=""><span class="a17-copy"><strong>Tidak ada</strong><span>Jangan debug aplikasi</span></span>${!state.devDebugApp?`<span class="language-check">✓</span>`:""}</button>
+        ${apps.map(app=>`<button class="a17-row developer-debug-app" type="button" data-developer-debug-app="${app.id}"><span class="sim-app-icon tone-${app.tone}">${app.glyph}</span><span class="a17-copy"><strong>${escapeHtml(app.name)}</strong><span>${state.devDebugApp===app.id?"Aplikasi debug terpilih":"Pilih untuk debug simulasi"}</span></span>${state.devDebugApp===app.id?`<span class="language-check">✓</span>`:""}</button>`).join("")}
+      </div>
     </div>`;
   }
 
@@ -1775,8 +2888,23 @@
 
   function renderAbout() {
     const normal = [[t("deviceName"), "Google Pixel 10"], [t("model"), "Frankel"]];
-    const tail = [[t("securityUpdate"), "5 Agustus 2026"], [t("build"), "WG17.260818.2"]];
-    root.innerHTML = `<div class="a17-page wallstyle-page">${topbar(t("aboutPhone"))}<div class="about-hero"><div class="about-glyph">G</div><h4>Google Pixel 10</h4><p>Android 17 • Model Frankel</p></div><div class="a17-card">${normal.map(d => `<div class="a17-row"><span class="a17-copy"><strong>${d[0]}</strong><span>${d[1]}</span></span></div>`).join("")}<button class="a17-row android-version-entry" type="button" data-nav="androidEasterEgg"><span class="a17-copy"><strong>${t("androidVersion")}</strong><span>17</span></span><span class="a17-chevron">›</span></button>${tail.map(d => `<div class="a17-row"><span class="a17-copy"><strong>${d[0]}</strong><span>${d[1]}</span></span></div>`).join("")}</div></div>`;
+    const buildInfo = {
+      securityUpdate: "5 Agustus 2026",
+      vendorSecurityPatch: "1 Agustus 2026",
+      basebandVersion: "2.7.c4-wf-260818.18-1833_0710_8f29c7d5a1",
+      kernelVersion: "6.12.25-android16-GKI-waifukernel-simulator",
+      buildDate: "Sel 18 Agu 18:33:00 WIB 2026",
+      buildNumber: "WG17.260818.2"
+    };
+    const detailRows = [
+      [t("securityUpdate"), buildInfo.securityUpdate],
+      [t("vendorSecurityPatch"), buildInfo.vendorSecurityPatch],
+      [t("basebandVersion"), buildInfo.basebandVersion],
+      [t("kernelVersion"), `${buildInfo.kernelVersion}<br><small>#1 ${buildInfo.buildDate}</small>`],
+      [t("buildDate"), buildInfo.buildDate],
+      [t("build"), buildInfo.buildNumber]
+    ];
+    root.innerHTML = `<div class="a17-page wallstyle-page">${topbar(t("aboutPhone"))}<div class="about-hero"><div class="about-glyph">G</div><h4>Google Pixel 10</h4><p>Android 17 • Model Frankel</p></div><div class="a17-card about-device-card">${normal.map(d => `<div class="a17-row"><span class="a17-copy"><strong>${d[0]}</strong><span>${d[1]}</span></span></div>`).join("")}<button class="a17-row android-version-entry" type="button" data-nav="androidEasterEgg"><span class="a17-copy"><strong>${t("androidVersion")}</strong><span>17</span></span><span class="a17-chevron">›</span></button>${detailRows.map(d => `<div class="a17-row about-build-row"><span class="a17-copy"><strong>${d[0]}</strong><span>${d[1]}</span></span></div>`).join("")}</div></div>`;
   }
 
   function renderAndroidEasterEgg() {
@@ -1898,12 +3026,48 @@
     </div>`;
   }
 
+  function financeBiometricMarkup(app) {
+    return `<div class="a17-page sim-app-page finance-biometric-page tone-${app.tone}">
+      ${simAppTopbar(app)}
+      <div class="finance-biometric-scrim">
+        <section class="finance-biometric-sheet">
+          <span class="finance-auth-app-icon sim-app-icon tone-${app.tone}">${app.glyph}</span>
+          <small>Keamanan ${escapeHtml(app.name)}</small>
+          <h3>Verifikasi identitas</h3>
+          <p>Sentuh sensor sidik jari untuk masuk ke ${escapeHtml(app.name)}.</p>
+
+          <button class="finance-fingerprint-button ${financialAuthBusy ? "scanning" : ""}"
+            type="button" data-sim-action="finance-biometric-auth"
+            aria-label="Verifikasi sidik jari">
+            <span class="finance-fingerprint-glyph"><i></i><i></i><i></i><i></i></span>
+          </button>
+
+          <strong class="finance-biometric-status">${financialAuthBusy ? "Memindai sidik jari…" : "Sentuh sensor sidik jari"}</strong>
+          <small class="finance-biometric-device">Sidik jari tersimpan • Google Pixel 10</small>
+          <button class="finance-biometric-cancel" type="button" data-sim-action="finance-biometric-cancel">Batal</button>
+        </section>
+
+        <button class="finance-display-fingerprint ${financialAuthBusy ? "scanning" : ""}"
+          type="button" data-sim-action="finance-biometric-auth"
+          aria-label="Sensor sidik jari di layar">
+          <span class="finance-fingerprint-glyph compact"><i></i><i></i><i></i><i></i></span>
+        </button>
+      </div>
+    </div>`;
+  }
+
   function renderFinancialApp(app) {
+    if (financialAuthSession !== app.id) {
+      root.innerHTML = financeBiometricMarkup(app);
+      return;
+    }
+
     root.innerHTML = `<div class="a17-page sim-app-page finance-app tone-${app.tone}">${simAppTopbar(app)}
       <div class="finance-sim-badge">SIMULASI • bukan saldo nyata</div>
       <section class="finance-profile"><div><small>Nama akun</small><strong>Skenakun</strong></div><span>${app.glyph}</span></section>
       <section class="finance-balance"><small>Saldo tersedia</small><strong>${SIM_BALANCE}</strong><span>IDR • data demo lokal</span></section>
       <div class="finance-actions"><button data-sim-action="finance-transfer">⇄<small>Transfer</small></button><button data-sim-action="finance-pay">▣<small>Bayar</small></button><button data-sim-action="finance-topup">＋<small>Top Up</small></button><button data-sim-action="finance-history">◷<small>Riwayat</small></button></div>
+      <div class="sim-card"><strong>Autentikasi berhasil</strong><p>Sidik jari terverifikasi untuk sesi ${escapeHtml(app.name)} ini. Keluar dari aplikasi akan meminta verifikasi ulang.</p></div>
       <div class="sim-card"><strong>Aktivitas simulasi</strong><p>Tidak ada transaksi nyata. Semua tombol hanya menampilkan demo antarmuka.</p></div>
     </div>`;
   }
@@ -2409,6 +3573,88 @@
     return true;
   }
 
+  /*
+   * FIX 74abda6: one owner for media-link paste.
+   *
+   * Clipboard read permission is browser controlled. On Chromium/Android the
+   * permission can be denied even though the user clicked "Tempel". Try the
+   * modern Clipboard API first, then a legacy paste attempt, and finally show
+   * a native paste box instead of silently doing nothing.
+   *
+   * Pasting only fills/saves the URL. Playback remains an explicit "Putar"
+   * action so the iframe is created from a clear user playback gesture.
+   */
+  async function pasteMediaLinkFromClipboard(appId = state.activeSimApp) {
+    const cfg = mediaStateForApp(appId);
+    const input = $("#" + cfg.inputId, root);
+    let value = "";
+
+    try {
+      if (window.isSecureContext && navigator.clipboard?.readText) {
+        value = String(await navigator.clipboard.readText() || "").trim();
+      }
+    } catch {
+      // Continue to browser-compatible fallbacks below.
+    }
+
+    if (!value) {
+      const probe = document.createElement("textarea");
+      probe.setAttribute("aria-hidden", "true");
+      probe.style.cssText = "position:fixed;left:-9999px;top:0;opacity:0;pointer-events:none";
+      document.body.appendChild(probe);
+      probe.focus();
+      try {
+        if (document.queryCommandSupported?.("paste")) {
+          document.execCommand("paste");
+          value = String(probe.value || "").trim();
+        }
+      } catch {}
+      probe.remove();
+    }
+
+    if (!value) {
+      input?.focus();
+      input?.select?.();
+      const manual = window.prompt(
+        appId === "spotify"
+          ? "Browser memblokir akses clipboard otomatis. Tempel link Spotify di sini:"
+          : "Browser memblokir akses clipboard otomatis. Tempel link YouTube / YouTube Music di sini:",
+        input?.value || ""
+      );
+      if (manual === null) {
+        toast("Tempel dibatalkan");
+        return false;
+      }
+      value = String(manual || "").trim();
+    }
+
+    if (!value) {
+      toast("Clipboard kosong");
+      input?.focus();
+      return false;
+    }
+
+    const validEmbed = appId === "spotify"
+      ? spotifyEmbedFromUrl(value)
+      : youtubeEmbedFromUrl(value);
+
+    if (!validEmbed) {
+      if (input) input.value = value;
+      toast(appId === "spotify"
+        ? "Tautan Spotify tidak dikenali"
+        : "Tautan YouTube / YouTube Music tidak dikenali");
+      input?.focus();
+      return false;
+    }
+
+    if (input) input.value = value;
+    state[cfg.urlKey] = value;
+    save();
+    toast("Link ditempel. Tekan Putar.");
+    input?.focus();
+    return true;
+  }
+
   function renderSpotifyApp(app) {
     const connected = !!spotifySessionToken();
     const configured = !!state.spotifyClientId;
@@ -2674,9 +3920,181 @@
   }
 
 
+  function simToolkitProfileMeta(id = state.simToolkitSelected) {
+    if (id === "sim2") {
+      return {
+        id: "sim2",
+        label: "Indosat",
+        provider: "IM3 / Indosat Ooredoo Hutchison",
+        number: "+62 857-••••-2843",
+        type: "SIM fisik • Slot 2",
+        enabledKey: "sim2Enabled",
+        iccid: "8962 1000 5702 2843"
+      };
+    }
+
+    if (id === "esim") {
+      const provider = simProviderById(state.eSimProvider);
+      return {
+        id: "esim",
+        label: provider?.name || "eSIM",
+        provider: provider?.name || "Belum ada profil eSIM",
+        number: state.eSimInstalled ? maskSimNumber(state.eSimPhone) : "Belum terpasang",
+        type: "eSIM • SIM digital",
+        enabledKey: "eSimEnabled",
+        iccid: state.eSimInstalled ? (state.eSimIccid || "8962 0000 0000 0000") : "—"
+      };
+    }
+
+    return {
+      id: "sim1",
+      label: "3",
+      provider: "Tri Indonesia",
+      number: maskSimNumber(state.simPhone1),
+      type: "SIM fisik • Slot 1",
+      enabledKey: "sim1Enabled",
+      iccid: "8962 8901 3100 1842"
+    };
+  }
+
+  function simToolkitPrimaryState(key, id) {
+    return state[key] === id ? "active" : "";
+  }
+
+  function renderSimToolkitApp(app) {
+    let selected = ["sim1", "sim2", "esim"].includes(state.simToolkitSelected)
+      ? state.simToolkitSelected
+      : "sim1";
+
+    if (selected === "esim" && !state.eSimInstalled) {
+      // Keep the eSIM card selectable so the user can start setup.
+    }
+
+    const profile = simToolkitProfileMeta(selected);
+    const profileEnabled = selected === "esim"
+      ? !!(state.eSimInstalled && state.eSimEnabled)
+      : !!state[profile.enabledKey];
+
+    const roamingMap = state.simToolkitRoaming && typeof state.simToolkitRoaming === "object"
+      ? state.simToolkitRoaming
+      : { sim1: false, sim2: false, esim: false };
+    const roaming = !!roamingMap[selected];
+
+    const profileCard = (id, title, badge, subtitle, enabled, extraClass = "") => `
+      <button class="simtk-profile ${selected === id ? "active" : ""} ${extraClass}"
+        type="button" data-sim-action="simtk-select-${id}">
+        <span class="simtk-profile-badge">${badge}</span>
+        <strong>${escapeHtml(title)}</strong>
+        <small>${escapeHtml(subtitle)}</small>
+        <i class="${enabled ? "on" : ""}"></i>
+      </button>`;
+
+    root.innerHTML = `<div class="a17-page sim-app-page sim-toolkit-app">
+      ${simAppTopbar(app)}
+
+      <section class="simtk-hero">
+        <span class="simtk-hero-icon">SIM</span>
+        <div>
+          <strong>SIM Toolkit</strong>
+          <small>Kelola SIM fisik dan eSIM di Google Pixel 10</small>
+        </div>
+      </section>
+
+      <div class="simtk-section-label">Kartu SIM</div>
+      <div class="simtk-profile-grid">
+        ${profileCard("sim1", "3", "3", "SIM fisik • Slot 1", !!state.sim1Enabled)}
+        ${profileCard("sim2", "Indosat", "IM3", "SIM fisik • Slot 2", !!state.sim2Enabled)}
+        ${profileCard(
+          "esim",
+          state.eSimInstalled ? (simProviderById(state.eSimProvider)?.name || "eSIM") : "Tambahkan eSIM",
+          "eSIM",
+          state.eSimInstalled ? "SIM digital • Terpasang" : "SIM digital • Belum terpasang",
+          !!(state.eSimInstalled && state.eSimEnabled),
+          "esim"
+        )}
+      </div>
+
+      <section class="simtk-card">
+        <div class="simtk-profile-title">
+          <span class="simtk-large-badge">${selected === "sim1" ? "3" : selected === "sim2" ? "IM3" : "eSIM"}</span>
+          <div>
+            <strong>${escapeHtml(profile.label)}</strong>
+            <small>${escapeHtml(profile.type)}</small>
+          </div>
+          ${selected === "esim" && !state.eSimInstalled ? "" : `
+            <button class="a17-switch ${profileEnabled ? "on" : ""}" type="button"
+              data-sim-action="simtk-toggle-current" aria-label="Aktifkan SIM"></button>
+          `}
+        </div>
+
+        ${selected === "esim" && !state.eSimInstalled ? `
+          <div class="simtk-empty-esim">
+            <p>Belum ada profil eSIM pada perangkat.</p>
+            <button class="simtk-primary-action" type="button" data-sim-action="simtk-add-esim">＋ Tambahkan eSIM</button>
+          </div>
+        ` : `
+          <div class="simtk-info-row"><span>Operator</span><strong>${escapeHtml(profile.provider)}</strong></div>
+          <div class="simtk-info-row"><span>Nomor</span><strong>${escapeHtml(profile.number)}</strong></div>
+          <div class="simtk-info-row"><span>ICCID</span><strong>${escapeHtml(profile.iccid)}</strong></div>
+
+          <div class="simtk-switch-row">
+            <div><strong>Roaming data</strong><small>Izinkan data saat berada di jaringan roaming</small></div>
+            <button class="a17-switch ${roaming ? "on" : ""}" type="button" data-sim-action="simtk-toggle-roaming"></button>
+          </div>
+        `}
+      </section>
+
+      ${selected === "esim" && !state.eSimInstalled ? "" : `
+        <div class="simtk-section-label">Jadikan SIM utama</div>
+        <section class="simtk-card simtk-primary-settings">
+          <div class="simtk-primary-row">
+            <div><strong>Panggilan</strong><small>${simPrimaryLabel(state.primaryCallSim)}</small></div>
+            <button class="${simToolkitPrimaryState("primaryCallSim", selected)}" type="button" data-sim-action="simtk-primary-call">Pilih</button>
+          </div>
+          <div class="simtk-primary-row">
+            <div><strong>Pesan teks</strong><small>${simPrimaryLabel(state.primarySmsSim)}</small></div>
+            <button class="${simToolkitPrimaryState("primarySmsSim", selected)}" type="button" data-sim-action="simtk-primary-sms">Pilih</button>
+          </div>
+          <div class="simtk-primary-row">
+            <div><strong>Data seluler</strong><small>${simPrimaryLabel(state.primaryDataSim)}</small></div>
+            <button class="${simToolkitPrimaryState("primaryDataSim", selected)}" type="button" data-sim-action="simtk-primary-data">Pilih</button>
+          </div>
+        </section>
+      `}
+
+      <div class="simtk-section-label">Jaringan</div>
+      <section class="simtk-card">
+        <div class="simtk-switch-row">
+          <div><strong>Data seluler</strong><small>${state.mobileData ? "Aktif" : "Nonaktif"}</small></div>
+          <button class="a17-switch ${state.mobileData ? "on" : ""}" type="button" data-sim-action="simtk-mobile-data"></button>
+        </div>
+        <div class="simtk-switch-row">
+          <div><strong>Pengalihan data otomatis</strong><small>Gunakan SIM lain bila jaringan utama tidak tersedia</small></div>
+          <button class="a17-switch ${state.autoDataSwitch ? "on" : ""}" type="button" data-sim-action="simtk-auto-data"></button>
+        </div>
+      </section>
+
+      <button class="simtk-system-settings" type="button" data-sim-action="simtk-system-settings">⚙ Buka setelan SIM lengkap</button>
+      <small class="simtk-disclaimer">Semua SIM, operator, ICCID, roaming dan aktivasi eSIM di sini hanya simulasi lokal.</small>
+    </div>`;
+  }
+
   function renderSimApp() {
     const app = appById(state.activeSimApp);
+    if (
+      app &&
+      state.developerOptionsEnabled &&
+      state.devWaitForDebugger &&
+      state.devDebugApp === app.id &&
+      developerDebuggerAttachedApp !== app.id
+    ) {
+      root.innerHTML=`<div class="a17-page sim-app-page developer-wait-debugger">${simAppTopbar(app)}
+        <div class="developer-debugger-wait-card"><span>⌘</span><strong>Menunggu debugger</strong><p>${escapeHtml(app.name)} dihentikan sementara sesuai opsi developer.</p><button type="button" data-sim-action="developer-attach-debugger">Hubungkan debugger simulasi</button></div>
+      </div>`;
+      return;
+    }
     if (["brimo","digi-bank","dana","ovo"].includes(app.id)) return renderFinancialApp(app);
+    if (app.id === "sim-toolkit") { renderSimToolkitApp(app); return; }
     if (app.id === "bcr") { root.innerHTML = renderBcrApp(app); return; }
     if (app.id === "dolby") { navigate("dolbyAtmos", false); return; }
     if (app.id === "settings-app") { navigate("settings", false); return; }
@@ -3208,7 +4626,8 @@
         <span>BASEBAND VERSION - <b>simulator</b></span>
         <span>SERIAL NUMBER - <b>WAIFU-P10-FRANKEL</b></span>
         <span>SECURE BOOT - <b>yes</b></span>
-        <span>DEVICE STATE - <b>locked</b></span>
+        <span>DEVICE STATE - <b>${state.bootloaderUnlocked ? "unlocked" : "locked"}</b></span>
+        <span>OEM UNLOCKING - <b>${state.oemUnlockAllowed ? "enabled" : "disabled"}</b></span>
         <span>BATTERY - <b>${state.battery}%</b></span>
       </div>
       <div class="android-fastboot-options">
@@ -3270,6 +4689,82 @@
     root.innerHTML = `<div class="boot-page"><div style="text-align:center"><div class="boot-mark">G</div><p style="font-size:8px;font-weight:900;color:#5f6368">${t("rebooting")}</p></div></div>`;
   }
 
+  function syncDeveloperOptionEffects() {
+    const active=!!state.developerOptionsEnabled;
+
+    const ensure=(id,cls)=>{
+      let node=$(`#${id}`,phone);
+      if(!node){node=document.createElement("div");node.id=id;node.className=cls;phone.appendChild(node)}
+      return node;
+    };
+
+    let secondary=$("#developerSecondaryDisplay",phone);
+    if(active&&state.devSecondaryDisplay&&state.devSecondaryDisplay!=="Tidak ada"){
+      secondary=secondary||ensure("developerSecondaryDisplay","developer-secondary-display");
+      secondary.innerHTML=`<b>Layar sekunder</b><span>${escapeHtml(state.devSecondaryDisplay)}</span><small>Display #2</small>`;
+    }else secondary?.remove();
+
+    const flags=[];
+    if(active&&state.devUsbDebugging)flags.push("ADB USB");
+    if(active&&state.devWirelessDebugging)flags.push("ADB Wi‑Fi");
+    if(active&&state.devDisableAdbTimeout)flags.push("ADB no-timeout");
+    if(active&&state.devVerifyAppsUsb)flags.push("Verify USB");
+    if(active&&state.devVerifyDebugBytecode)flags.push("ART verify");
+    if(active&&state.devGpuDebugLayers)flags.push("GPU debug");
+    if(active&&state.devExperimentalAngle)flags.push("ANGLE");
+    if(active&&state.devGraphicsDriver&&state.devGraphicsDriver!=="Default sistem")flags.push(state.devGraphicsDriver);
+    if(active&&state.devForceGpuRendering)flags.push("GPU 2D");
+    if(active&&state.devDisableHwOverlays)flags.push("HW overlay off");
+    if(active&&state.devMockModem)flags.push("Mock modem");
+    if(active&&state.devFeaturePredictiveBack)flags.push("Predictive back");
+    if(active&&state.devFeatureDesktopWindowing)flags.push("Desktop window");
+    if(active&&state.devFeatureNewMediaControls)flags.push("Media controls v2");
+    if(active&&state.devDisableDefaultFrameRate)flags.push("Game FPS bebas");
+    if(active&&state.devBluetoothHciSnoop)flags.push("BT HCI log");
+    if(active&&state.devWifiVerboseLogging)flags.push("Wi‑Fi verbose");
+    if(active&&!state.devWifiScanThrottling)flags.push("Wi‑Fi no throttle");
+    if(active&&state.devWifiNonPersistentMac)flags.push("Random MAC");
+    if(active&&state.devHardwareTethering)flags.push("HW tether");
+    if(active&&state.devVerboseVendorLogging)flags.push("Vendor log");
+    if(active&&state.devNfcVerboseLogging)flags.push("NFC vendor log");
+    if(active&&state.devNfcNciVerboseLogging)flags.push("NCI raw");
+    if(active&&state.devBluetoothHdAudio)flags.push("BT HD");
+    if(active&&state.devBluetoothA2dpOffload)flags.push("A2DP SW");
+
+    let hud=$("#developerOptionHud",phone);
+    if(active && state.devShowStatusHud && flags.length){
+      hud=hud||ensure("developerOptionHud","developer-option-hud");
+      hud.textContent=flags.join(" • ");
+    } else {
+      hud?.remove();
+    }
+
+    if(active&&state.devCellularAlwaysActive&&!state.airplane&&!state.mobileData){
+      state.mobileData=true;save();
+    }
+
+    if(active&&state.devWifiNonPersistentMac&&state.wifi){
+      const bucket=Math.floor(Date.now()/30000);
+      const seed=String(bucket).slice(-6).padStart(6,"0");
+      const mac=`02:${seed.slice(0,2)}:${seed.slice(2,4)}:${seed.slice(4,6)}:${String(state.battery).padStart(2,"0")}:A7`;
+      if(state.devWifiRandomMac!==mac){state.devWifiRandomMac=mac;save()}
+    }
+
+    let settingsOverlay=$("#developerSettingsOverlay",phone);
+    if(active&&state.devAllowOverlaySettings&&["settings","system","developerOptions"].includes(state.view)){
+      settingsOverlay=settingsOverlay||ensure("developerSettingsOverlay","developer-settings-overlay");
+      settingsOverlay.textContent="Overlay diizinkan";
+    }else settingsOverlay?.remove();
+
+    let awake=$("#developerStayAwakeBadge",phone);
+    if(active&&state.devStayAwake){
+      awake=awake||ensure("developerStayAwakeBadge","developer-stay-awake-badge");
+      awake.textContent="☀ Tetap aktif";
+    }else awake?.remove();
+
+    if(!active||(!state.devPointerLocation&&!state.devTouchpadPointer))$("#developerPointerOverlay",phone)?.remove();
+  }
+
   function render() {
     ensurePowerModeStyles();
     applyTheme();
@@ -3280,14 +4775,18 @@
       const map = {
         home: renderHome, wallpaperStyle: renderWallpaperStyle, color: renderColor, icons: renderIcons, layout: renderLayout,
         clock: renderClock, shortcuts: renderShortcuts, notifications: renderNotifications, lockMore: renderLockMore,
-        wallpaperPicker: renderWallpaperPicker, homeSettings: renderHomeSettings, settings: renderSettings, system: renderSystem,
+        wallpaperPicker: renderWallpaperPicker, homeSettings: renderHomeSettings, widgetPicker: renderWidgetPicker, settings: renderSettings, system: renderSystem,
         languageRegion: renderLanguageRegion, navigationMode: renderNavigationMode, gestureNavigation: renderGestureNavigation,
+        developerOptions: renderDeveloperOptions, developerMemory: renderDeveloperMemory,
+        developerRunningServices: renderDeveloperRunningServices, developerWirelessDebugging: renderDeveloperWirelessDebugging,
+        developerSelectDebugApp: renderDeveloperSelectDebugApp,
         buttonNavigation: renderButtonNavigation, recents: renderRecents, about: renderAbout, androidEasterEgg: renderAndroidEasterEgg, android16Game: renderAndroid16Game,
         fingerprintSettings: renderFingerprintSettings, fingerprintEnroll: renderFingerprintEnroll, screenLockSettings: renderScreenLockSettings, pinEnroll: renderPinEnroll, patternEnroll: renderPatternEnroll,
         apps: renderApps, appInfo: renderAppInfo, simApp: renderSimApp, camera: renderCamera, cameraSettings: renderCameraSettings,
         boot: renderBoot, recovery: renderRecovery, bootloader: renderBootloader,
 
         networkInternet: renderNetworkInternet, internetSettings: renderInternetSettings, simSettings: renderSimSettings,
+        eSimSetup: renderEsimSetup, eSimConfirm: renderEsimConfirm,
         hotspotSettings: renderHotspotSettings, dataSaverSettings: renderDataSaverSettings, vpnSettings: renderVpnSettings,
         privateDnsSettings: renderPrivateDnsSettings,
 
@@ -3337,6 +4836,13 @@
     if (state.shade && !["boot", "recovery", "bootloader"].includes(state.view) && !state.poweredOff) root.insertAdjacentHTML("beforeend", renderShadePanel());
     appendPowerTransientUi();
     bindDynamic();
+    requestAnimationFrame(syncDynamicSystemBars);
+    syncDeveloperOptionEffects();
+    if(!state.developerOptionsEnabled||(!state.devPointerLocation&&!state.devTouchpadPointer)) $("#developerPointerOverlay",phone)?.remove();
+    if(state.developerOptionsEnabled&&state.devSurfaceUpdates){
+      root.classList.remove("developer-surface-flash");void root.offsetWidth;root.classList.add("developer-surface-flash");
+      window.setTimeout(()=>root.classList.remove("developer-surface-flash"),150);
+    }
 
     // V12 media bridge survives root.innerHTML replacement.
     requestAnimationFrame(() => {
@@ -3346,13 +4852,25 @@
 
   function bindDynamic() {
     $$('[data-nav]', root).forEach(btn => btn.addEventListener("click", () => btn.dataset.nav === "back" ? goBack() : navigate(btn.dataset.nav)));
-    $$('[data-open-app]', root).forEach(btn => btn.addEventListener("click", () => {
+    $$('[data-add-home-widget]', root).forEach(button => button.addEventListener("click", () => { const id=button.dataset.addHomeWidget;addHomeWidget(id);vibrate([6,18,6]);toast(`${homeWidgetDefinition(id).name} ditambahkan`);navigate("home",false); }));
+    $$('[data-home-widget-index]', root).forEach(button => button.addEventListener("click", event => { event.preventDefault();event.stopPropagation();state.homeWidgetActive=Number(button.dataset.homeWidgetIndex)||0;save();vibrate(4);render(); }));
+
+    $$('[data-open-app]', root).forEach(btn => btn.addEventListener("click", event => {
+      if (state.view === "home" && homeEditMode) {
+        event.preventDefault();
+        return;
+      }
       const id = btn.dataset.openApp;
+      if (!id) return;
       if (id === "google") {
         vibrate(6);
         const opened = window.open("https://www.google.com/", "_blank", "noopener,noreferrer");
         if (!opened) toast("Izinkan pop-up untuk membuka Google");
         return;
+      }
+      if (["brimo", "digi-bank", "dana", "ovo"].includes(id)) {
+        financialAuthSession = "";
+        financialAuthBusy = false;
       }
       state.activeSimApp = id;
       state.recentSimApps = [id, ...(state.recentSimApps || []).filter(x => x !== id)].slice(0, 8);
@@ -3403,7 +4921,16 @@
       const display = $("#phoneNumber", root); if (display) display.textContent = (display.textContent + btn.dataset.dialKey).slice(0, 18);
     }));
     $$('[data-toggle]', root).forEach(btn => btn.addEventListener("click", () => {
-      const key = btn.dataset.toggle; state[key] = !state[key]; save(); vibrate(); render();
+      const key=btn.dataset.toggle;
+      const label=btn.closest(".a17-row,.developer-master-card")?.querySelector("strong,span")?.textContent?.trim()||key;
+      if(key==="devWaitForDebugger"&&!state.devDebugApp){toast("Pilih aplikasi debug terlebih dahulu");vibrate([8,25,8]);return;}
+      state[key]=!state[key];
+      if(key==="devUsbDebugging"&&state[key]&&Number(state.devUsbAuthorizationCount)===0)state.devUsbAuthorizationCount=1;
+      if(key==="devBluetoothHciSnoop"&&state[key])state.devBluetoothHciPackets=0;
+      if(key==="devNfcVerboseLogging"||key==="devNfcNciVerboseLogging")state.devNfcLogEntries=(Number(state.devNfcLogEntries)||0)+1;
+      if(key==="devCellularAlwaysActive"&&state[key]&&!state.airplane)state.mobileData=true;
+      save();vibrate();render();
+      if(String(key).startsWith("dev")||key==="developerOptionsEnabled") toast(`${label}: ${state[key]?"aktif":"nonaktif"}`);
     }));
     $$('[data-style-tab]', root).forEach(btn => btn.addEventListener("click", () => {
       state.styleTab = btn.dataset.styleTab; state.wallpaperTarget = state.styleTab; save(); render();
@@ -3468,6 +4995,58 @@
     }));
     $$('[data-cycle-setting]', root).forEach(btn => btn.addEventListener("click", () => {
       cycleSystemSetting(btn.dataset.cycleSetting);
+    }));
+
+    $$('[data-developer-value-key]', root).forEach(btn => btn.addEventListener("click", () => {
+      const key = btn.dataset.developerValueKey;
+      const raw = btn.dataset.developerValue;
+      state[key] = /^-?\d+(?:\.\d+)?$/.test(raw) ? Number(raw) : raw;
+
+      const bluetoothKeys = new Set([
+        "devAvrcpVersion","devMapVersion","devBluetoothCodec","devBluetoothSampleRate",
+        "devBluetoothBits","devBluetoothChannel","devBluetoothMaxDevices"
+      ]);
+
+      if (bluetoothKeys.has(key) && state.pairedDeviceConnected) {
+        state.devBluetoothHciPackets = (Number(state.devBluetoothHciPackets) || 0) + 6;
+      }
+
+      developerDialog = "";
+      save();
+      vibrate(6);
+      render();
+
+      const labels = {
+        devLoggerBuffer:"Ukuran buffer logger",
+        devAvrcpVersion:"Versi AVRCP",
+        devMapVersion:"Versi MAP",
+        devBluetoothCodec:"Codec Bluetooth",
+        devBluetoothSampleRate:"Frekuensi sampel",
+        devBluetoothBits:"Bit per sampel",
+        devBluetoothChannel:"Mode channel",
+        devBluetoothMaxDevices:"Batas perangkat Bluetooth"
+      };
+      if (labels[key]) toast(`${labels[key]}: ${raw}`);
+    }));
+    $$('[data-developer-usb-value]',root).forEach(btn=>btn.addEventListener("click",()=>{
+      const value=btn.dataset.developerUsbValue||"Tidak ada transfer data";
+      state.devUsbDefault=value;
+      state.devUsbFileSharing=value==="File Sharing";
+      state.usbTether=value==="Tethering USB";
+      state.devUsbMidiActive=value==="MIDI";
+      state.devUsbAndroidAutoActive=value==="Android Auto";
+      state.devUsbPtpActive=value==="PTP";
+      if(state.usbTether) state.mobileData=true;
+      developerDialog="";
+      save();vibrate([6,18,6]);render();toast(`USB default: ${value}`);
+    }));
+
+    $$('[data-developer-debug-app]', root).forEach(btn => btn.addEventListener("click", () => {
+      state.devDebugApp=btn.dataset.developerDebugApp||"";
+      developerDebuggerAttachedApp="";
+      if(!state.devDebugApp) state.devWaitForDebugger=false;
+      save(); vibrate(6); render();
+      toast(state.devDebugApp?`${appById(state.devDebugApp)?.name||state.devDebugApp} dipilih untuk debug`:"Aplikasi debug dibersihkan");
     }));
 
     $$('[data-state-value-key]', root).forEach(btn => btn.addEventListener("click", () => {
@@ -3731,6 +5310,40 @@
     }
   }
 
+  function showDeveloperTapIndicator(event) {
+    if (!state.developerOptionsEnabled || !state.devShowTaps) return;
+    if (!(phone instanceof HTMLElement)) return;
+    const rect=phone.getBoundingClientRect();
+    const dot=document.createElement("span");
+    dot.className="developer-tap-indicator";
+    dot.style.left=`${event.clientX-rect.left}px`;
+    dot.style.top=`${event.clientY-rect.top}px`;
+    phone.appendChild(dot);
+    window.setTimeout(()=>dot.remove(),420);
+  }
+  phone.addEventListener("pointerdown",showDeveloperTapIndicator,{passive:true});
+  phone.addEventListener("pointermove",event=>{
+    if(!state.developerOptionsEnabled)return;
+    const use=state.devPointerLocation||(state.devTouchpadPointer&&event.pointerType==="mouse");
+    if(!use)return;
+    const rect=phone.getBoundingClientRect();
+    developerPointerLast={x:event.clientX-rect.left,y:event.clientY-rect.top,type:event.pointerType||"mouse"};
+    let overlay=$("#developerPointerOverlay",phone);
+    if(!overlay){overlay=document.createElement("div");overlay.id="developerPointerOverlay";overlay.className="developer-pointer-overlay";phone.appendChild(overlay);}
+    overlay.style.setProperty("--pointer-x",`${developerPointerLast.x}px`);
+    overlay.style.setProperty("--pointer-y",`${developerPointerLast.y}px`);
+    overlay.innerHTML=`<span>X:${Math.round(developerPointerLast.x)} Y:${Math.round(developerPointerLast.y)} ${developerPointerLast.type}</span><i></i><b></b>`;
+  },{passive:true});
+
+  phone.addEventListener("click",event=>{
+    if(!state.developerOptionsEnabled||!state.devViewAttributeInspection)return;
+    if(event.target.closest(".pixel-statusbar,#androidGesturePill,.pixel-three-button-nav"))return;
+    const target=event.target instanceof Element?event.target:null;if(!target)return;
+    state.devAttributeInspectCount=(Number(state.devAttributeInspectCount)||0)+1;
+    const label=target.getAttribute("aria-label")||target.textContent?.trim()?.replace(/\s+/g," ").slice(0,28)||target.tagName;
+    toast(`Inspect: ${target.tagName.toLowerCase()} • ${label}`);
+  },true);
+
   function bindPatternBoard() {
     const board=$('[data-pattern-board]',root); if(!board) return;
     const mode=board.dataset.patternBoard;
@@ -3774,6 +5387,11 @@
     if (!list) return;
     const current = list.indexOf(state[key]);
     state[key] = list[(current + 1) % list.length];
+    if (key === "region") {
+      state.regionManuallySelected = true;
+      state.regionDetected = false;
+      state.regionDetectionStatus = "idle";
+    }
     save(); vibrate(5); render();
   }
 
@@ -3820,6 +5438,118 @@
 
   function handleSimAppAction(action) {
     const app = appById(state.activeSimApp);
+
+    if(action==="developer-attach-debugger"){
+      developerDebuggerAttachedApp=app?.id||"";
+      vibrate([8,20,8]);render();toast(`Debugger terhubung ke ${app?.name||"aplikasi"}`);return;
+    }
+
+    if (action === "finance-biometric-auth") {
+      if (financialAuthBusy) return;
+      financialAuthBusy = true;
+      vibrate(18);
+      render();
+
+      window.setTimeout(() => {
+        financialAuthBusy = false;
+        financialAuthSession = app.id;
+        vibrate([18, 45, 18]);
+        render();
+        toast(`Sidik jari terverifikasi • ${app.name}`);
+      }, 720);
+      return;
+    }
+
+    if (action === "finance-biometric-cancel") {
+      financialAuthBusy = false;
+      financialAuthSession = "";
+      navigate("apps", false);
+      return;
+    }
+
+    if (action?.startsWith("simtk-select-")) {
+      const id = action.replace("simtk-select-", "");
+      if (["sim1", "sim2", "esim"].includes(id)) {
+        state.simToolkitSelected = id;
+        save();
+        vibrate(5);
+        render();
+      }
+      return;
+    }
+
+    if (action === "simtk-toggle-current") {
+      const profile = simToolkitProfileMeta(state.simToolkitSelected);
+      if (profile.id === "esim") {
+        if (!state.eSimInstalled) {
+          navigate("eSimSetup");
+          return;
+        }
+        state.eSimEnabled = !state.eSimEnabled;
+      } else {
+        state[profile.enabledKey] = !state[profile.enabledKey];
+      }
+      save();
+      vibrate(7);
+      render();
+      return;
+    }
+
+    if (action === "simtk-toggle-roaming") {
+      const id = state.simToolkitSelected || "sim1";
+      const roaming = state.simToolkitRoaming && typeof state.simToolkitRoaming === "object"
+        ? { ...state.simToolkitRoaming }
+        : { sim1: false, sim2: false, esim: false };
+      roaming[id] = !roaming[id];
+      state.simToolkitRoaming = roaming;
+      save();
+      vibrate(5);
+      render();
+      return;
+    }
+
+    if (["simtk-primary-call", "simtk-primary-sms", "simtk-primary-data"].includes(action)) {
+      const id = state.simToolkitSelected || "sim1";
+      const profile = simToolkitProfileMeta(id);
+      const enabled = id === "esim" ? state.eSimInstalled && state.eSimEnabled : !!state[profile.enabledKey];
+      if (!enabled) {
+        toast("Aktifkan SIM ini terlebih dahulu");
+        vibrate([12, 35, 12]);
+        return;
+      }
+
+      if (action === "simtk-primary-call") state.primaryCallSim = id;
+      if (action === "simtk-primary-sms") state.primarySmsSim = id;
+      if (action === "simtk-primary-data") state.primaryDataSim = id;
+      save();
+      vibrate(6);
+      render();
+      toast(`${profile.label} dijadikan SIM utama`);
+      return;
+    }
+
+    if (action === "simtk-mobile-data") {
+      state.mobileData = !state.mobileData;
+      save(); vibrate(5); render();
+      return;
+    }
+
+    if (action === "simtk-auto-data") {
+      state.autoDataSwitch = !state.autoDataSwitch;
+      save(); vibrate(5); render();
+      return;
+    }
+
+    if (action === "simtk-add-esim") {
+      navigate("eSimSetup");
+      return;
+    }
+
+    if (action === "simtk-system-settings") {
+      navigate("simSettings");
+      return;
+    }
+
     if (action === "spotify-connect") { startSpotifyOAuth(); return; }
     if (action === "spotify-disconnect") {
       ["wg_spotify_access_token","wg_spotify_expires_at","wg_spotify_refresh_token"].forEach(k=>sessionStorage.removeItem(k));
@@ -3830,13 +5560,7 @@
     if (action === "youtube-disconnect") { sessionStorage.removeItem("wg_youtube_access_token"); sessionStorage.removeItem("wg_youtube_expires_at"); render(); return; }
     if (action === "youtube-open-url") { openPastedMediaLink($("#youtubeUrlInput", root)?.value || "", state.activeSimApp); return; }
     if (action === "media-paste-clipboard") {
-      const cfg = mediaStateForApp(state.activeSimApp);
-      const input = $("#" + cfg.inputId, root);
-      if (!navigator.clipboard?.readText) { toast("Clipboard browser tidak tersedia"); return; }
-      navigator.clipboard.readText().then(text => {
-        if (input) input.value = text.trim();
-        openPastedMediaLink(text, state.activeSimApp);
-      }).catch(() => toast("Izinkan akses clipboard lalu coba lagi"));
+      pasteMediaLinkFromClipboard(state.activeSimApp);
       return;
     }
     if (action && action.startsWith("finance-")) { toast(`SIMULASI ${app.name}: transaksi tidak dikirim`); vibrate(8); return; }
@@ -4007,7 +5731,14 @@
     if (action === "dismissMenu") { state.longPressMenu = false; render(); }
     if (action === "extractSimWallpaperPalette") { applyWallpaperColorBurst(); }
     if (action === "openStyle") { state.styleTab = "home"; state.wallpaperTarget = "home"; navigate("wallpaperStyle"); }
-    if (action === "widgetToast") toast(t("widgets"));
+    if (action === "openHomeLayoutEditor") { homeEditMode=true;state.longPressMenu=false;navigate("home",false);return; }
+    if (action === "widgetToast") { state.longPressMenu=false; navigate("widgetPicker"); return; }
+    if (action === "home-edit-done") { homeEditMode=false;homeDragState=null;save();vibrate(6);render();return; }
+    if (action === "home-edit-reset") { state.homeAppOrder=["instagram","tiktok","wa-business","nekogram"];state.homeDockOrder=["phone","message","chrome","contacts","camera"];state.homeWidgets=["screen-time"];state.homeWidgetActive=0;state.homeWidgetSide="right";state.homeWidgetSizes={"screen-time":"medium"};save();vibrate([8,20,8]);render();toast("Tata letak layar utama direset");return; }
+    if (action === "home-widget-size-down") { const s=cycleHomeWidgetSize(-1);vibrate(5);render();toast(`Ukuran widget: ${s}`);return; }
+    if (action === "home-widget-size-up") { const s=cycleHomeWidgetSize(1);vibrate(5);render();toast(`Ukuran widget: ${s}`);return; }
+    if (action === "home-widget-move-side") { state.homeWidgetSide=state.homeWidgetSide==="left"?"right":"left";save();vibrate(5);render();return; }
+    if (action === "home-widget-remove") { if(state.homeWidgets.length<=1){toast("Sisakan minimal satu widget");return;}const id=currentHomeWidgetId();state.homeWidgets=state.homeWidgets.filter(x=>x!==id);state.homeWidgetActive=Math.max(0,Math.min(state.homeWidgets.length-1,state.homeWidgetActive));save();vibrate(6);render();toast("Widget dihapus");return; }
     if (action === "applyLayout") {
       state.homeCols = Math.max(4, Math.min(6, Number(state.layoutDraft) || 5));
       state.layoutDraft = state.homeCols;
@@ -4030,6 +5761,86 @@
       toast(state.cameraMode === "video" ? "Rekaman video simulasi dimulai" : t("photoCaptured"));
     }
     if (action === "nowPlayingToast") toast(t("nowPlayingDesc"));
+    if (action === "detectBrowserRegion") {
+      detectRegionUsingBrowser();
+      return;
+    }
+    if (action === "setManualTime") {
+      const current = String(state.manualTime || "20:30");
+      const value = window.prompt("Atur waktu manual (HH:MM)", current);
+      if (value === null) return;
+      const normalized = String(value).trim();
+      if (!/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(normalized)) {
+        toast("Format waktu harus HH:MM");
+        return;
+      }
+      state.manualTime = normalized;
+      save(); vibrate(5); render();
+      return;
+    }
+
+    if (action === "developer-oem-toggle") {
+      if (state.oemUnlockAllowed) {
+        state.oemUnlockAllowed = false;
+        save(); vibrate(8); render(); toast("Pembukaan kunci OEM dinonaktifkan");
+        return;
+      }
+      developerDialog = "oem-confirm";
+      render();
+      return;
+    }
+    if (action === "developer-oem-confirm") {
+      state.oemUnlockAllowed = true;
+      developerDialog = "";
+      save(); vibrate([12,35,12]); render(); toast("Pembukaan kunci OEM diizinkan");
+      return;
+    }
+    if (action === "developer-dialog-close") { developerDialog=""; render(); return; }
+    if (action === "developer-save-smallest-width") {
+      const input=$("#developerSmallestWidthInput",root);
+      state.devSmallestWidth=Math.max(320,Math.min(720,Number(input?.value)||392));
+      developerDialog=""; save(); vibrate(5); render(); return;
+    }
+    if (action === "developer-memory-period") { developerDialog="memory-period"; render(); return; }
+    if (action === "developer-revoke-usb") {
+      if (Number(state.devUsbAuthorizationCount) <= 0) {
+        toast("Tidak ada komputer USB yang diotorisasi");
+        vibrate(5);
+        return;
+      }
+      developerDialog="usb-revoke-confirm";
+      render();
+      return;
+    }
+    if (action === "developer-revoke-usb-confirm") {
+      state.devUsbAuthorizationCount=0;
+      developerDialog="";
+      save();
+      vibrate([8,24,8]);
+      render();
+      toast("Semua otorisasi debug USB telah dicabut");
+      return;
+    }
+    if (action === "developer-bug-report") { state.devBugReportCount=(Number(state.devBugReportCount)||0)+1; developerDialog="bug-report"; save(); vibrate(8); render(); return; }
+    if (action === "developer-feature-flags") { developerDialog="feature-flags"; render(); return; }
+    if (action === "developer-driver-preferences") { developerDialog="graphics-driver"; render(); return; }
+    if (action === "developer-app-compat") { developerDialog="app-compat"; render(); return; }
+    if (action === "developer-open-logger-buffer") { developerDialog="logger-buffer"; render(); return; }
+    if (action === "developer-open-usb-config") { developerDialog="usb-config"; render(); return; }
+    if (action === "developer-open-avrcp") { developerDialog="avrcp-version"; render(); return; }
+    if (action === "developer-open-map") { developerDialog="map-version"; render(); return; }
+    if (action === "developer-open-bt-codec") { developerDialog="bt-codec"; render(); return; }
+    if (action === "developer-open-bt-rate") { developerDialog="bt-rate"; render(); return; }
+    if (action === "developer-open-bt-bits") { developerDialog="bt-bits"; render(); return; }
+    if (action === "developer-open-bt-channel") { developerDialog="bt-channel"; render(); return; }
+    if (action === "developer-open-bt-max") { developerDialog="bt-max"; render(); return; }
+    if (action === "developer-open-window-scale") { developerDialog="window-scale"; render(); return; }
+    if (action === "developer-open-transition-scale") { developerDialog="transition-scale"; render(); return; }
+    if (action === "developer-open-animator-scale") { developerDialog="animator-scale"; render(); return; }
+    if (action === "developer-open-secondary-display") { developerDialog="secondary-display"; render(); return; }
+    if (action === "developer-open-smallest-width") { developerDialog="smallest-width"; render(); return; }
+    if (action === "developer-open-display-cutout") { developerDialog="display-cutout"; render(); return; }
+
     if (action === "addLanguage") {
       const installed = Array.isArray(state.installedLanguages) ? state.installedLanguages : ["id"];
       if (!installed.includes("en")) {
@@ -4048,6 +5859,64 @@
       state.vpnEnabled = !state.vpnEnabled;
       save(); vibrate(8); render(); toast(state.vpnEnabled ? "VPN tersambung" : "VPN terputus");
     }
+    if (action === "beginEsimSetup") {
+      state.eSimInstalling = false;
+      save(); vibrate(7); navigate("eSimSetup");
+      return;
+    }
+    if (action === "toggleEsim") {
+      if (!state.eSimInstalled) { navigate("eSimSetup"); return; }
+      state.eSimEnabled = !state.eSimEnabled;
+      if (!state.eSimEnabled) {
+        if (state.primaryDataSim === "esim") state.primaryDataSim = state.sim1Enabled ? "sim1" : "sim2";
+        if (state.primarySmsSim === "esim") state.primarySmsSim = state.sim1Enabled ? "sim1" : "sim2";
+        if (state.primaryCallSim === "esim") state.primaryCallSim = "ask";
+      }
+      save(); vibrate(7); render();
+      toast(state.eSimEnabled ? "eSIM diaktifkan" : "eSIM dinonaktifkan");
+      return;
+    }
+    if (action === "esimQrScanner") {
+      toast("Pemindai QR eSIM simulasi dibuka • pilih operator di bawah");
+      vibrate(5);
+      return;
+    }
+    if (action === "installEsim") {
+      if (state.eSimInstalling) return;
+      const provider = simProviderById(state.eSimProvider) || ESIM_PROVIDERS[0];
+      state.eSimProvider = provider.id;
+      state.eSimInstalling = true;
+      save(); vibrate(10); render();
+      window.setTimeout(() => {
+        state.eSimInstalled = true;
+        state.eSimEnabled = true;
+        state.eSimInstalling = false;
+        if (!state.eSimPhone) state.eSimPhone = makeRandomIndoNumber();
+        if (!state.eSimIccid) state.eSimIccid = `8962${String(Date.now()).slice(-15)}`;
+        save();
+        navigate("simSettings", false);
+        toast(`eSIM ${provider.name} berhasil ditambahkan`);
+      }, 1100);
+      return;
+    }
+    if (action === "removeEsim") {
+      state.eSimInstalled = false;
+      state.eSimEnabled = false;
+      state.eSimProvider = "";
+      state.eSimPhone = "";
+      state.eSimIccid = "";
+      state.eSimInstalling = false;
+      if (state.primaryDataSim === "esim") state.primaryDataSim = state.sim1Enabled ? "sim1" : "sim2";
+      if (state.primarySmsSim === "esim") state.primarySmsSim = state.sim1Enabled ? "sim1" : "sim2";
+      if (state.primaryCallSim === "esim") state.primaryCallSim = "ask";
+      save(); vibrate(8); render(); toast("eSIM dihapus dari simulator");
+      return;
+    }
+    if(action==="pairUnnamedBt"){
+      state.pairedDevice="7C:91:22:AF:10:3D";state.pairedDeviceConnected=true;
+      if(state.devBluetoothHciSnoop)state.devBluetoothHciPackets=(Number(state.devBluetoothHciPackets)||0)+42;
+      save();vibrate(8);navigate("bluetoothDeviceDetail");toast("Perangkat tanpa nama terhubung");return;
+    }
     if (action === "pairI12") {
       state.bluetooth = true; state.pairedDevice = "i12"; state.pairedDeviceConnected = true;
       save(); vibrate(12); navigate("bluetoothDeviceDetail");
@@ -4063,7 +5932,7 @@
     if (action === "crossDeviceReady") { state.crossDeviceReady = true; save(); render(); toast("Layanan lintas perangkat siap"); }
     if (action === "addPrinter") toast("Layanan Cetak Default tersedia");
     if (action === "clearConversations") toast("Percakapan terbaru dibersihkan");
-    if (action === "addBatteryWidget") { toast("Widget baterai ditambahkan"); setTimeout(() => navigate("home"), 450); }
+    if (action === "addBatteryWidget") { addHomeWidget("battery");toast("Widget baterai ditambahkan");setTimeout(()=>navigate("home"),240); }
     if (action === "cleanStorage") { toast("Pembersihan simulasi selesai"); }
     if (action === "resetDisplaySize") { state.fontScale = 100; state.displayScale = 100; save(); render(); }
   }
@@ -4251,6 +6120,24 @@
     state.locked ? unlockPhone() : navigate("home");
   });
 
+  /*
+   * A completed Home swipe can be followed by a browser-generated click on
+   * the element where the gesture started. Consume only that post-swipe click.
+   * Ordinary app/widget taps never set systemGestureConsumedAt and therefore
+   * continue to the normal data-open-app/data-nav handlers.
+   */
+  phone.addEventListener("click", event => {
+    if (performance.now() - systemGestureConsumedAt >= 360) return;
+    const target = event.target instanceof Element
+      ? event.target.closest(
+          '[data-open-app],[data-nav],[data-home-widget-index],.record-home-widget-card,.record-home-search'
+        )
+      : null;
+    if (!target) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }, true);
+
   phone.addEventListener("pointerdown", e => {
     if (state.navigationMode !== "gesture" || state.locked) return;
     if (e.pointerType === "mouse" && e.button !== 0) return;
@@ -4261,7 +6148,8 @@
     const onGesturePill = e.target instanceof Element
       ? !!e.target.closest("#androidGesturePill")
       : false;
-    if (interactive && !onGesturePill) return;
+    const launcherSwipeEligible = state.view === "home" && !homeEditMode && !state.longPressMenu;
+    if (interactive && !onGesturePill && !launcherSwipeEligible) return;
 
     const rect = phone.getBoundingClientRect();
     systemGestureStart = {
@@ -4271,9 +6159,19 @@
       height: rect.height,
       time: performance.now(),
       pointerId: e.pointerId,
-      view: state.view
+      view: state.view,
+      onGesturePill
     };
 
+    /*
+     * FIX b10e8cf:
+     * Never capture a normal Home tap at #pixelScreen.
+     *
+     * Capturing every launcher pointer retargets the pointer/click sequence
+     * away from [data-open-app] / widget buttons in Chromium-family browsers.
+     * The global listener still receives bubbling pointerup events, so Home
+     * swipe-up remains detectable without stealing normal taps.
+     */
     if (onGesturePill) {
       try { phone.setPointerCapture(e.pointerId); } catch {}
     }
@@ -4291,6 +6189,45 @@
     const dy = endY - systemGestureStart.y;
     const elapsed = performance.now() - systemGestureStart.time;
     const fromBottom = systemGestureStart.y > systemGestureStart.height - 56;
+
+    /* Navigation-pill tap fallback. Pointer capture keeps mobile swipe gestures
+       reliable, but some browsers retarget the generated click to #pixelScreen.
+       Handle a short stationary tap here so the pill always returns Home. */
+    if (
+      systemGestureStart.onGesturePill &&
+      Math.abs(dx) < 18 &&
+      Math.abs(dy) < 18 &&
+      elapsed < 520
+    ) {
+      systemGestureConsumedAt = performance.now();
+      vibrate(4);
+      navigate("home");
+
+      try {
+        if (phone.hasPointerCapture?.(e.pointerId)) phone.releasePointerCapture(e.pointerId);
+      } catch {}
+      systemGestureStart = null;
+      return;
+    }
+
+    const verticalSwipe = Math.abs(dy) > Math.abs(dx) * 1.18;
+    const homeAllAppsSwipe =
+      systemGestureStart.view === "home" &&
+      verticalSwipe &&
+      dy < -46 &&
+      elapsed < 980;
+
+    if (homeAllAppsSwipe) {
+      systemGestureConsumedAt = performance.now();
+      clearTimeout(longPressTimer);
+      vibrate(5);
+      navigate("apps");
+      try {
+        if (phone.hasPointerCapture?.(e.pointerId)) phone.releasePointerCapture(e.pointerId);
+      } catch {}
+      systemGestureStart = null;
+      return;
+    }
 
     if (fromBottom && dy < -58) {
       const fromCorner = systemGestureStart.x < 55 || systemGestureStart.x > systemGestureStart.width - 55;
@@ -4357,6 +6294,17 @@
     powerPressTimer = 0;
     powerPressPointerId = null;
   }
+
+  [power,volume].filter(Boolean).forEach(button=>{
+    button.addEventListener("pointerdown",()=>{
+      if(!state.developerOptionsEnabled||!state.devShowButtonPresses)return;
+      phone.dataset.developerPressedKey=button===power?"POWER":"VOLUME";
+      phone.classList.add("developer-show-hardware-key");
+    });
+    ["pointerup","pointercancel","pointerleave"].forEach(type=>button.addEventListener(type,()=>{
+      phone.classList.remove("developer-show-hardware-key");delete phone.dataset.developerPressedKey;
+    }));
+  });
 
   power?.addEventListener("pointerdown", event => {
     if (event.pointerType === "mouse" && event.button !== 0) return;

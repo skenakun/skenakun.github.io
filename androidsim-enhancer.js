@@ -448,6 +448,20 @@
       return;
     }
 
+    /*
+     * FIX b863a63: Dynamic Island lives outside #androidScreenRoot.
+     * Open media apps through the core simulator bridge instead of relying on
+     * a launcher icon being present on the currently rendered page.
+     */
+    if (typeof window.__waifuAndroidSimOpenApp === "function") {
+      const opened = window.__waifuAndroidSimOpenApp(target);
+      if (opened) {
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        requestAnimationFrame(sync);
+        return;
+      }
+    }
+
     let button = root.querySelector(`[data-open-app="${CSS.escape(target)}"]`);
     if (button instanceof HTMLElement) {
       button.click();
@@ -2456,6 +2470,19 @@
       return true;
     }
 
+    /*
+     * Prefer the simulator's public app-opening API. YouTube, YouTube Music
+     * and Spotify are not guaranteed to have launcher buttons on Home, so DOM
+     * lookup alone makes "Buka aplikasi" fail from Dynamic Island.
+     */
+    if (typeof window.__waifuAndroidSimOpenApp === "function") {
+      const opened = window.__waifuAndroidSimOpenApp(targetApp);
+      if (opened) {
+        await nextFrame();
+        return true;
+      }
+    }
+
     let button = root.querySelector(`[data-open-app="${CSS.escape(targetApp)}"]`);
     if (button instanceof HTMLElement) {
       button.click();
@@ -2614,27 +2641,13 @@
 
     const simAction = target.closest("[data-sim-action]")?.dataset.simAction;
 
-    if (simAction === "spotify-open-url") {
-      const input = root.querySelector("#spotifyUrlInput");
-      if (startPersistentMedia("spotify", input?.value || "")) {
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-      }
-      return;
-    }
-
-    if (simAction === "youtube-open-url") {
-      const input = root.querySelector("#youtubeUrlInput");
-      const appId = root.querySelector(".youtube-live-app.music")
-        ? "youtube-music"
-        : "youtube";
-
-      if (startPersistentMedia(appId, input?.value || "")) {
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-      }
+    /*
+     * FIX 74abda6:
+     * androidsim.js is the canonical owner of manual media URL actions.
+     * Do not intercept Tempel/Putar here; the core saves the URL/embed state
+     * first and then calls the persistent bridge.
+     */
+    if (["spotify-open-url", "youtube-open-url", "media-paste-clipboard"].includes(simAction)) {
       return;
     }
 
@@ -2697,24 +2710,6 @@
       return;
     }
 
-    if (simAction === "media-paste-clipboard" && navigator.clipboard?.readText) {
-      const appId = root.querySelector(".spotify-live-app")
-        ? "spotify"
-        : (root.querySelector(".youtube-live-app.music") ? "youtube-music" : "youtube");
-      const input = appId === "spotify"
-        ? root.querySelector("#spotifyUrlInput")
-        : root.querySelector("#youtubeUrlInput");
-
-      event.preventDefault();
-      event.stopPropagation();
-      event.stopImmediatePropagation();
-
-      navigator.clipboard.readText().then(text => {
-        const value = String(text || "").trim();
-        if (input) input.value = value;
-        startPersistentMedia(appId, value);
-      }).catch(() => {});
-    }
   }, true);
 
   root.addEventListener("keydown", event => {
@@ -2722,36 +2717,21 @@
     if (!input || event.key !== "Enter") return;
     if (!["spotifyUrlInput", "youtubeUrlInput"].includes(input.id)) return;
 
-    const appId = input.id === "spotifyUrlInput"
-      ? "spotify"
-      : (root.querySelector(".youtube-live-app.music") ? "youtube-music" : "youtube");
-
-    if (!startPersistentMedia(appId, input.value)) return;
-
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-  }, true);
-
-  root.addEventListener("paste", event => {
-    const input = event.target instanceof HTMLInputElement ? event.target : null;
-    if (!input || !["spotifyUrlInput", "youtubeUrlInput"].includes(input.id)) return;
-
-    const pasted = event.clipboardData?.getData("text")?.trim();
-    if (!pasted) return;
-
-    const appId = input.id === "spotifyUrlInput"
-      ? "spotify"
-      : (root.querySelector(".youtube-live-app.music") ? "youtube-music" : "youtube");
-
-    if (!mediaEmbedFromRaw(appId, pasted)) return;
+    const action = input.id === "spotifyUrlInput"
+      ? "spotify-open-url"
+      : "youtube-open-url";
+    const playButton = root.querySelector(`[data-sim-action="${action}"]`);
+    if (!(playButton instanceof HTMLElement)) return;
 
     event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-    input.value = pasted;
-    startPersistentMedia(appId, pasted);
+    playButton.click();
   }, true);
+
+  /*
+   * Native paste into the URL field must stay native. The previous enhancer
+   * cancelled the paste event and started playback immediately, which could
+   * race with the core state and made Tempel/Putar behave inconsistently.
+   */
 
   /* =========================================================
      SAFE RENDER WATCHER
