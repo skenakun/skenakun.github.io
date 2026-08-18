@@ -882,11 +882,15 @@
       let startY = null;
       let startX = null;
       let moved = false;
+      let homePointerId = null;
       surface?.addEventListener("pointerdown", e => {
+        if (e.pointerType === "mouse" && e.button !== 0) return;
         if (e.target.closest("button")) return;
         startY = e.clientY;
         startX = e.clientX;
         moved = false;
+        homePointerId = e.pointerId;
+        try { surface.setPointerCapture(e.pointerId); } catch {}
         clearTimeout(longPressTimer);
         longPressTimer = setTimeout(() => {
           if (moved) return;
@@ -904,18 +908,31 @@
       });
       surface?.addEventListener("pointerup", e => {
         clearTimeout(longPressTimer);
+        if (homePointerId != null && e.pointerId !== homePointerId) return;
         if (startY == null) return;
         const dy = e.clientY - startY;
+        const dx = e.clientX - startX;
+        try {
+          if (surface.hasPointerCapture?.(e.pointerId)) surface.releasePointerCapture(e.pointerId);
+        } catch {}
         startY = null;
         startX = null;
-        if (dy < -44) {
+        homePointerId = null;
+
+        if (dy < -44 && Math.abs(dy) > Math.abs(dx) * 1.15) {
           vibrate(5);
           navigate("apps");
         }
       });
-      ["pointercancel", "pointerleave"].forEach(ev => surface?.addEventListener(ev, () => {
-        clearTimeout(longPressTimer); startY = null; startX = null;
-      }));
+      surface?.addEventListener("pointercancel", e => {
+        clearTimeout(longPressTimer);
+        try {
+          if (surface.hasPointerCapture?.(e.pointerId)) surface.releasePointerCapture(e.pointerId);
+        } catch {}
+        startY = null;
+        startX = null;
+        homePointerId = null;
+      });
       surface?.addEventListener("contextmenu", e => {
         e.preventDefault();
         state.longPressMenu = true;
@@ -4218,23 +4235,48 @@
     save();
     render();
   });
-  gesture?.addEventListener("click", () => {
+  /* Mobile-safe Android system gesture handling.
+     The navigation pill is itself a <button>, so it must be allowed to start
+     the launcher gesture. Pointer capture keeps the swipe alive on mobile
+     browsers even when the finger leaves the pill element. */
+  let systemGestureStart = null;
+  let systemGestureConsumedAt = 0;
+
+  gesture?.addEventListener("click", event => {
+    if (performance.now() - systemGestureConsumedAt < 450) {
+      event.preventDefault();
+      return;
+    }
     if (state.navigationMode !== "gesture") return;
     state.locked ? unlockPhone() : navigate("home");
   });
 
-  let systemGestureStart = null;
   phone.addEventListener("pointerdown", e => {
     if (state.navigationMode !== "gesture" || state.locked) return;
-    if (e.target.closest("button,input,label")) return;
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+
+    const interactive = e.target instanceof Element
+      ? e.target.closest("button,input,label")
+      : null;
+    const onGesturePill = e.target instanceof Element
+      ? !!e.target.closest("#androidGesturePill")
+      : false;
+    if (interactive && !onGesturePill) return;
+
     const rect = phone.getBoundingClientRect();
     systemGestureStart = {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
       width: rect.width,
       height: rect.height,
-      time: performance.now()
+      time: performance.now(),
+      pointerId: e.pointerId,
+      view: state.view
     };
+
+    if (onGesturePill) {
+      try { phone.setPointerCapture(e.pointerId); } catch {}
+    }
   });
 
   phone.addEventListener("pointerup", e => {
@@ -4252,13 +4294,23 @@
 
     if (fromBottom && dy < -58) {
       const fromCorner = systemGestureStart.x < 55 || systemGestureStart.x > systemGestureStart.width - 55;
+      systemGestureConsumedAt = performance.now();
+
       if (fromCorner && state.assistantGesture) {
         toast(t("digitalAssistant"));
+      } else if (systemGestureStart.view === "home" && elapsed <= 480) {
+        /* Pixel Launcher: a quick upward swipe from Home opens All apps. */
+        vibrate(5);
+        navigate("apps");
       } else if (elapsed > 360) {
         navigate("recents");
       } else {
         navigate("home");
       }
+
+      try {
+        if (phone.hasPointerCapture?.(e.pointerId)) phone.releasePointerCapture(e.pointerId);
+      } catch {}
       systemGestureStart = null;
       return;
     }
@@ -4283,10 +4335,18 @@
       goBack();
     }
 
+    try {
+      if (phone.hasPointerCapture?.(e.pointerId)) phone.releasePointerCapture(e.pointerId);
+    } catch {}
     systemGestureStart = null;
   });
 
-  phone.addEventListener("pointercancel", () => { systemGestureStart = null; });
+  phone.addEventListener("pointercancel", e => {
+    try {
+      if (phone.hasPointerCapture?.(e.pointerId)) phone.releasePointerCapture(e.pointerId);
+    } catch {}
+    systemGestureStart = null;
+  });
 
   let powerPressTimer = 0;
   let powerPressLong = false;

@@ -1343,3 +1343,203 @@ html.performance-lite .axion-notification-shade{
   backdrop-filter:none!important;
   -webkit-backdrop-filter:none!important;
 }
+
+
+/* =========================================================
+   MOBILE PIXEL FRAME + APP DRAWER FIX 7a2f0b7
+   Keep the same framed simulator used on desktop, but scale the complete
+   Pixel device to fit a phone viewport. Also reserve touch gestures for the
+   launcher so mobile Chrome/Safari do not cancel the All-apps swipe.
+   ========================================================= */
+@media (max-width: 560px) {
+  body:has(.phone-sim-dialog[open]) {
+    overflow: hidden;
+  }
+
+  .phone-sim-dialog {
+    box-sizing: border-box;
+    width: min(430px, calc(100vw - 12px));
+    height: min(930px, calc(100dvh - 12px));
+    max-width: calc(100vw - 12px);
+    max-height: calc(100dvh - 12px);
+    margin: auto;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 26px;
+    background: transparent;
+  }
+
+  .phone-sim-dialog::backdrop {
+    background: rgba(18, 11, 28, .82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .pixel-sim-stage {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 7px 8px 6px;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    align-items: center;
+    justify-items: center;
+    gap: 5px;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--violet) 18%, transparent);
+    border-radius: 26px;
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
+    box-shadow: 0 22px 70px rgba(13, 7, 22, .45);
+  }
+
+  .pixel-sim-toolbar {
+    position: relative;
+    inset: auto;
+    z-index: 120;
+    box-sizing: border-box;
+    width: min(100%, 390px);
+    min-width: 0;
+    padding: 0 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+    pointer-events: auto;
+  }
+
+  .pixel-sim-identity {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .pixel-sim-identity strong {
+    display: block;
+    font-size: .68rem;
+  }
+
+  .pixel-sim-identity small {
+    display: block;
+    margin-top: 1px;
+    font-size: .50rem;
+  }
+
+  .pixel-g-badge {
+    width: 27px;
+    height: 27px;
+    border-radius: 9px;
+    font-size: .78rem;
+  }
+
+  .pixel-sim-toolbar-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 3px;
+    pointer-events: auto;
+  }
+
+  .pixel-sim-toolbar-actions button,
+  .pixel-sim-toolbar-actions button:not(.pixel-sim-close),
+  .pixel-sim-toolbar-actions .pixel-sim-close {
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    color: var(--ink);
+    background: var(--surface-strong);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .pixel-frame {
+    box-sizing: border-box;
+    position: relative;
+    flex: none;
+    align-self: center;
+    justify-self: center;
+    width: min(
+      330px,
+      calc((100dvh - 104px) * .45),
+      calc(100vw - 42px)
+    );
+    height: auto;
+    max-width: none;
+    max-height: 100%;
+    aspect-ratio: 1080 / 2400;
+    margin: 0 auto;
+    padding: 5px;
+    overflow: visible;
+    border-radius: 42px;
+    background: linear-gradient(145deg, #38353c, #0b0c10 58%, #413d45);
+    box-shadow:
+      0 18px 44px rgba(12, 7, 20, .38),
+      inset 0 0 0 1px rgba(255,255,255,.22);
+  }
+
+  .pixel-screen {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 37px;
+  }
+
+  .pixel-camera-hole {
+    top: 8px;
+  }
+
+  .pixel-power,
+  .pixel-volume {
+    display: block;
+  }
+
+  .pixel-sim-help {
+    width: min(100%, 390px);
+    margin: 0;
+    padding: 0 3px 1px;
+    display: block;
+    color: var(--muted);
+    font-size: .48rem;
+    line-height: 1.15;
+    text-align: center;
+  }
+
+  /* The launcher itself does not need page scrolling. Prevent the host browser
+     from converting an upward Android gesture into document overscroll. */
+  .record-home-page,
+  .record-home-content,
+  .record-home-gesture-hint,
+  #androidGesturePill {
+    touch-action: none;
+    overscroll-behavior: none;
+  }
+
+  /* App drawer remains vertically scrollable after it has opened. */
+  .app-drawer-page,
+  .app-drawer-page .drawer-grid {
+    touch-action: pan-y;
+    overscroll-behavior: contain;
+  }
+}
+
+@media (max-width: 560px) and (max-height: 620px) {
+  .pixel-sim-help,
+  .pixel-sim-identity small {
+    display: none;
+  }
+
+  .pixel-sim-stage {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .pixel-frame {
+    width: min(
+      270px,
+      calc((100dvh - 72px) * .45),
+      calc(100vw - 42px)
+    );
+  }
+}
