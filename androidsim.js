@@ -288,7 +288,26 @@
     nekogramThread: -1,
     waThread: -1,
     pinterestPin: -1,
-    tiktokIndex: 0
+    tiktokIndex: 0,
+
+    /* Pixel Camera simulator */
+    cameraMode: "camera",
+    cameraLens: "rear",
+    cameraZoom: 1,
+    cameraPanelOpen: false,
+    cameraFlash: false,
+    cameraResolution: "FHD",
+    cameraFps: 30,
+    cameraVideoMode: "normal",
+    cameraLocation: true,
+    cameraLensSuggestions: true,
+    cameraSocialShare: false,
+    cameraFramingHints: true,
+    cameraGrid: "Tanpa petak",
+    cameraExposure: true,
+    cameraFullResolution: true,
+    cameraMirrorSelfie: false,
+    cameraStabilization: true
   };
 
   const strings = {
@@ -747,7 +766,7 @@
     const parent = {
       wallpaperStyle: "home", color: "wallpaperStyle", icons: "wallpaperStyle", layout: "wallpaperStyle",
       clock: "wallpaperStyle", shortcuts: "wallpaperStyle", notifications: "wallpaperStyle", lockMore: "wallpaperStyle",
-      wallpaperPicker: "wallpaperStyle", settings: "home", about: "settings", apps: "home", camera: "home",
+      wallpaperPicker: "wallpaperStyle", settings: "home", about: "settings", apps: "home", camera: "home", cameraSettings: "camera",
       homeSettings: "home", system: "settings", languageRegion: "system", navigationMode: "system",
       gestureNavigation: "navigationMode", buttonNavigation: "navigationMode", recents: "home",
 
@@ -2687,8 +2706,184 @@
     root.innerHTML = `<div class="a17-page sim-app-page">${commonTop}<div class="sim-app-content">${body}</div></div>`;
   }
 
+  function ensurePixelCameraStyles() {
+    if (document.getElementById("pixelCameraSimulatorStyles")) return;
+    const style = document.createElement("style");
+    style.id = "pixelCameraSimulatorStyles";
+    style.textContent = `
+      .camera-pro-page{position:absolute;inset:0;overflow:hidden;background:#000;color:#fff;font-family:inherit;overscroll-behavior:none}
+      .camera-pro-page button{font:inherit;-webkit-tap-highlight-color:transparent}
+      .camera-pro-viewfinder{position:absolute;left:0;right:0;top:58px;bottom:194px;overflow:hidden;border-radius:0;background:#171717}
+      .camera-pro-page.video .camera-pro-viewfinder{border-radius:14px 14px 0 0}
+      .camera-pro-viewfinder::before{content:"";position:absolute;inset:0;background-image:var(--camera-feed);background-position:center;background-size:cover;background-repeat:no-repeat;transform:scale(var(--camera-zoom,1));transition:transform .2s ease,filter .18s ease}
+      .camera-pro-viewfinder.front::before{background-position:center 32%}
+      .camera-pro-focus{position:absolute;left:50%;top:47%;width:48px;height:48px;border:1px solid rgba(255,255,255,.72);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
+      .camera-pro-top{position:absolute;z-index:15;top:13px;left:50%;display:flex;align-items:center;gap:3px;padding:3px 5px;border-radius:24px;background:#18161f;transform:translateX(-50%)}
+      .camera-pro-top button{height:37px;border:0;color:#ded8ea;background:transparent;cursor:pointer}
+      .camera-pro-setting-icon{min-width:42px;padding:0 8px;border-radius:18px!important;font-size:12px;font-weight:800;background:#2b2734!important}
+      .camera-pro-setting-icon.photo{font-size:15px;font-weight:500}
+      .camera-pro-chevron{width:28px;font-size:20px}
+      .camera-pro-hint{position:absolute;z-index:4;top:98px;left:50%;padding:7px 13px;border-radius:18px;background:rgba(31,29,32,.85);font-size:8px;transform:translateX(-50%);white-space:nowrap}
+      .camera-pro-bottom{position:absolute;z-index:6;left:0;right:0;bottom:0;height:196px;overflow:visible;background:#000}
+      .camera-pro-zoom{position:absolute;top:6px;left:50%;display:flex;border-radius:18px;background:#3a393a;transform:translateX(-50%);overflow:hidden}
+      .camera-pro-zoom button{width:43px;height:32px;border:0;color:#fff;background:transparent;font-size:9px;cursor:pointer}
+      .camera-pro-zoom button.active{color:#3e374b;background:#d4c8e9;border-radius:17px}
+      .camera-pro-video-tools{position:absolute;top:43px;left:50%;width:calc(100% - 22px);display:flex;align-items:center;justify-content:center;gap:7px;transform:translateX(-50%)}
+      .camera-pro-video-modes{display:flex;align-items:center;padding:2px;border-radius:19px;background:#333;white-space:nowrap;overflow:hidden}
+      .camera-pro-video-modes button{border:0;padding:6px 9px;border-radius:15px;color:#fff;background:transparent;font-size:7px;cursor:pointer;white-space:nowrap}
+      .camera-pro-video-modes button.active{color:#3b3544;background:#d5c9e8;font-weight:600}
+      .camera-pro-stabilizer{width:35px;height:35px;flex:0 0 35px;border:2px solid rgba(214,202,232,.72);border-radius:50%;display:grid;place-items:center;color:#e6dff4;background:#443a59;font-size:11px;line-height:1;cursor:pointer;box-shadow:0 0 0 2px rgba(255,255,255,.08) inset}
+      .camera-pro-stabilizer.on{background:#65558d;color:#fff;border-color:#a994d0}
+      .camera-pro-main-controls{position:absolute;top:53px;left:18px;right:18px;display:flex;justify-content:space-between;align-items:center}
+      .camera-pro-page.video .camera-pro-main-controls{top:87px}
+      .camera-pro-switch,.camera-pro-thumb{width:43px;height:43px;border:2px solid #fff;border-radius:50%;display:grid;place-items:center;color:#fff;background:#686d72;font-size:19px;cursor:pointer}
+      .camera-pro-thumb{background-image:var(--camera-last-shot,var(--camera-feed));background-size:cover;background-position:center}
+      .camera-pro-shutter{width:64px;height:64px;border:4px solid #fff;border-radius:50%;display:grid;place-items:center;background:transparent;cursor:pointer}
+      .camera-pro-shutter::after{content:"";width:46px;height:46px;border-radius:50%;background:#fff}
+      .camera-pro-page.video .camera-pro-shutter::after{width:20px;height:20px;background:#fff}
+      .camera-pro-modes{position:absolute;left:0;right:0;bottom:10px;height:38px;display:flex;align-items:center;justify-content:flex-start;gap:2px;overflow-x:auto;overflow-y:hidden;padding:0 calc(50% - 42px);scroll-padding-inline:50%;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;touch-action:pan-x;user-select:none;-webkit-user-select:none;white-space:nowrap;cursor:grab}
+      .camera-pro-modes::-webkit-scrollbar{display:none}
+      .camera-pro-modes.dragging{cursor:grabbing;scroll-snap-type:none}
+      .camera-pro-modes button{flex:0 0 auto;min-width:max-content;border:0;padding:7px 11px;border-radius:17px;color:#fff;background:transparent;font-size:9px;cursor:pointer;scroll-snap-align:center;scroll-snap-stop:always;white-space:nowrap}
+      .camera-pro-modes button.active{color:#3d3748;background:#d5cae8}
+      .camera-pro-more{position:absolute;z-index:14;left:50%;top:106px;width:calc(100% - 22px);padding:16px 15px 17px;border-radius:24px;background:rgba(43,42,40,.94);transform:translateX(-50%);backdrop-filter:blur(14px);box-shadow:0 10px 28px rgba(0,0,0,.18)}
+      .camera-pro-more-grid{display:grid;grid-template-columns:minmax(0,1fr) 40px 40px;gap:12px 8px;align-items:center}
+      .camera-pro-more-copy strong,.camera-pro-more-copy small{display:block}.camera-pro-more-copy strong{font-size:8px;font-weight:500}.camera-pro-more-copy small{margin-top:3px;color:#d9c9ee;font-size:9px;line-height:1.2}
+      .camera-pro-more-choice{width:40px;height:40px;border:0;border-radius:50%;color:#ddd;background:#191722;font-size:8px;font-weight:800;cursor:pointer}.camera-pro-more-choice.active{color:#fff;background:#66578d}
+      .camera-pro-more-settings{position:absolute;right:0;bottom:-46px;padding:9px 17px;border:0;border-radius:21px;color:#fff;background:#3b393a;font-size:9px;cursor:pointer;box-shadow:0 5px 15px rgba(0,0,0,.12)}
+      .camera-pro-photo-more{position:absolute;z-index:14;left:50%;top:106px;width:calc(100% - 42px);padding:12px;border-radius:22px;background:rgba(43,42,40,.94);transform:translateX(-50%);backdrop-filter:blur(14px);box-shadow:0 10px 28px rgba(0,0,0,.18)}
+      .camera-pro-photo-more-row{display:flex;align-items:center;justify-content:space-between;gap:7px}
+      .camera-pro-photo-more button{min-height:38px;border:0;border-radius:19px;color:#fff;background:#1a1820;font-size:8px;cursor:pointer}
+      .camera-pro-photo-flash{width:42px;font-size:14px!important}.camera-pro-photo-flash.active{background:#66578d}
+      .camera-pro-photo-settings{flex:1;padding:0 13px;text-align:left;background:#3b393a!important}
+      .camera-pro-photo-settings strong{display:block;font-size:9px;font-weight:500}.camera-pro-photo-settings small{display:block;margin-top:2px;color:#d8ccdf;font-size:7px}
+      .camera-pro-mode-panel{position:absolute;z-index:14;left:20px;right:20px;bottom:58px;padding:17px;border-radius:25px;background:#3b393a;text-align:center;display:flex;align-items:center}.camera-pro-mode-panel button{width:50%;border:0;color:#fff;background:transparent;cursor:pointer}.camera-pro-mode-panel i{width:44px;height:44px;margin:0 auto 8px;display:grid;place-items:center;border-radius:50%;color:#41394d;background:#d4c8e8;font-style:normal;font-size:19px}.camera-pro-mode-panel span{display:block;font-size:9px}
+      .camera-pro-flash{position:absolute;z-index:40;inset:0;background:#fff;animation:cameraFlash .18s ease-out forwards;pointer-events:none}@keyframes cameraFlash{from{opacity:.95}to{opacity:0}}
+      .camera-settings-page{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding:16px 12px 34px;background:#fbf6ff;color:#342f3a;scrollbar-gutter:stable}
+      .camera-settings-head{position:sticky;z-index:3;top:-16px;display:flex;align-items:center;gap:10px;padding:18px 0 12px;background:#fbf6ff}.camera-settings-head button{width:31px;height:31px;border:0;color:#686171;background:transparent;font-size:25px}.camera-settings-head h3{margin:0;font-size:17px;font-weight:500}
+      .camera-settings-section{margin:14px 0 7px;color:#6e5d96;font-size:9px}
+      .camera-settings-row{min-height:58px;display:grid;grid-template-columns:35px 1fr auto;align-items:start;padding:9px 0;border:0;color:inherit;background:transparent;text-align:left;width:100%}.camera-settings-icon{padding-top:2px;color:#6f6879;font-size:17px}.camera-settings-copy strong{display:block;font-size:12px;font-weight:500}.camera-settings-copy small{display:block;margin-top:3px;color:#716c75;font-size:9px;line-height:1.25}
+      .camera-settings-switch{position:relative;width:30px;height:18px;margin-top:5px;border-radius:10px;background:#cbc6cc}.camera-settings-switch::after{content:"";position:absolute;top:-2px;left:-1px;width:22px;height:22px;border-radius:50%;background:#ecebed;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .18s}.camera-settings-switch.on{background:#d3c6e7}.camera-settings-switch.on::after{left:11px;background:#6a5599}
+      .camera-settings-divider{height:1px;background:rgba(90,80,100,.08)}
+      .camera-settings-page::-webkit-scrollbar{width:4px}.camera-settings-page::-webkit-scrollbar-thumb{background:#8d8892;border-radius:4px}
+    `;
+    document.head.appendChild(style);
+  }
+
+  function cameraFeedUrl() {
+    return state.cameraLens === "front"
+      ? "./assets/camera-front-raiden.png"
+      : "./assets/camera-rear-landscape.png";
+  }
+
   function renderCamera() {
-    root.innerHTML = `<div class="a17-page camera-page"><div class="camera-preview"></div><button class="camera-back" type="button" data-nav="back">‹</button><div class="camera-controls"><button class="camera-shutter" type="button" data-action="shutter"></button></div></div>`;
+    ensurePixelCameraStyles();
+    const mode = state.cameraMode || "camera";
+    const isVideo = mode === "video";
+    const isMore = mode === "more";
+    const videoMode = ["slow", "normal", "timelapse"].includes(state.cameraVideoMode)
+      ? state.cameraVideoMode
+      : "normal";
+    const topBadge = isVideo
+      ? state.cameraResolution
+      : (mode === "night" ? "☾⚙" : (mode === "portrait" ? "▣⚙" : "▣⚙"));
+    const modes = [
+      ["night", "Mode Foto Malam"], ["portrait", "Potret"], ["camera", "Kamera"], ["video", "Video"], ["more", "Mode"]
+    ];
+    const videoModes = [
+      ["slow", "Gerak Lambat"], ["normal", "Normal"], ["timelapse", "Time Lapse"]
+    ];
+
+    const videoPanel = state.cameraPanelOpen && isVideo ? `
+      <div class="camera-pro-more" role="dialog" aria-label="Setelan cepat video">
+        <div class="camera-pro-more-grid">
+          <div class="camera-pro-more-copy"><strong>Flash</strong><small>${state.cameraFlash ? "Aktif" : "Nonaktif"}</small></div>
+          <button class="camera-pro-more-choice ${!state.cameraFlash ? "active" : ""}" type="button" data-camera-flash="off" aria-label="Flash nonaktif">⚡̸</button>
+          <button class="camera-pro-more-choice ${state.cameraFlash ? "active" : ""}" type="button" data-camera-flash="on" aria-label="Flash aktif">⚡</button>
+
+          <div class="camera-pro-more-copy"><strong>Resolusi</strong><small>${state.cameraResolution === "4K" ? "4K (Resolusi sangat tinggi)" : "Full HD (1080p)"}</small></div>
+          <button class="camera-pro-more-choice ${state.cameraResolution === "FHD" ? "active" : ""}" type="button" data-camera-resolution="FHD">FHD</button>
+          <button class="camera-pro-more-choice ${state.cameraResolution === "4K" ? "active" : ""}" type="button" data-camera-resolution="4K">4K</button>
+
+          <div class="camera-pro-more-copy"><strong>Frame/dtk</strong><small>${state.cameraFps}</small></div>
+          <button class="camera-pro-more-choice ${state.cameraFps === 30 ? "active" : ""}" type="button" data-camera-fps="30">30</button>
+          <button class="camera-pro-more-choice ${state.cameraFps === 60 ? "active" : ""}" type="button" data-camera-fps="60">60</button>
+        </div>
+        <button class="camera-pro-more-settings" type="button" data-camera-settings>Setelan lainnya</button>
+      </div>` : "";
+
+    const photoPanel = state.cameraPanelOpen && !isVideo && !isMore ? `
+      <div class="camera-pro-photo-more" role="dialog" aria-label="Setelan cepat kamera">
+        <div class="camera-pro-photo-more-row">
+          <button class="camera-pro-photo-flash ${state.cameraFlash ? "active" : ""}" type="button" data-camera-flash="${state.cameraFlash ? "off" : "on"}" aria-label="${state.cameraFlash ? "Nonaktifkan flash" : "Aktifkan flash"}">⚡</button>
+          <button class="camera-pro-photo-settings" type="button" data-camera-settings>
+            <strong>Setelan kamera</strong>
+            <small>Buka semua setelan kamera</small>
+          </button>
+        </div>
+      </div>` : "";
+
+    const morePanel = isMore ? `
+      <div class="camera-pro-mode-panel">
+        <button type="button" data-camera-extra="panorama"><i>▱</i><span>Panorama</span></button>
+        <button type="button" data-camera-extra="sphere"><i>◉</i><span>Photo Sphere</span></button>
+      </div>` : "";
+
+    root.innerHTML = `
+      <div class="a17-page camera-pro-page ${isVideo ? "video" : ""}" style="--camera-feed:url('${cameraFeedUrl()}');--camera-zoom:${state.cameraZoom === 2 ? 1.45 : 1}">
+        ${!isMore ? `<div class="camera-pro-top">
+          ${isVideo
+            ? `<button class="camera-pro-setting-icon" type="button" data-camera-panel aria-label="Setelan cepat video">${topBadge}</button>`
+            : `<button class="camera-pro-setting-icon photo" type="button" data-camera-settings aria-label="Setelan kamera">${topBadge}</button>`}
+          <button class="camera-pro-chevron" type="button" data-camera-panel aria-label="${state.cameraPanelOpen ? "Tutup setelan cepat" : "Buka setelan cepat"}">${state.cameraPanelOpen ? "⌃" : "⌄"}</button>
+        </div>` : ""}
+        <div class="camera-pro-viewfinder ${state.cameraLens === "front" ? "front" : "rear"}" data-camera-focus>
+          <span class="camera-pro-focus"></span>
+        </div>
+        ${mode === "portrait" ? `<div class="camera-pro-hint">Ketuk untuk memfokuskan</div>` : ""}
+        <div class="camera-pro-bottom">
+          ${!isMore ? `<div class="camera-pro-zoom"><button class="${state.cameraZoom === 1 ? "active" : ""}" type="button" data-camera-zoom="1">1×</button><button class="${state.cameraZoom === 2 ? "active" : ""}" type="button" data-camera-zoom="2">2</button></div>` : ""}
+          ${isVideo ? `<div class="camera-pro-video-tools">
+            <div class="camera-pro-video-modes" aria-label="Mode perekaman video">
+              ${videoModes.map(([id,label]) => `<button type="button" class="${videoMode === id ? "active" : ""}" data-camera-video-mode="${id}">${label}</button>`).join("")}
+            </div>
+            <button class="camera-pro-stabilizer ${state.cameraStabilization ? "on" : ""}" type="button" data-camera-stabilization aria-label="Stabilisasi video">⌁✋⌁</button>
+          </div>` : ""}
+          ${!isMore ? `<div class="camera-pro-main-controls"><button class="camera-pro-switch" type="button" data-camera-switch aria-label="Ganti kamera">↻</button><button class="camera-pro-shutter" type="button" data-action="shutter" aria-label="${isVideo ? "Mulai rekaman" : "Ambil gambar"}"></button><button class="camera-pro-thumb" type="button" aria-label="Foto terakhir"></button></div>` : ""}
+          <div class="camera-pro-modes" data-camera-mode-rail aria-label="Mode kamera">${modes.map(([id,label]) => `<button type="button" class="${mode === id ? "active" : ""}" data-camera-mode="${id}">${label}</button>`).join("")}</div>
+        </div>
+        ${videoPanel}${photoPanel}${morePanel}
+      </div>`;
+  }
+
+  function cameraSettingsRow(icon, title, desc, key = "") {
+    const switchMarkup = key ? `<span class="camera-settings-switch ${state[key] ? "on" : ""}"></span>` : "";
+    return `<button class="camera-settings-row" type="button" ${key ? `data-camera-setting="${key}"` : ""}><span class="camera-settings-icon">${icon}</span><span class="camera-settings-copy"><strong>${title}</strong>${desc ? `<small>${desc}</small>` : ""}</span>${switchMarkup}</button>`;
+  }
+
+  function renderCameraSettings() {
+    ensurePixelCameraStyles();
+    root.innerHTML = `<div class="a17-page camera-settings-page">
+      <div class="camera-settings-head"><button type="button" data-nav="back">‹</button><h3>Setelan kamera</h3></div>
+      <div class="camera-settings-section">Umum</div>
+      ${cameraSettingsRow("⌖","Simpan lokasi","Aplikasi lain mungkin dapat melihat info lokasi foto & video","cameraLocation")}
+      ${cameraSettingsRow("◉","Saran Google Lens","Arahkan kamera untuk memindai kode QR, dokumen, dan lainnya","cameraLensSuggestions")}
+      ${cameraSettingsRow("⌯","Berbagi ke media sosial",state.cameraSocialShare ? "Aktif" : "Nonaktif","cameraSocialShare")}
+      ${cameraSettingsRow("☝","Gestur","Tindakan tombol volume, Tindakan ketuk dua kali")}
+      ${cameraSettingsRow("☺","Wajah Favorit","Nonaktif")}
+      ${cameraSettingsRow("▣","Penyimpanan perangkat","Hemat Penyimpanan, Kosongkan ruang penyimpanan")}
+      ${cameraSettingsRow("•••","Lanjutan","")}
+      <div class="camera-settings-section">Komposisi</div>
+      ${cameraSettingsRow("⌗","Petunjuk pemberian bingkai","Tips dan alat di layar, seperti perata dan tips fokus","cameraFramingHints")}
+      ${cameraSettingsRow("▦","Jenis petak",state.cameraGrid)}
+      <div class="camera-settings-section">Kontrol Manual</div>
+      ${cameraSettingsRow("◐","Eksposur","Menyesuaikan kecerahan dan bayangan","cameraExposure")}
+      <div class="camera-settings-section">Foto</div>
+      ${cameraSettingsRow("▣","Resolusi foto kamera",state.cameraFullResolution ? "Resolusi penuh" : "Resolusi standar","cameraFullResolution")}
+      ${cameraSettingsRow("◫","Simpan selfie sebagai dipratinjau","Simpan foto selfie saat muncul di penampil","cameraMirrorSelfie")}
+      <div class="camera-settings-section">Video</div>
+      ${cameraSettingsRow("▰","Stabilisasi video","Mengurangi goyangan pada kamera agar video lebih halus","cameraStabilization")}
+    </div>`;
   }
 
   function lockClockMarkup() {
@@ -2834,7 +3029,7 @@
         languageRegion: renderLanguageRegion, navigationMode: renderNavigationMode, gestureNavigation: renderGestureNavigation,
         buttonNavigation: renderButtonNavigation, recents: renderRecents, about: renderAbout, androidEasterEgg: renderAndroidEasterEgg, android16Game: renderAndroid16Game,
         fingerprintSettings: renderFingerprintSettings, fingerprintEnroll: renderFingerprintEnroll, screenLockSettings: renderScreenLockSettings, pinEnroll: renderPinEnroll, patternEnroll: renderPatternEnroll,
-        apps: renderApps, appInfo: renderAppInfo, simApp: renderSimApp, camera: renderCamera, boot: renderBoot,
+        apps: renderApps, appInfo: renderAppInfo, simApp: renderSimApp, camera: renderCamera, cameraSettings: renderCameraSettings, boot: renderBoot,
 
         networkInternet: renderNetworkInternet, internetSettings: renderInternetSettings, simSettings: renderSimSettings,
         hotspotSettings: renderHotspotSettings, dataSaverSettings: renderDataSaverSettings, vpnSettings: renderVpnSettings,
@@ -3108,6 +3303,151 @@
 
     $$('[data-action]', root).forEach(btn => btn.addEventListener("click", () => handleAction(btn.dataset.action)));
 
+    $$('[data-camera-mode]', root).forEach(btn => btn.addEventListener("click", () => {
+      state.cameraMode = btn.dataset.cameraMode || "camera";
+      state.cameraPanelOpen = false;
+      save(); vibrate(5); render();
+    }));
+    $$('[data-camera-zoom]', root).forEach(btn => btn.addEventListener("click", () => {
+      state.cameraZoom = Number(btn.dataset.cameraZoom) === 2 ? 2 : 1;
+      save(); vibrate(4); render();
+    }));
+    $$('[data-camera-panel]', root).forEach(btn => btn.addEventListener("click", () => {
+      state.cameraPanelOpen = !state.cameraPanelOpen;
+      save(); vibrate(4); render();
+    }));
+    $('[data-camera-switch]', root)?.addEventListener("click", () => {
+      state.cameraLens = state.cameraLens === "front" ? "rear" : "front";
+      save(); vibrate(8); render();
+    });
+    $$('[data-camera-flash]', root).forEach(btn => btn.addEventListener("click", () => {
+      state.cameraFlash = btn.dataset.cameraFlash === "on";
+      save(); render();
+    }));
+    $$('[data-camera-resolution]', root).forEach(btn => btn.addEventListener("click", () => {
+      state.cameraResolution = btn.dataset.cameraResolution === "4K" ? "4K" : "FHD";
+      save(); render();
+    }));
+    $$('[data-camera-fps]', root).forEach(btn => btn.addEventListener("click", () => {
+      state.cameraFps = Number(btn.dataset.cameraFps) === 60 ? 60 : 30;
+      save(); render();
+    }));
+    $$('[data-camera-video-mode]', root).forEach(btn => btn.addEventListener("click", () => {
+      const next = btn.dataset.cameraVideoMode;
+      state.cameraVideoMode = ["slow", "normal", "timelapse"].includes(next) ? next : "normal";
+      save(); vibrate(4); render();
+    }));
+    $('[data-camera-stabilization]', root)?.addEventListener("click", () => {
+      state.cameraStabilization = !state.cameraStabilization;
+      save(); vibrate(4); render();
+    });
+
+    const cameraModeRail = $('[data-camera-mode-rail]', root);
+    if (cameraModeRail instanceof HTMLElement) {
+      const modeButtons = () => [...cameraModeRail.querySelectorAll('[data-camera-mode]')];
+      const centerModeButton = (button, behavior = "smooth") => {
+        if (!(button instanceof HTMLElement) || !cameraModeRail.isConnected) return;
+        const left = button.offsetLeft - (cameraModeRail.clientWidth - button.offsetWidth) / 2;
+        cameraModeRail.scrollTo({ left: Math.max(0, left), behavior });
+      };
+      const activateNearestCameraMode = () => {
+        if (!cameraModeRail.isConnected) return;
+        const buttons = modeButtons();
+        if (!buttons.length) return;
+        const railRect = cameraModeRail.getBoundingClientRect();
+        const centerX = railRect.left + railRect.width / 2;
+        const nearest = buttons.reduce((best, button) => {
+          const rect = button.getBoundingClientRect();
+          const distance = Math.abs((rect.left + rect.width / 2) - centerX);
+          return !best || distance < best.distance ? { button, distance } : best;
+        }, null)?.button;
+        if (!(nearest instanceof HTMLElement)) return;
+        const nextMode = nearest.dataset.cameraMode || "camera";
+        if (nextMode === state.cameraMode) {
+          centerModeButton(nearest);
+          return;
+        }
+        state.cameraMode = nextMode;
+        state.cameraPanelOpen = false;
+        save();
+        vibrate(5);
+        render();
+      };
+
+      const activeMode = cameraModeRail.querySelector('[data-camera-mode].active');
+      requestAnimationFrame(() => centerModeButton(activeMode, "auto"));
+
+      let mouseDrag = null;
+      let suppressModeClick = false;
+      let settleTimer = 0;
+      const queueNearestMode = (delay = 90) => {
+        clearTimeout(settleTimer);
+        settleTimer = setTimeout(activateNearestCameraMode, delay);
+      };
+
+      cameraModeRail.addEventListener("pointerdown", event => {
+        if (event.pointerType !== "mouse" || event.button !== 0) return;
+        mouseDrag = { x: event.clientX, scrollLeft: cameraModeRail.scrollLeft, moved: false, pointerId: event.pointerId };
+        cameraModeRail.classList.add("dragging");
+        try { cameraModeRail.setPointerCapture(event.pointerId); } catch {}
+      });
+      cameraModeRail.addEventListener("pointermove", event => {
+        if (!mouseDrag || event.pointerId !== mouseDrag.pointerId) return;
+        const dx = event.clientX - mouseDrag.x;
+        if (Math.abs(dx) > 4) mouseDrag.moved = true;
+        cameraModeRail.scrollLeft = mouseDrag.scrollLeft - dx;
+        if (mouseDrag.moved) event.preventDefault();
+      });
+      const finishCameraModeDrag = event => {
+        if (!mouseDrag || (event.pointerId != null && event.pointerId !== mouseDrag.pointerId)) return;
+        const moved = !!mouseDrag.moved;
+        suppressModeClick = moved;
+        try { cameraModeRail.releasePointerCapture(mouseDrag.pointerId); } catch {}
+        mouseDrag = null;
+        cameraModeRail.classList.remove("dragging");
+        if (moved) queueNearestMode(20);
+        if (suppressModeClick) setTimeout(() => { suppressModeClick = false; }, 0);
+      };
+      cameraModeRail.addEventListener("pointerup", finishCameraModeDrag);
+      cameraModeRail.addEventListener("pointercancel", finishCameraModeDrag);
+      cameraModeRail.addEventListener("click", event => {
+        if (!suppressModeClick) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }, true);
+      cameraModeRail.addEventListener("scroll", () => queueNearestMode(120), { passive: true });
+      if ("onscrollend" in cameraModeRail) {
+        cameraModeRail.addEventListener("scrollend", activateNearestCameraMode, { passive: true });
+      }
+      cameraModeRail.addEventListener("wheel", event => {
+        if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+        cameraModeRail.scrollLeft += event.deltaY;
+        queueNearestMode(140);
+        event.preventDefault();
+      }, { passive: false });
+    }
+    $$('[data-camera-settings]', root).forEach(btn => btn.addEventListener("click", () => {
+      state.cameraPanelOpen = false; save(); navigate("cameraSettings");
+    }));
+    $$('[data-camera-setting]', root).forEach(btn => btn.addEventListener("click", () => {
+      const key = btn.dataset.cameraSetting;
+      if (!(key in state)) return;
+      state[key] = !state[key]; save(); vibrate(4); render();
+    }));
+    $$('[data-camera-extra]', root).forEach(btn => btn.addEventListener("click", () => {
+      toast(btn.dataset.cameraExtra === "sphere" ? "Photo Sphere simulator" : "Panorama simulator");
+      vibrate(5);
+    }));
+    $('[data-camera-focus]', root)?.addEventListener("click", event => {
+      const area = event.currentTarget;
+      const dot = area?.querySelector('.camera-pro-focus');
+      if (!dot || !(area instanceof HTMLElement)) return;
+      const r = area.getBoundingClientRect();
+      dot.style.left = `${event.clientX - r.left}px`;
+      dot.style.top = `${event.clientY - r.top}px`;
+      vibrate(3);
+    });
+
     $("#brightnessSlider")?.addEventListener("input", e => { state.brightness = Number(e.target.value); save(); applyTheme(); });
     $("#qsVolumeSlider")?.addEventListener("input", e => { state.volume = Number(e.target.value); save(); });
 
@@ -3373,7 +3713,17 @@
     }
     if (action === "closeShade") { state.shade = false; render(); }
     if (action === "clearShadeNotifications") { state.shadeNotificationsCleared = true; save(); vibrate(6); render(); return; }
-    if (action === "shutter") toast(t("photoCaptured"));
+    if (action === "shutter") {
+      const page = root.querySelector(".camera-pro-page");
+      if (page) {
+        const flash = document.createElement("div");
+        flash.className = "camera-pro-flash";
+        page.appendChild(flash);
+        window.setTimeout(() => flash.remove(), 220);
+      }
+      vibrate(12);
+      toast(state.cameraMode === "video" ? "Rekaman video simulasi dimulai" : t("photoCaptured"));
+    }
     if (action === "nowPlayingToast") toast(t("nowPlayingDesc"));
     if (action === "addLanguage") {
       const installed = Array.isArray(state.installedLanguages) ? state.installedLanguages : ["id"];
