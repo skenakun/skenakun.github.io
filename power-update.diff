@@ -1,0 +1,563 @@
+--- /mnt/data/androidsim-camera-mode-fixed.js	2026-08-18 09:09:39.192395933 +0000
++++ /mnt/data/androidsim-power-system-modes.js	2026-08-18 09:28:13.708387487 +0000
+@@ -132,6 +132,12 @@
+ 
+     /* Android 17 interactive settings referenced by the supplied screenshots */
+     screenOff: false,
++    poweredOff: false,
++    lockdownActive: false,
++    bootloaderSelection: 0,
++    recoveryPage: "main",
++    recoveryMountSystem: false,
++    recoveryReadOnly: true,
+     connectedWifi: "Wifi Berbagi Rezeki_5G",
+     mobileData: false,
+     sim1Enabled: true,
+@@ -602,6 +608,12 @@
+     phone.style.setProperty("--drawer-cols", String(state.homeCols));
+     phone.classList.toggle("android-dark", !!state.dark);
+     phone.classList.toggle("screen-off-active", !!state.screenOff);
++    const androidSystemMode = state.poweredOff
++      ? "power-off"
++      : (["boot", "recovery", "bootloader"].includes(state.view) ? state.view : "");
++    phone.classList.toggle("android-special-boot", !!androidSystemMode);
++    if (androidSystemMode) phone.dataset.androidSystemMode = androidSystemMode;
++    else phone.removeAttribute("data-android-system-mode");
+     phone.style.opacity = String(0.68 + state.brightness / 312);
+ 
+     const timeEl = $("#androidStatusTime");
+@@ -3013,14 +3025,240 @@
+     return renderQuickShade();
+   }
+ 
++  /* =========================================================
++     POWER MENU / RECOVERY / BOOTLOADER SIMULATION
++     ========================================================= */
++
++  let powerMenuStage = "";
++  let systemUiRestarting = false;
++  let bootTransitionTimer = 0;
++  let screenshotFlashTimer = 0;
++
++  function ensurePowerModeStyles() {
++    if (document.getElementById("androidPowerModeStylesV1")) return;
++    const style = document.createElement("style");
++    style.id = "androidPowerModeStylesV1";
++    style.textContent = `
++      #pixelScreen.android-special-boot #androidStatusbar,
++      #pixelScreen.android-special-boot #androidGesturePill,
++      #pixelScreen.android-special-boot #androidButtonNav,
++      #pixelScreen[data-android-system-mode] #androidDynamicIsland,
++      #pixelScreen[data-android-system-mode] #androidPersistentMediaHost,
++      #pixelScreen[data-android-system-mode] #androidPersistentMediaHostV12 {
++        opacity: 0 !important;
++        visibility: hidden !important;
++        pointer-events: none !important;
++      }
++      .android-power-overlay {
++        position: absolute; inset: 0; z-index: 9800; display: grid; place-items: center;
++        padding: 42px 16px 28px; box-sizing: border-box; color: #17192f;
++      }
++      .android-power-backdrop {
++        position: absolute; inset: 0; border: 0; padding: 0;
++        background: rgba(34,37,52,.48); backdrop-filter: blur(8px) saturate(.85);
++        -webkit-backdrop-filter: blur(8px) saturate(.85);
++      }
++      .android-power-card {
++        position: relative; width: min(82%, 270px); padding: 18px 16px 20px;
++        border-radius: 28px; background: rgba(229,232,255,.62);
++        box-shadow: 0 18px 48px rgba(14,16,28,.28), inset 0 1px rgba(255,255,255,.34);
++        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
++      }
++      .android-power-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px 14px; }
++      .android-power-action { border: 0; background: transparent; color: #17192f; padding: 0; display: grid; justify-items: center; gap: 8px; font: inherit; }
++      .android-power-action .android-power-icon {
++        width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center;
++        background: #d9ddff; box-shadow: 0 8px 20px rgba(23,25,47,.12); font-size: 27px; font-weight: 800;
++      }
++      .android-power-action.danger .android-power-icon { background: #e93a32; color: #fff; }
++      .android-power-action strong { font-size: 12px; line-height: 1.05; font-weight: 850; text-align: center; }
++      .android-power-screenshot { grid-column: 1 / -1; margin-top: 2px; }
++      .android-power-screenshot .android-power-icon { width: 72px; height: 72px; }
++      .android-power-restart-card .android-power-action .android-power-icon { background: #d9ddff; }
++      .android-systemui-restart {
++        position: absolute; inset: 0; z-index: 9900; display: grid; place-items: center;
++        background: rgba(7,8,12,.78); color: white; backdrop-filter: blur(5px);
++      }
++      .android-systemui-restart div { text-align: center; }
++      .android-systemui-restart b { display: block; font-size: 28px; margin-bottom: 10px; }
++      .android-systemui-restart span { font-size: 11px; opacity: .84; font-weight: 800; }
++      .android-screenshot-flash { position: absolute; inset: 0; z-index: 9950; pointer-events: none; background: #fff; animation: androidScreenshotFlash .32s ease forwards; }
++      @keyframes androidScreenshotFlash { 0%{opacity:.94} 100%{opacity:0} }
++
++      .android-poweroff-page, .android-bootloader-page, .android-recovery-page {
++        position: absolute; inset: 0; width: 100%; height: 100%; box-sizing: border-box; overflow: hidden;
++      }
++      .android-poweroff-page { background: #000; }
++      .android-poweroff-hint { position:absolute; left:50%; bottom:24px; transform:translateX(-50%); color:#6f7278; font-size:8px; white-space:nowrap; }
++
++      .android-bootloader-page {
++        background: #07090d; color: #e7e9ed; padding: 22px 14px 18px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
++        display: flex; flex-direction: column;
++      }
++      .android-fastboot-mark { width: 54px; height: 54px; margin: 0 auto 12px; border-radius: 50%; border: 3px solid #2da66f; color:#2da66f; display:grid; place-items:center; font-size:25px; font-weight:900; }
++      .android-fastboot-title { text-align:center; color:#7ddcae; font-size:13px; font-weight:900; letter-spacing:.08em; margin-bottom:14px; }
++      .android-fastboot-info { border-top:1px solid #2a3138; border-bottom:1px solid #2a3138; padding:10px 0; display:grid; gap:5px; font-size:7px; line-height:1.3; color:#aeb7c0; }
++      .android-fastboot-info b { color:#f1f3f4; font-weight:700; }
++      .android-fastboot-options { margin-top:auto; display:grid; gap:6px; }
++      .android-fastboot-option { border:1px solid #3a4149; border-radius:8px; padding:9px 10px; background:#11151b; color:#cbd1d7; text-align:left; font:700 8px ui-monospace,monospace; }
++      .android-fastboot-option.active { color:#07130d; background:#71e5a8; border-color:#71e5a8; }
++      .android-fastboot-help { margin-top:10px; font-size:6.5px; line-height:1.45; color:#7e8790; text-align:center; }
++      .android-fastboot-hold { margin-top:6px; text-align:center; color:#e0b45b; font-size:6.5px; }
++
++      .android-recovery-page { background:#101318; color:#e9edf3; font-family: Arial, sans-serif; display:flex; flex-direction:column; }
++      .android-recovery-head { display:flex; align-items:center; justify-content:space-between; padding:10px 12px; background:#20252c; border-bottom:1px solid #3a4149; }
++      .android-recovery-head div { display:grid; }
++      .android-recovery-head strong { color:#8fd5ff; font-size:10px; letter-spacing:.04em; }
++      .android-recovery-head small { font-size:6.5px; color:#aab3bd; margin-top:2px; }
++      .android-recovery-head span { font:700 7px ui-monospace,monospace; color:#c5ccd4; }
++      .android-recovery-body { flex:1; overflow:auto; padding:12px; box-sizing:border-box; }
++      .android-twrp-title { text-align:center; margin:2px 0 10px; font-size:11px; color:#fff; }
++      .android-twrp-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
++      .android-twrp-tile { min-height:58px; border:1px solid #38414b; border-radius:9px; background:linear-gradient(#242b33,#1a2027); color:#ecf1f5; display:grid; place-items:center; gap:4px; padding:7px 4px; font:700 8px Arial,sans-serif; }
++      .android-twrp-tile b { color:#67c7ff; font-size:20px; line-height:1; }
++      .android-twrp-panel { border:1px solid #38414b; border-radius:10px; background:#1c2229; padding:11px; }
++      .android-twrp-panel h4 { margin:0 0 8px; color:#7fd2ff; font-size:10px; }
++      .android-twrp-panel p { margin:5px 0; color:#b8c0c8; font-size:7px; line-height:1.45; }
++      .android-twrp-list { display:grid; gap:7px; margin-top:9px; }
++      .android-twrp-row { border:1px solid #3b444e; border-radius:8px; background:#272e36; color:#ecf0f3; padding:9px; text-align:left; font:700 7.5px Arial,sans-serif; }
++      .android-twrp-row.active { border-color:#54bceb; color:#84d7ff; }
++      .android-twrp-warning { color:#ffbe69 !important; }
++      .android-twrp-actions { display:flex; gap:7px; margin-top:10px; }
++      .android-twrp-actions button { flex:1; border:0; border-radius:8px; padding:9px 5px; background:#52bde9; color:#07141b; font-size:7px; font-weight:900; }
++      .android-twrp-actions button.secondary { background:#343c45; color:#e1e6eb; }
++      .android-recovery-nav { height:31px; background:#20252c; border-top:1px solid #3a4149; display:grid; grid-template-columns:repeat(3,1fr); gap:1px; }
++      .android-recovery-nav button { border:0; background:transparent; color:#cbd2d9; font-size:12px; }
++    `;
++    document.head.appendChild(style);
++  }
++
++  function powerMenuMarkup() {
++    if (!powerMenuStage) return "";
++    const restart = powerMenuStage === "restart";
++    return `<div class="android-power-overlay">
++      <button class="android-power-backdrop" type="button" data-action="power-menu-dismiss" aria-label="Tutup menu daya"></button>
++      <section class="android-power-card ${restart ? "android-power-restart-card" : ""}" aria-label="${restart ? "Opsi mulai ulang" : "Menu daya"}">
++        ${restart ? `
++          <div class="android-power-grid">
++            <button class="android-power-action" type="button" data-action="power-restart-system"><span class="android-power-icon">↻</span><strong>System</strong></button>
++            <button class="android-power-action" type="button" data-action="power-restart-systemui"><span class="android-power-icon">♟</span><strong>Sistem UI</strong></button>
++            <button class="android-power-action" type="button" data-action="power-restart-recovery"><span class="android-power-icon">⚙</span><strong>Recovery</strong></button>
++            <button class="android-power-action" type="button" data-action="power-restart-bootloader"><span class="android-power-icon">▣</span><strong>Bootloader</strong></button>
++          </div>
++        ` : `
++          <div class="android-power-grid">
++            <button class="android-power-action danger" type="button" data-action="power-emergency"><span class="android-power-icon">✱</span><strong>Darurat</strong></button>
++            <button class="android-power-action" type="button" data-action="power-lockdown"><span class="android-power-icon">▣</span><strong>Kunci total</strong></button>
++            <button class="android-power-action" type="button" data-action="power-off"><span class="android-power-icon">⏻</span><strong>Matikan</strong></button>
++            <button class="android-power-action" type="button" data-action="power-restart"><span class="android-power-icon">↻</span><strong>Mulai ulang</strong></button>
++            <button class="android-power-action android-power-screenshot" type="button" data-action="power-screenshot"><span class="android-power-icon">▣</span><strong>Screenshot</strong></button>
++          </div>
++        `}
++      </section>
++    </div>`;
++  }
++
++  function appendPowerTransientUi() {
++    if (powerMenuStage && !state.poweredOff && !["bootloader", "recovery", "boot"].includes(state.view)) {
++      root.insertAdjacentHTML("beforeend", powerMenuMarkup());
++    }
++    if (systemUiRestarting) {
++      root.insertAdjacentHTML("beforeend", `<div class="android-systemui-restart"><div><b>G</b><span>Memulai ulang Sistem UI…</span></div></div>`);
++    }
++  }
++
++  function renderPowerOff() {
++    root.innerHTML = `<div class="android-poweroff-page"><div class="android-poweroff-hint">Tahan tombol daya untuk menyalakan</div></div>`;
++  }
++
++  const BOOTLOADER_OPTIONS = [
++    { id: "start", label: "START" },
++    { id: "restart", label: "RESTART BOOTLOADER" },
++    { id: "recovery", label: "RECOVERY MODE" },
++    { id: "poweroff", label: "POWER OFF" }
++  ];
++
++  function renderBootloader() {
++    const selected = Math.max(0, Math.min(BOOTLOADER_OPTIONS.length - 1, Number(state.bootloaderSelection) || 0));
++    state.bootloaderSelection = selected;
++    root.innerHTML = `<div class="android-bootloader-page">
++      <div class="android-fastboot-mark">▶</div>
++      <div class="android-fastboot-title">FASTBOOT MODE</div>
++      <div class="android-fastboot-info">
++        <span>PRODUCT_NAME - <b>frankel</b></span>
++        <span>VARIANT - <b>Pixel 10</b></span>
++        <span>BOOTLOADER VERSION - <b>sim-17.0</b></span>
++        <span>BASEBAND VERSION - <b>simulator</b></span>
++        <span>SERIAL NUMBER - <b>WAIFU-P10-FRANKEL</b></span>
++        <span>SECURE BOOT - <b>yes</b></span>
++        <span>DEVICE STATE - <b>locked</b></span>
++        <span>BATTERY - <b>${state.battery}%</b></span>
++      </div>
++      <div class="android-fastboot-options">
++        ${BOOTLOADER_OPTIONS.map((item, index) => `<button class="android-fastboot-option ${index === selected ? "active" : ""}" type="button" data-action="bootloader-select-${item.id}">${item.label}</button>`).join("")}
++      </div>
++      <div class="android-fastboot-help">Tombol volume: pindah pilihan • tombol power: pilih</div>
++      <div class="android-fastboot-hold">Tahan power 10 detik untuk reboot paksa ke System</div>
++    </div>`;
++  }
++
++  function recoveryPanelMarkup() {
++    const page = state.recoveryPage || "main";
++    if (page === "main") {
++      return `<h3 class="android-twrp-title">Team Win Recovery Project</h3>
++        <div class="android-twrp-grid">
++          <button class="android-twrp-tile" data-action="recovery-open-install"><b>⇩</b>Install</button>
++          <button class="android-twrp-tile" data-action="recovery-open-wipe"><b>⌫</b>Wipe</button>
++          <button class="android-twrp-tile" data-action="recovery-open-backup"><b>▣</b>Backup</button>
++          <button class="android-twrp-tile" data-action="recovery-open-restore"><b>↥</b>Restore</button>
++          <button class="android-twrp-tile" data-action="recovery-open-mount"><b>◫</b>Mount</button>
++          <button class="android-twrp-tile" data-action="recovery-open-settings"><b>⚙</b>Settings</button>
++          <button class="android-twrp-tile" data-action="recovery-open-advanced"><b>⋮</b>Advanced</button>
++          <button class="android-twrp-tile" data-action="recovery-open-reboot"><b>↻</b>Reboot</button>
++        </div>`;
++    }
++    if (page === "install") {
++      return `<div class="android-twrp-panel"><h4>Install</h4><p>Pilih paket ZIP simulasi. Tidak ada file nyata yang akan diflash.</p><div class="android-twrp-list"><button class="android-twrp-row" data-action="recovery-sim-install">/sdcard/Download/update-simulator.zip</button><button class="android-twrp-row" data-action="recovery-sim-install">/sdcard/Download/module-demo.zip</button></div></div>`;
++    }
++    if (page === "wipe") {
++      return `<div class="android-twrp-panel"><h4>Wipe</h4><p class="android-twrp-warning">Simulasi saja. Data browser tidak akan benar-benar dihapus.</p><div class="android-twrp-list"><button class="android-twrp-row" data-action="recovery-wipe-cache">Wipe Cache / Dalvik</button><button class="android-twrp-row" data-action="recovery-wipe-data">Factory Reset (simulasi)</button></div></div>`;
++    }
++    if (page === "backup") {
++      return `<div class="android-twrp-panel"><h4>Backup</h4><p>Partisi yang dipilih: Boot, System, Data.</p><div class="android-twrp-actions"><button data-action="recovery-backup-run">Mulai Backup</button></div></div>`;
++    }
++    if (page === "restore") {
++      return `<div class="android-twrp-panel"><h4>Restore</h4><p>Belum ada backup TWRP simulasi tersimpan.</p><div class="android-twrp-actions"><button class="secondary" data-action="recovery-home">Kembali</button></div></div>`;
++    }
++    if (page === "mount") {
++      return `<div class="android-twrp-panel"><h4>Mount</h4><div class="android-twrp-list"><button class="android-twrp-row ${state.recoveryMountSystem ? "active" : ""}" data-action="recovery-toggle-mount-system">System ${state.recoveryMountSystem ? "• mounted" : ""}</button><button class="android-twrp-row active">Data • mounted</button><button class="android-twrp-row active">Cache • mounted</button></div></div>`;
++    }
++    if (page === "settings") {
++      return `<div class="android-twrp-panel"><h4>Settings</h4><div class="android-twrp-list"><button class="android-twrp-row ${state.recoveryReadOnly ? "active" : ""}" data-action="recovery-toggle-readonly">Mount system partition read-only</button><button class="android-twrp-row" data-action="recovery-sim-haptics">Vibration</button><button class="android-twrp-row" data-action="recovery-sim-timezone">Time zone: Asia/Jakarta</button></div></div>`;
++    }
++    if (page === "advanced") {
++      return `<div class="android-twrp-panel"><h4>Advanced</h4><div class="android-twrp-list"><button class="android-twrp-row" data-action="recovery-sim-terminal">Terminal</button><button class="android-twrp-row" data-action="recovery-wipe-cache">Wipe Dalvik / ART Cache</button><button class="android-twrp-row" data-action="recovery-sim-filemanager">File Manager</button></div></div>`;
++    }
++    return `<div class="android-twrp-panel"><h4>Reboot</h4><p>Pilih target reboot.</p><div class="android-twrp-list"><button class="android-twrp-row" data-action="power-restart-system">System</button><button class="android-twrp-row" data-action="power-restart-recovery">Recovery</button><button class="android-twrp-row" data-action="power-restart-bootloader">Bootloader</button><button class="android-twrp-row" data-action="power-off">Power Off</button></div></div>`;
++  }
++
++  function renderRecovery() {
++    root.innerHTML = `<div class="android-recovery-page">
++      <header class="android-recovery-head"><div><strong>TWRP 3.7.1-0</strong><small>Pixel 10 • frankel</small></div><span>${formatTime().replace(".", ":")} · ${state.battery}%</span></header>
++      <main class="android-recovery-body">${recoveryPanelMarkup()}</main>
++      <nav class="android-recovery-nav"><button type="button" data-action="recovery-back">‹</button><button type="button" data-action="recovery-home">⌂</button><button type="button" data-action="recovery-log">☰</button></nav>
++    </div>`;
++  }
++
+   function renderBoot() {
+     root.innerHTML = `<div class="boot-page"><div style="text-align:center"><div class="boot-mark">G</div><p style="font-size:8px;font-weight:900;color:#5f6368">${t("rebooting")}</p></div></div>`;
+   }
+ 
+   function render() {
++    ensurePowerModeStyles();
+     applyTheme();
+-    if (state.screenOff) renderScreenOff();
+-    else if (state.locked) renderLock();
++    if (state.poweredOff) renderPowerOff();
++    else if (state.screenOff) renderScreenOff();
++    else if (state.locked && !["recovery", "bootloader", "boot"].includes(state.view)) renderLock();
+     else {
+       const map = {
+         home: renderHome, wallpaperStyle: renderWallpaperStyle, color: renderColor, icons: renderIcons, layout: renderLayout,
+@@ -3029,7 +3267,8 @@
+         languageRegion: renderLanguageRegion, navigationMode: renderNavigationMode, gestureNavigation: renderGestureNavigation,
+         buttonNavigation: renderButtonNavigation, recents: renderRecents, about: renderAbout, androidEasterEgg: renderAndroidEasterEgg, android16Game: renderAndroid16Game,
+         fingerprintSettings: renderFingerprintSettings, fingerprintEnroll: renderFingerprintEnroll, screenLockSettings: renderScreenLockSettings, pinEnroll: renderPinEnroll, patternEnroll: renderPatternEnroll,
+-        apps: renderApps, appInfo: renderAppInfo, simApp: renderSimApp, camera: renderCamera, cameraSettings: renderCameraSettings, boot: renderBoot,
++        apps: renderApps, appInfo: renderAppInfo, simApp: renderSimApp, camera: renderCamera, cameraSettings: renderCameraSettings,
++        boot: renderBoot, recovery: renderRecovery, bootloader: renderBootloader,
+ 
+         networkInternet: renderNetworkInternet, internetSettings: renderInternetSettings, simSettings: renderSimSettings,
+         hotspotSettings: renderHotspotSettings, dataSaverSettings: renderDataSaverSettings, vpnSettings: renderVpnSettings,
+@@ -3078,7 +3317,8 @@
+       };
+       (map[state.view] || renderHome)();
+     }
+-    if (state.shade && state.view !== "boot") root.insertAdjacentHTML("beforeend", renderShadePanel());
++    if (state.shade && !["boot", "recovery", "bootloader"].includes(state.view) && !state.poweredOff) root.insertAdjacentHTML("beforeend", renderShadePanel());
++    appendPowerTransientUi();
+     bindDynamic();
+ 
+     // V12 media bridge survives root.innerHTML replacement.
+@@ -3696,9 +3936,57 @@
+     if (action === "closeLockAuth") { lockAuthVisible=false;lockPinAttempt="";activePattern=[];render();return; }
+     if (action === "lockFingerprint") {
+       const sensor=$('.in-display-fingerprint',root);
++      if(state.lockdownActive){toast('Kunci total aktif • gunakan PIN atau pola');vibrate([18,35,18]);return;}
+       if(!state.fingerprintEnrolled){toast('Daftarkan sidik jari di Setelan');vibrate(6);return;}
+       sensor?.classList.add('scanning');vibrate(18);setTimeout(()=>{if(state.locked)unlockPhone();},520);return;
+     }
++    if (action === "power-menu-dismiss") { powerMenuStage = ""; render(); return; }
++    if (action === "power-emergency") {
++      powerMenuStage = "";
++      state.poweredOff = false; state.screenOff = false; state.locked = false; state.shade = false;
++      save();
++      openSimAppDirect("phone");
++      return;
++    }
++    if (action === "power-lockdown") {
++      powerMenuStage = "";
++      state.lockdownActive = true; state.poweredOff = false; state.screenOff = false; state.locked = true; state.shade = false;
++      save(); vibrate(18); render();
++      return;
++    }
++    if (action === "power-off") { powerMenuStage = ""; shutdownPhone(); return; }
++    if (action === "power-restart") { powerMenuStage = "restart"; vibrate(5); render(); return; }
++    if (action === "power-screenshot") { powerMenuStage = ""; takeSimulatorScreenshot(); return; }
++    if (action === "power-restart-system") { powerMenuStage = ""; rebootPhone("system"); return; }
++    if (action === "power-restart-systemui") { powerMenuStage = ""; restartSystemUi(); return; }
++    if (action === "power-restart-recovery") { powerMenuStage = ""; rebootPhone("recovery"); return; }
++    if (action === "power-restart-bootloader") { powerMenuStage = ""; rebootPhone("bootloader"); return; }
++
++    if (action?.startsWith("bootloader-select-")) {
++      const id = action.slice("bootloader-select-".length);
++      const index = BOOTLOADER_OPTIONS.findIndex(item => item.id === id);
++      if (index >= 0) { state.bootloaderSelection = index; save(); vibrate(5); handleBootloaderSelection(); }
++      return;
++    }
++
++    if (action?.startsWith("recovery-open-")) {
++      state.recoveryPage = action.slice("recovery-open-".length) || "main";
++      save(); vibrate(4); render(); return;
++    }
++    if (action === "recovery-home") { state.recoveryPage = "main"; save(); render(); return; }
++    if (action === "recovery-back") { state.recoveryPage = state.recoveryPage === "main" ? "main" : "main"; save(); render(); return; }
++    if (action === "recovery-log") { toast("TWRP log • simulasi recovery aktif"); return; }
++    if (action === "recovery-toggle-mount-system") { state.recoveryMountSystem = !state.recoveryMountSystem; save(); vibrate(4); render(); return; }
++    if (action === "recovery-toggle-readonly") { state.recoveryReadOnly = !state.recoveryReadOnly; save(); vibrate(4); render(); return; }
++    if (action === "recovery-sim-install") { toast("ZIP simulasi berhasil diverifikasi • tidak ada flash nyata"); vibrate(8); return; }
++    if (action === "recovery-wipe-cache") { toast("Cache / Dalvik dibersihkan dalam simulasi"); vibrate(8); return; }
++    if (action === "recovery-wipe-data") { toast("Factory Reset simulasi selesai • data website tetap aman"); vibrate([12,30,12]); return; }
++    if (action === "recovery-backup-run") { toast("Backup TWRP simulasi selesai"); vibrate(8); return; }
++    if (action === "recovery-sim-terminal") { toast("Terminal recovery simulasi dibuka"); return; }
++    if (action === "recovery-sim-filemanager") { toast("File Manager recovery simulasi dibuka"); return; }
++    if (action === "recovery-sim-haptics") { vibrate([15,40,15]); toast("Getaran recovery diuji"); return; }
++    if (action === "recovery-sim-timezone") { toast("Zona waktu: Asia/Jakarta"); return; }
++
+     if (action === "dismissMenu") { state.longPressMenu = false; render(); }
+     if (action === "extractSimWallpaperPalette") { applyWallpaperColorBurst(); }
+     if (action === "openStyle") { state.styleTab = "home"; state.wallpaperTarget = "home"; navigate("wallpaperStyle"); }
+@@ -3782,9 +4070,37 @@
+     }
+   }
+ 
+-  function lockPhone() { lockAuthVisible=false;lockPinAttempt="";activePattern=[]; state.screenOff = false; state.locked = true; state.shade = false; save(); render(); }
+-  function unlockPhone() { lockAuthVisible=false;lockPinAttempt="";activePattern=[]; state.screenOff = false; state.locked = false; state.view = "home"; state.shade = false; save(); render(); }
++  function lockPhone() {
++    lockAuthVisible=false; lockPinAttempt=""; activePattern=[];
++    state.screenOff = false; state.locked = true; state.shade = false;
++    save(); render();
++  }
++  function unlockPhone() {
++    lockAuthVisible=false; lockPinAttempt=""; activePattern=[];
++    state.screenOff = false; state.locked = false; state.lockdownActive = false;
++    state.view = "home"; state.shade = false;
++    save(); render();
++  }
++
++  function showPowerMenu() {
++    if (state.poweredOff) return;
++    if (state.screenOff) { state.screenOff = false; state.locked = true; save(); }
++    if (["bootloader", "recovery", "boot"].includes(state.view)) return;
++    powerMenuStage = "main";
++    vibrate(12);
++    render();
++  }
++
+   function togglePower() {
++    if (state.poweredOff) return;
++    if (state.view === "bootloader") { handleBootloaderSelection(); return; }
++    if (state.view === "recovery") {
++      state.screenOff = !state.screenOff;
++      state.locked = false;
++      save(); render();
++      return;
++    }
++    powerMenuStage = "";
+     if (state.screenOff) {
+       state.screenOff = false;
+       state.locked = true;
+@@ -3793,12 +4109,93 @@
+       state.locked = true;
+       state.shade = false;
+     }
+-    save();
+-    render();
++    save(); render();
++  }
++
++  function shutdownPhone() {
++    clearTimeout(bootTransitionTimer);
++    powerMenuStage = "";
++    systemUiRestarting = false;
++    state.poweredOff = true;
++    state.screenOff = false;
++    state.locked = false;
++    state.shade = false;
++    state.view = "powerOff";
++    save(); vibrate(22); render();
++  }
++
++  function completeSystemBoot() {
++    state.poweredOff = false;
++    state.screenOff = false;
++    state.view = "home";
++    state.locked = true;
++    state.shade = false;
++    state.recoveryPage = "main";
++    save(); render();
++  }
++
++  function rebootPhone(target = "system") {
++    clearTimeout(bootTransitionTimer);
++    powerMenuStage = "";
++    systemUiRestarting = false;
++    state.poweredOff = false;
++    state.screenOff = false;
++    state.locked = false;
++    state.shade = false;
++    state.view = "boot";
++    save(); render();
++
++    bootTransitionTimer = window.setTimeout(() => {
++      if (target === "recovery") {
++        state.view = "recovery";
++        state.recoveryPage = "main";
++        state.locked = false;
++        save(); render();
++        return;
++      }
++      if (target === "bootloader") {
++        state.view = "bootloader";
++        state.bootloaderSelection = 0;
++        state.locked = false;
++        save(); render();
++        return;
++      }
++      completeSystemBoot();
++    }, target === "system" ? 1450 : 850);
+   }
+-  function rebootPhone() {
+-    state.locked = false; state.shade = false; state.view = "boot"; render();
+-    setTimeout(() => { state.view = "home"; state.locked = true; save(); render(); }, 1450);
++
++  function restartSystemUi() {
++    if (state.poweredOff || ["bootloader", "recovery"].includes(state.view)) return;
++    systemUiRestarting = true;
++    state.shade = false;
++    save(); render(); vibrate(10);
++    window.setTimeout(() => {
++      systemUiRestarting = false;
++      render();
++      toast("Sistem UI berhasil dimulai ulang");
++    }, 950);
++  }
++
++  function takeSimulatorScreenshot() {
++    clearTimeout(screenshotFlashTimer);
++    render();
++    const flash = document.createElement("div");
++    flash.className = "android-screenshot-flash";
++    root.appendChild(flash);
++    vibrate(8);
++    screenshotFlashTimer = window.setTimeout(() => {
++      flash.remove();
++      toast("Screenshot simulator disimpan");
++    }, 320);
++  }
++
++  function handleBootloaderSelection() {
++    const item = BOOTLOADER_OPTIONS[Math.max(0, Math.min(BOOTLOADER_OPTIONS.length - 1, Number(state.bootloaderSelection) || 0))];
++    if (!item) return;
++    if (item.id === "start") { rebootPhone("system"); return; }
++    if (item.id === "restart") { rebootPhone("bootloader"); return; }
++    if (item.id === "recovery") { rebootPhone("recovery"); return; }
++    if (item.id === "poweroff") { shutdownPhone(); }
+   }
+ 
+   openBtn.addEventListener("click", () => {
+@@ -3809,7 +4206,7 @@
+   dialog.addEventListener("cancel", e => { e.preventDefault(); dialog.close(); });
+ 
+   statusBar?.addEventListener("click", e => {
+-    if (state.view === "boot") return;
++    if (state.poweredOff || ["boot", "recovery", "bootloader"].includes(state.view)) return;
+     const rect = statusBar.getBoundingClientRect();
+     const localX = e.clientX - rect.left;
+     if (state.separateQs) {
+@@ -3891,8 +4288,64 @@
+ 
+   phone.addEventListener("pointercancel", () => { systemGestureStart = null; });
+ 
+-  power?.addEventListener("click", togglePower);
++  let powerPressTimer = 0;
++  let powerPressLong = false;
++  let powerPressPointerId = null;
++
++  function cancelPowerPress() {
++    clearTimeout(powerPressTimer);
++    powerPressTimer = 0;
++    powerPressPointerId = null;
++  }
++
++  power?.addEventListener("pointerdown", event => {
++    if (event.pointerType === "mouse" && event.button !== 0) return;
++    cancelPowerPress();
++    powerPressLong = false;
++    powerPressPointerId = event.pointerId;
++    try { power.setPointerCapture(event.pointerId); } catch {}
++
++    const holdMs = state.view === "bootloader"
++      ? 10000
++      : (state.poweredOff ? 3000 : 5000);
++
++    powerPressTimer = window.setTimeout(() => {
++      powerPressLong = true;
++      if (state.view === "bootloader") {
++        vibrate([20,35,20]);
++        rebootPhone("system");
++      } else if (state.poweredOff) {
++        vibrate(18);
++        rebootPhone("system");
++      } else {
++        showPowerMenu();
++      }
++    }, holdMs);
++  });
++
++  power?.addEventListener("pointerup", event => {
++    if (powerPressPointerId != null && event.pointerId !== powerPressPointerId) return;
++    clearTimeout(powerPressTimer);
++    powerPressTimer = 0;
++    try { power.releasePointerCapture(event.pointerId); } catch {}
++    powerPressPointerId = null;
++    if (!powerPressLong) togglePower();
++    powerPressLong = false;
++  });
++
++  power?.addEventListener("pointercancel", () => {
++    cancelPowerPress();
++    powerPressLong = false;
++  });
++  power?.addEventListener("contextmenu", event => event.preventDefault());
++  power?.addEventListener("click", event => event.preventDefault());
++
+   volume?.addEventListener("click", () => {
++    if (state.view === "bootloader" && !state.poweredOff) {
++      state.bootloaderSelection = ((Number(state.bootloaderSelection) || 0) + 1) % BOOTLOADER_OPTIONS.length;
++      save(); vibrate(4); render();
++      return;
++    }
+     state.volume = state.volume >= 100 ? 20 : state.volume + 10; save(); showVolume();
+   });
+ 
