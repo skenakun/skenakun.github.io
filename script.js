@@ -804,12 +804,28 @@ const presetPalettes = [
 
 function getThemeState() {
   try {
+    const saved = JSON.parse(localStorage.getItem("waifuThemeState") || "{}");
+    const state = {
+      ...defaultThemeState,
+      ...saved,
+      palette: {
+        ...defaultThemeState.palette,
+        ...(saved.palette || {})
+      }
+    };
+
+    /*
+     * Only two display styles are valid. This prevents stale/old browser
+     * state from accidentally keeping Material U behavior active.
+     */
+    state.style = state.style === "default" ? "default" : "material";
+
+    return state;
+  } catch {
     return {
       ...defaultThemeState,
-      ...JSON.parse(localStorage.getItem("waifuThemeState") || "{}")
+      palette: { ...defaultThemeState.palette }
     };
-  } catch {
-    return { ...defaultThemeState };
   }
 }
 
@@ -934,6 +950,12 @@ function applyPalette(palette, darkMode) {
     ? mix(palette.primary, "#ffffff", .78)
     : mix(palette.primary, "#000000", .55);
 
+  /*
+   * Material U only owns the --mu-* token family.
+   * Do not write --purple/--violet/--pink/--cyan directly on :root:
+   * those are the website's native Default palette and inline overrides
+   * would survive after body.material-u is removed.
+   */
   root.style.setProperty("--mu-primary", palette.primary);
   root.style.setProperty("--mu-secondary", palette.secondary);
   root.style.setProperty("--mu-tertiary", palette.tertiary);
@@ -941,19 +963,53 @@ function applyPalette(palette, darkMode) {
   root.style.setProperty("--mu-secondary-container", secondaryContainer);
   root.style.setProperty("--mu-tertiary-container", tertiaryContainer);
   root.style.setProperty("--mu-on-primary-container", primaryOnContainer);
+}
 
-  root.style.setProperty("--purple", palette.primary);
-  root.style.setProperty("--violet", palette.primary);
-  root.style.setProperty("--pink", palette.secondary);
-  root.style.setProperty("--cyan", palette.tertiary);
+const materialInlineProperties = [
+  "--mu-primary",
+  "--mu-secondary",
+  "--mu-tertiary",
+  "--mu-primary-container",
+  "--mu-secondary-container",
+  "--mu-tertiary-container",
+  "--mu-on-primary-container",
+
+  /*
+   * Compatibility cleanup for users who previously ran the buggy build.
+   * Older builds stored Material U colors directly in these website tokens.
+   */
+  "--purple",
+  "--violet",
+  "--pink",
+  "--cyan"
+];
+
+function restoreDefaultWebsitePalette() {
+  const root = document.documentElement;
+
+  materialInlineProperties.forEach((property) => {
+    root.style.removeProperty(property);
+  });
 }
 
 function applyThemeState(state) {
-  document.body.classList.toggle("material-u", state.style === "material");
-  document.body.classList.toggle("default-style", state.style === "default");
+  const materialActive = state.style === "material";
+
+  document.body.classList.toggle("material-u", materialActive);
+  document.body.classList.toggle("default-style", !materialActive);
   document.body.classList.toggle("dark-mode", !!state.dark);
 
-  applyPalette(state.palette, !!state.dark);
+  if (materialActive) {
+    applyPalette(state.palette, !!state.dark);
+  } else {
+    /*
+     * Default means the original website palette from styles.css.
+     * The selected Material U palette remains saved in localStorage so
+     * switching back to Material U restores the user's chosen color.
+     */
+    restoreDefaultWebsitePalette();
+  }
+
   darkModeToggle.checked = !!state.dark;
 
   styleOptions.forEach((button) => {
