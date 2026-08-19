@@ -554,15 +554,15 @@
 
       preparePhoneFeature({
     buttonId: "phoneSimBtn",
-    css: "./androidsim.css?v=v29-homeclick-b10e8cf",
-    js: "./androidsim.js?v=v29-homeclick-b10e8cf",
+    css: "./androidsim.css?v=v31-volume-material-9a59842",
+    js: "./androidsim.js?v=v31-volume-material-9a59842",
     requiredCss: [
-      "./androidsim-media-persistence.css?v=v29-homeclick-b10e8cf",
-      "./androidsim-enhancer.css?v=v29-homeclick-b10e8cf",
-      "./androidsim-blank-rescue.css?v=v29-homeclick-b10e8cf"
+      "./androidsim-media-persistence.css?v=v31-volume-material-9a59842",
+      "./androidsim-enhancer.css?v=v31-volume-material-9a59842",
+      "./androidsim-blank-rescue.css?v=v31-volume-material-9a59842"
     ],
     requiredJs: [
-      "./androidsim-enhancer.js?v=v29-homeclick-b10e8cf"
+      "./androidsim-enhancer.js?v=v31-volume-material-9a59842"
     ],
     optionalCss: [],
     optionalJs: []

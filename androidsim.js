@@ -214,6 +214,8 @@
     brightness: 78,
     battery: 61,
     volume: 62,
+    ringerMode: "vibrate",
+    audioOutputDevice: "Ponsel ini",
 
     /* Android 17 System settings */
     deviceLanguage: "auto",
@@ -670,6 +672,8 @@
   let homeDragState = null;
   let toastTimer = null;
   let volumeTimer = null;
+  let volumePanelExpanded = false;
+  let volumePreviousLevel = 62;
 
   function save() { localStorage.setItem(STORE, JSON.stringify(state)); }
 
@@ -1065,14 +1069,225 @@
     toastTimer = setTimeout(() => el.remove(), 1300);
   }
 
-  function showVolume() {
-    $(".volume-toast", root)?.remove();
-    const el = document.createElement("div");
-    el.className = "volume-toast";
-    el.innerHTML = `♫<br>${state.volume}%`;
-    root.appendChild(el);
+  function volumeLevelStyle(value) {
+    const level = Math.max(0, Math.min(100, Number(value) || 0));
+    return `--volume-level:${level}%`;
+  }
+
+  function volumeRingerIcon() {
+    if (state.ringerMode === "silent") return "⌁";
+    if (state.ringerMode === "sound") return "♬";
+    return "⌇";
+  }
+
+  function volumeRingerText() {
+    if (state.ringerMode === "silent") return "Panggilan telepon dan notifikasi akan dibisukan";
+    if (state.ringerMode === "sound") return "Panggilan telepon dan notifikasi akan berdering";
+    return "Panggilan telepon dan notifikasi akan bergetar";
+  }
+
+  function volumeOutputLabel() {
+    if (
+      state.audioOutputDevice &&
+      state.audioOutputDevice !== "Ponsel ini" &&
+      state.pairedDeviceConnected
+    ) return state.audioOutputDevice;
+    return "Ponsel ini";
+  }
+
+  function cycleVolumeOutput() {
+    const connected = state.pairedDeviceConnected
+      ? (state.pairedDevice || "Perangkat Bluetooth")
+      : "";
+
+    if (!connected) {
+      state.audioOutputDevice = "Ponsel ini";
+      save();
+      toast("Audio diputar di Ponsel ini");
+      return;
+    }
+
+    state.audioOutputDevice =
+      state.audioOutputDevice === "Ponsel ini" ? connected : "Ponsel ini";
+    save();
+    toast(`Audio diputar di ${state.audioOutputDevice}`);
+  }
+
+  function renderCompactVolumePanel() {
+    return `<div class="pixel-volume-compact">
+      <button class="pixel-volume-quick" type="button" data-volume-action="output" aria-label="Keluaran audio">▥</button>
+      <button class="pixel-volume-quick ${Number(state.volume)===0?"active":""}" type="button" data-volume-action="mute" aria-label="Bisukan media">⌁</button>
+      <button class="pixel-volume-quick ${state.ringerMode==="vibrate"?"active":""}" type="button" data-volume-action="ringer" aria-label="Mode dering">${volumeRingerIcon()}</button>
+
+      <label class="pixel-volume-vertical" style="${volumeLevelStyle(state.volume)}">
+        <input type="range" min="0" max="100" value="${Number(state.volume)}" data-volume-range="volume" aria-label="Volume media">
+        <span>♫</span>
+      </label>
+
+      <button class="pixel-volume-expand" type="button" data-volume-action="expand" aria-label="Buka panel volume lengkap">☷</button>
+    </div>`;
+  }
+
+  function volumeSliderRow(label, key, icon) {
+    const value = Math.max(0, Math.min(100, Number(state[key]) || 0));
+    return `<label class="pixel-volume-row">
+      <span>${label}</span>
+      <div class="pixel-volume-horizontal" style="${volumeLevelStyle(value)}">
+        <input type="range" min="0" max="100" value="${value}" data-volume-range="${key}">
+        <i>${icon}</i>
+      </div>
+    </label>`;
+  }
+
+  function renderExpandedVolumePanel() {
+    const output = escapeHtml(volumeOutputLabel());
+    const ringer = escapeHtml(volumeRingerText());
+
+    return `<div class="pixel-volume-expanded">
+      <button class="pixel-volume-output" type="button" data-volume-action="output">
+        <span>Audio akan diputar di</span>
+        <strong>${output}</strong>
+        <i>▯</i>
+      </button>
+
+      <div class="pixel-volume-sliders">
+        ${volumeSliderRow("Media","volume","♫")}
+        ${volumeSliderRow("Telepon","callVolume","☎")}
+        ${volumeSliderRow("Dering","ringVolume","♬")}
+        ${volumeSliderRow("Notifikasi","notificationVolume","♧")}
+        ${volumeSliderRow("Alarm","alarmVolume","◷")}
+      </div>
+
+      <button class="pixel-volume-spatial ${state.spatialAudio?"active":""}" type="button" data-volume-action="spatial">
+        <span>♧</span>
+        <small>Audio Spasial</small>
+      </button>
+
+      <button class="pixel-volume-ringer-card" type="button" data-volume-action="ringer">
+        <span>${ringer}</span>
+        <i>${volumeRingerIcon()}</i>
+      </button>
+
+      <div class="pixel-volume-footer">
+        <button type="button" data-volume-action="settings">Setelan</button>
+        <button class="primary" type="button" data-volume-action="done">Selesai</button>
+      </div>
+    </div>`;
+  }
+
+  function closeVolumePanel() {
     clearTimeout(volumeTimer);
-    volumeTimer = setTimeout(() => el.remove(), 1000);
+    volumeTimer = null;
+    volumePanelExpanded = false;
+    $(".pixel-volume-layer", root)?.remove();
+  }
+
+  function refreshVolumeRange(input) {
+    const value = Math.max(0, Math.min(100, Number(input.value) || 0));
+    const host = input.closest(".pixel-volume-vertical,.pixel-volume-horizontal");
+    host?.style.setProperty("--volume-level", `${value}%`);
+  }
+
+  function bindVolumePanel(layer) {
+    layer.querySelectorAll("[data-volume-range]").forEach(input => {
+      input.addEventListener("input", () => {
+        const key = input.dataset.volumeRange;
+        const value = Number(input.value);
+        state[key] = value;
+
+        if (key === "volume" && value > 0) volumePreviousLevel = value;
+        refreshVolumeRange(input);
+        save();
+
+        if (!volumePanelExpanded) {
+          clearTimeout(volumeTimer);
+          volumeTimer = setTimeout(closeVolumePanel, 3000);
+        }
+      });
+
+      input.addEventListener("change", () => vibrate(4));
+    });
+
+    layer.querySelectorAll("[data-volume-action]").forEach(button => {
+      button.addEventListener("click", () => {
+        const action = button.dataset.volumeAction;
+
+        if (action === "expand") {
+          showVolume(true);
+          return;
+        }
+
+        if (action === "done") {
+          closeVolumePanel();
+          return;
+        }
+
+        if (action === "settings") {
+          closeVolumePanel();
+          navigate("soundSettings");
+          return;
+        }
+
+        if (action === "output") {
+          cycleVolumeOutput();
+          showVolume(volumePanelExpanded);
+          return;
+        }
+
+        if (action === "mute") {
+          if (Number(state.volume) > 0) {
+            volumePreviousLevel = Number(state.volume);
+            state.volume = 0;
+          } else {
+            state.volume = Math.max(1, Number(volumePreviousLevel) || 50);
+          }
+          save();
+          vibrate(5);
+          showVolume(volumePanelExpanded);
+          return;
+        }
+
+        if (action === "ringer") {
+          const modes = ["sound","vibrate","silent"];
+          const index = modes.indexOf(state.ringerMode);
+          state.ringerMode = modes[(index + 1 + modes.length) % modes.length];
+          state.vibrationEnabled = state.ringerMode === "vibrate";
+          save();
+          vibrate(state.ringerMode === "vibrate" ? [8,18,8] : 5);
+          showVolume(volumePanelExpanded);
+          return;
+        }
+
+        if (action === "spatial") {
+          state.spatialAudio = !state.spatialAudio;
+          save();
+          vibrate(5);
+          showVolume(true);
+        }
+      });
+    });
+
+    if (volumePanelExpanded) {
+      layer.addEventListener("click", event => {
+        if (event.target === layer) closeVolumePanel();
+      });
+    }
+  }
+
+  function showVolume(expanded = false) {
+    $(".volume-toast", root)?.remove();
+    $(".pixel-volume-layer", root)?.remove();
+
+    volumePanelExpanded = !!expanded;
+
+    const layer = document.createElement("div");
+    layer.className = `pixel-volume-layer ${expanded ? "expanded" : "compact"}`;
+    layer.innerHTML = expanded ? renderExpandedVolumePanel() : renderCompactVolumePanel();
+    root.appendChild(layer);
+    bindVolumePanel(layer);
+
+    clearTimeout(volumeTimer);
+    if (!expanded) volumeTimer = setTimeout(closeVolumePanel, 3000);
   }
 
   function topbar(title, { back = true, apply = false, close = false } = {}) {
@@ -2167,7 +2382,7 @@
   function renderDisplaySaturation() { root.innerHTML=`<div class="a17-page system-page">${topbar("Display Saturation")}<div class="landscape-preview sunset"></div><div class="a17-card system-card">${rangeRow("Value","100 by default", "displaySaturation",50,130,"%")}</div></div>`; }
 
   function renderSoundSettings() {
-    root.innerHTML=`<div class="a17-page system-page">${topbar("Suara & getaran")}<div class="sound-volume-card">${rangeRow("Volume media","", "volume",0,100,"%")}${rangeRow("Volume panggilan","", "callVolume",0,100,"%")}${rangeRow("Volume dering","", "ringVolume",0,100,"%")}${rangeRow("Volume notifikasi","", "notificationVolume",0,100,"%")}${rangeRow("Volume alarm","", "alarmVolume",0,100,"%")}${rangeRow("Volume Asisten","", "assistantVolume",0,100,"%")}</div><div class="a17-card system-card">${navRow("Getaran & haptik",state.vibrationEnabled?"Aktif":"Nonaktif","vibrationHaptics")}${navRow("Pola getaran nada dering",state.ringtonePattern,"ringtonePattern")}${navRow("Nada dering ponsel",state.ringtone,"ringtonePicker")}${plainRow("Suara notifikasi default",state.notificationSound,`<span class="a17-chevron">›</span>`)}${plainRow("Suara alarm default",state.alarmSound,`<span class="a17-chevron">›</span>`)}${switchRow("Kontrol volume per aplikasi","", "gameOverlay")}${switchRow("Fokus audio multi","", "gameKeepAwake")}${navRow("Teks Otomatis",state.liveCaption?"Aktif":"Nonaktif","liveCaption")}${navRow("Audio Spasial","Aktif / Headphone berkabel","spatialAudioSettings")}${navRow("Now Playing",state.nowPlaying?"Aktif":"Nonaktif","nowPlayingSettings")}${navRow("Media","Tampilan pemutar","mediaSettings")}</div><div class="a17-card system-card">${switchRow("Mi Sound Enhancer","", "miSoundEnhancer")}${navRow("Bersihkan Speaker",state.cleanSpeaker?"Aktif":"Nonaktif","cleanSpeaker")}${navRow("Dolby Atmos",state.dolbyAtmos?"Aktif":"Nonaktif","dolbyAtmos")}</div></div>`;
+    root.innerHTML=`<div class="a17-page system-page">${topbar("Suara & getaran")}<div class="sound-volume-card">${rangeRow("Volume media","", "volume",0,100,"%")}${rangeRow("Volume panggilan","", "callVolume",0,100,"%")}${rangeRow("Volume dering","", "ringVolume",0,100,"%")}${rangeRow("Volume notifikasi","", "notificationVolume",0,100,"%")}${rangeRow("Volume alarm","", "alarmVolume",0,100,"%")}${rangeRow("Volume Asisten","", "assistantVolume",0,100,"%")}</div><div class="a17-card system-card">${navRow("Getaran & haptik",state.vibrationEnabled?"Aktif":"Nonaktif","vibrationHaptics")}${navRow("Pola getaran nada dering",state.ringtonePattern,"ringtonePattern")}${navRow("Nada dering ponsel",state.ringtone,"ringtonePicker")}${plainRow("Suara notifikasi default",state.notificationSound,`<span class="a17-chevron">›</span>`)}${plainRow("Suara alarm default",state.alarmSound,`<span class="a17-chevron">›</span>`)}${switchRow("Kontrol volume per aplikasi","", "gameOverlay")}${switchRow("Fokus audio multi","", "gameKeepAwake")}${navRow("Teks Otomatis",state.liveCaption?"Aktif":"Nonaktif","liveCaption")}${navRow("Audio Spasial","Aktif / Headphone berkabel","spatialAudioSettings")}${navRow("Now Playing",state.nowPlaying?"Aktif":"Nonaktif","nowPlayingSettings")}${navRow("Media","Tampilan pemutar","mediaSettings")}</div><div class="a17-card system-card">${switchRow("Sound Enhancer","", "miSoundEnhancer")}${navRow("Bersihkan Speaker",state.cleanSpeaker?"Aktif":"Nonaktif","cleanSpeaker")}${navRow("Dolby Atmos",state.dolbyAtmos?"Aktif":"Nonaktif","dolbyAtmos")}</div></div>`;
   }
 
   function renderVibrationHaptics() { root.innerHTML=`<div class="a17-page system-page">${topbar("Getaran & haptik")}<div class="vibration-hero">${switchRow("Gunakan getaran & haptik","", "vibrationEnabled")}</div>${sectionLabel("Panggilan telepon")}<div class="a17-card system-card">${rangeRow("Getaran dering","", "ringVibration",0,100,"%")}${switchRow("Getar lalu dering bertahap","", "vibrateWhenConnected")}</div>${sectionLabel("Notifikasi dan alarm")}<div class="a17-card system-card">${rangeRow("Getaran notifikasi","", "notificationVibration",0,100,"%")}${rangeRow("Getaran alarm","", "alarmVibration",0,100,"%")}</div>${sectionLabel("Haptik interaksi")}<div class="a17-card system-card">${rangeRow("Respons sentuhan","", "touchVibration",0,100,"%")}${rangeRow("Getaran media","", "mediaVibration",0,100,"%")}${switchRow("Getaran keyboard","", "keyboardVibration")}</div></div>`; }
@@ -6348,13 +6563,23 @@
   power?.addEventListener("contextmenu", event => event.preventDefault());
   power?.addEventListener("click", event => event.preventDefault());
 
-  volume?.addEventListener("click", () => {
+  volume?.addEventListener("click", event => {
     if (state.view === "bootloader" && !state.poweredOff) {
       state.bootloaderSelection = ((Number(state.bootloaderSelection) || 0) + 1) % BOOTLOADER_OPTIONS.length;
       save(); vibrate(4); render();
       return;
     }
-    state.volume = state.volume >= 100 ? 20 : state.volume + 10; save(); showVolume();
+
+    const rect = volume.getBoundingClientRect();
+    const pressY = event.clientY - rect.top;
+    const delta = pressY <= rect.height / 2 ? 5 : -5;
+
+    state.volume = Math.max(0, Math.min(100, Number(state.volume) + delta));
+    if (state.volume > 0) volumePreviousLevel = state.volume;
+
+    save();
+    vibrate(3);
+    showVolume(false);
   });
 
   $$('[data-sim-command]').forEach(btn => btn.addEventListener("click", () => {
