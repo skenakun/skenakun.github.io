@@ -44,7 +44,16 @@ const seedPhotos = [
   { id: "seed-31", src: "./assets/waifu-31.jpg", thumb: "./thumbs/waifu-31.webp", title: "Blooming Bride", category: "wedding", uploaded: false },
   { id: "seed-32", src: "./assets/waifu-32.jpg", thumb: "./thumbs/waifu-32.webp", title: "Soft Bridal Moment", category: "wedding", uploaded: false },
   { id: "seed-33", src: "./assets/waifu-33.jpg", thumb: "./thumbs/waifu-33.webp", title: "Casual Violet", category: "casual", uploaded: false },
-  { id: "seed-34", src: "./assets/waifu-34.jpg", thumb: "./thumbs/waifu-34.webp", title: "Purple Rose Garden", category: "classic", uploaded: false }
+  { id: "seed-34", src: "./assets/waifu-34.jpg", thumb: "./thumbs/waifu-34.webp", title: "Purple Rose Garden", category: "classic", uploaded: false },
+  { id: "seed-35", src: "./assets/waifu-35.jpg", thumb: "./thumbs/waifu-35.webp", title: "Neko Violet Wink", category: "portrait", uploaded: false },
+  { id: "seed-36", src: "./assets/waifu-36.jpg", thumb: "./thumbs/waifu-36.webp", title: "Gentle Violet Smile", category: "portrait", uploaded: false },
+  { id: "seed-37", src: "./assets/waifu-37.jpg", thumb: "./thumbs/waifu-37.webp", title: "Midnight Traveler", category: "casual", uploaded: false },
+  { id: "seed-38", src: "./assets/waifu-38.jpg", thumb: "./thumbs/waifu-38.webp", title: "Violet Morning", category: "portrait", uploaded: false },
+  { id: "seed-39", src: "./assets/waifu-39.jpg", thumb: "./thumbs/waifu-39.webp", title: "Sleepy Violet", category: "casual", uploaded: false },
+  { id: "seed-40", src: "./assets/waifu-40.jpg", thumb: "./thumbs/waifu-40.webp", title: "Crystal Princess", category: "portrait", uploaded: false },
+  { id: "seed-41", src: "./assets/waifu-41.jpg", thumb: "./thumbs/waifu-41.webp", title: "Azure Wedding", category: "wedding", uploaded: false },
+  { id: "seed-42", src: "./assets/waifu-42.jpg", thumb: "./thumbs/waifu-42.webp", title: "Starlit Crystal", category: "classic", uploaded: false },
+  { id: "seed-43", src: "./assets/waifu-43.jpg", thumb: "./thumbs/waifu-43.webp", title: "Icebound Elegance", category: "portrait", uploaded: false }
 ];
 
 const gallery = document.getElementById("gallery");
