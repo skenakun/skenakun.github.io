@@ -12,6 +12,7 @@
    */
 
   const loadedScripts = new Map();
+  const loadedModules = new Map();
   const loadedCss = new Set();
   const optionalStarted = new Set();
 
@@ -116,6 +117,16 @@
 
     loadedScripts.set(src, wrapped);
     return wrapped;
+  }
+
+  function loadModule(src) {
+    if (loadedModules.has(src)) return loadedModules.get(src);
+    const task = timeout(import(src), RESOURCE_TIMEOUT, src).catch(error => {
+      loadedModules.delete(src);
+      throw error;
+    });
+    loadedModules.set(src, task);
+    return task;
   }
 
   function clearLoading(button) {
@@ -287,6 +298,43 @@
     css: "./minigame.css",
     js: "./minigame.js"
   });
+
+  function prepareMusicCenter() {
+    const button = document.getElementById("musicCenterBtn");
+    if (!button) return;
+    clearLoading(button);
+
+    const ensureCore = async () => {
+      const [, module] = await Promise.all([
+        loadCss("./music-center.css?v=music-center-v1"),
+        loadModule("./music-center.js?v=music-center-v1")
+      ]);
+      button.dataset.featureReady = "1";
+      return module;
+    };
+
+    const warmup = () => ensureCore().catch(() => {});
+    button.addEventListener("pointerenter", warmup, { once: true, passive: true });
+    button.addEventListener("pointerdown", warmup, { once: true, passive: true });
+    button.addEventListener("focus", warmup, { once: true, passive: true });
+
+    button.addEventListener("click", async event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      beginLoading(button);
+      try {
+        const module = await ensureCore();
+        clearLoading(button);
+        await module.openMusicCenter();
+      } catch (error) {
+        clearLoading(button);
+        console.error(error);
+        button.title = "Music Center gagal dimuat. Muat ulang halaman lalu coba lagi.";
+      }
+    }, true);
+  }
+
+  prepareMusicCenter();
 
   /* =========================================================
      ANDROID SIMULATOR V7 VISUAL BOOT

@@ -52,6 +52,10 @@
         <span class="phone-sim-button-icon">▯</span>
         <span class="desktop-only">Ponsel</span>
       </button>
+      <button class="icon-button music-center-button" id="musicCenterBtn" type="button" title="Buka Music Center" aria-label="Buka Music Center">
+        <span class="music-center-button-icon">♫</span>
+        <span class="desktop-only">Music</span>
+      </button>
 
       <button class="language-switch" id="languageToggle" type="button" aria-label="Ganti bahasa ke Inggris" title="Ganti bahasa ke Inggris" data-i18n-aria="languageToggleToEnglish" data-i18n-title="languageToggleToEnglish">
         <span class="language-slider" aria-hidden="true"></span>
@@ -533,6 +537,11 @@
     </figure>
     <button class="lightbox-nav next" id="nextBtn" type="button" aria-label="Foto berikutnya" data-i18n-aria="nextPhoto">›</button>
   </dialog>
+
+
+  <div id="music-center-root" hidden></div>
+  <div id="music-mini-player" hidden></div>
+  <div id="mc-playback-host"></div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
