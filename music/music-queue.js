@@ -26,6 +26,7 @@ export function createQueueState(trackIds = [], options = {}) {
   const entries = trackIds.map(trackId => ({ id: idFactory(), trackId }))
   return {
     entries,
+    groups: [],
     playOrder: entries.map(entry => entry.id),
     cursor: entries.length ? 0 : -1,
     shuffle: false,
@@ -33,9 +34,70 @@ export function createQueueState(trackIds = [], options = {}) {
   }
 }
 
+export function normalizeQueueState(snapshot) {
+  if (!snapshot || !Array.isArray(snapshot.entries) || !Array.isArray(snapshot.playOrder)) return createQueueState([])
+  const entries = snapshot.entries.filter(entry => entry?.id && entry?.trackId).map(entry => ({ ...entry }))
+  const entryIds = new Set(entries.map(entry => entry.id))
+  const playOrder = snapshot.playOrder.filter(id => entryIds.has(id))
+  const normalizedOrder = playOrder.length === entries.length ? playOrder : entries.map(entry => entry.id)
+  const groupIds = new Set(entries.map(entry => entry.groupId).filter(Boolean))
+  const groups = (Array.isArray(snapshot.groups) ? snapshot.groups : [])
+    .filter(group => group?.id && groupIds.has(group.id))
+    .map(group => ({ ...group, collapsed: Boolean(group.collapsed) }))
+  const cursor = normalizedOrder.length
+    ? clampCursor(snapshot.cursor, normalizedOrder.length)
+    : -1
+  return {
+    entries,
+    groups,
+    playOrder: normalizedOrder,
+    cursor,
+    shuffle: Boolean(snapshot.shuffle),
+    repeatMode: ['off', 'all', 'one'].includes(snapshot.repeatMode) ? snapshot.repeatMode : 'off'
+  }
+}
+
 export function getCurrentEntry(state) {
   const id = currentId(state)
   return id ? state.entries.find(entry => entry.id === id) || null : null
+}
+
+function reindexGroups(entries) {
+  const positions = new Map()
+  return entries.map(entry => {
+    if (!entry.groupId) return entry
+    const index = positions.get(entry.groupId) || 0
+    positions.set(entry.groupId, index + 1)
+    return { ...entry, groupIndex: index }
+  })
+}
+
+function pruneGroups(groups = [], entries = []) {
+  const liveIds = new Set(entries.map(entry => entry.groupId).filter(Boolean))
+  return groups.filter(group => liveIds.has(group.id))
+}
+
+export function addGroupToEnd(state, group, trackIds = [], idFactory = defaultIdFactory) {
+  if (!group?.id || !trackIds.length) return state
+  const childEntries = trackIds.map((trackId, groupIndex) => ({ id: idFactory(), trackId, groupId: group.id, groupIndex }))
+  const entries = [...state.entries, ...childEntries]
+  const playOrder = [...state.playOrder, ...childEntries.map(entry => entry.id)]
+  const groups = [...(state.groups || []).filter(item => item.id !== group.id), { ...group, collapsed: Boolean(group.collapsed) }]
+  return {
+    ...state,
+    entries,
+    groups,
+    playOrder,
+    cursor: state.cursor === -1 && childEntries.length ? state.playOrder.length : state.cursor
+  }
+}
+
+export function setGroupCollapsed(state, groupId, collapsed) {
+  if (!(state.groups || []).some(group => group.id === groupId)) return state
+  return {
+    ...state,
+    groups: state.groups.map(group => group.id === groupId ? { ...group, collapsed: Boolean(collapsed) } : group)
+  }
 }
 
 export function addToEnd(state, trackId, idFactory = defaultIdFactory) {
@@ -64,20 +126,35 @@ export function playNext(state, trackId, idFactory = defaultIdFactory) {
   return { ...state, entries, playOrder }
 }
 
-export function removeEntry(state, entryId) {
+function removeEntriesById(state, removedIds) {
   const activeId = currentId(state)
-  const removedPlayIndex = state.playOrder.indexOf(entryId)
-  const entries = state.entries.filter(entry => entry.id !== entryId)
-  const playOrder = state.playOrder.filter(id => id !== entryId)
-  if (!playOrder.length) return { ...state, entries, playOrder, cursor: -1 }
+  const removedPlayIndices = state.playOrder
+    .map((id, index) => removedIds.has(id) ? index : -1)
+    .filter(index => index >= 0)
+  if (!removedPlayIndices.length) return state
+  const firstRemovedPlayIndex = Math.min(...removedPlayIndices)
+  const entries = reindexGroups(state.entries.filter(entry => !removedIds.has(entry.id)))
+  const groups = pruneGroups(state.groups || [], entries)
+  const playOrder = state.playOrder.filter(id => !removedIds.has(id))
+  if (!playOrder.length) return { ...state, entries, groups, playOrder, cursor: -1 }
 
   let cursor
-  if (activeId && activeId !== entryId) {
-    cursor = playOrder.indexOf(activeId)
-  } else {
-    cursor = Math.min(Math.max(removedPlayIndex, 0), playOrder.length - 1)
+  if (activeId && !removedIds.has(activeId)) cursor = playOrder.indexOf(activeId)
+  else cursor = Math.min(Math.max(firstRemovedPlayIndex, 0), playOrder.length - 1)
+  return { ...state, entries, groups, playOrder, cursor: clampCursor(cursor, playOrder.length) }
+}
+
+export function removeEntry(state, entryId) {
+  return removeEntriesById(state, new Set([entryId]))
+}
+
+export function removeGroup(state, groupId) {
+  const removedIds = new Set(state.entries.filter(entry => entry.groupId === groupId).map(entry => entry.id))
+  if (!removedIds.size) return {
+    ...state,
+    groups: (state.groups || []).filter(group => group.id !== groupId)
   }
-  return { ...state, entries, playOrder, cursor: clampCursor(cursor, playOrder.length) }
+  return removeEntriesById(state, removedIds)
 }
 
 export function reorderEntry(state, fromIndex, toIndex) {

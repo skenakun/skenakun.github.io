@@ -57,3 +57,27 @@ test('fails Spotify load when createController never becomes ready', async () =>
     error => error?.code === 'PLAYER_API_TIMEOUT'
   )
 })
+
+test('maps Spotify active track URI to live metadata', async () => {
+  const listeners = new Map()
+  const events = []
+  const controller = {
+    loadEntity() {}, play() {}, pause() {}, seek() {}, destroy() {},
+    addListener: (name, fn) => listeners.set(name, fn)
+  }
+  const adapter = createSpotifyAdapter({
+    host: {},
+    emit: (type, detail) => events.push([type, detail]),
+    metadataLoader: async url => ({ title: 'Spotify Track', author: 'Spotify Artist', artworkUrl: 'https://i.scdn.co/image/a.jpg', canonicalUrl: url }),
+    apiLoader: async () => ({ createController: (_host, _options, cb) => cb(controller) })
+  })
+  await adapter.load({ canonicalUrl: 'https://open.spotify.com/playlist/playlist123' })
+  listeners.get('playback_started')({ data: { playingURI: 'spotify:track:track123' } })
+  await new Promise(resolve => setTimeout(resolve, 0))
+  const metadata = events.find(([type]) => type === 'metadata')?.[1]
+  assert.ok(metadata)
+  assert.equal(metadata.title, 'Spotify Track')
+  assert.equal(metadata.author, 'Spotify Artist')
+  assert.equal(metadata.artworkUrl, 'https://i.scdn.co/image/a.jpg')
+  assert.equal(metadata.canonicalUrl, 'https://open.spotify.com/track/track123')
+})

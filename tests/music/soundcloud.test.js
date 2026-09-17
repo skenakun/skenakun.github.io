@@ -56,3 +56,28 @@ test('waits for SoundCloud READY and times out when the widget never becomes rea
     error => error?.code === 'PLAYER_API_TIMEOUT'
   )
 })
+
+test('emits current SoundCloud track metadata when playback starts', async () => {
+  const bindings = new Map()
+  const events = []
+  const widget = {
+    bind: (name, fn) => { bindings.set(name, fn); if (name === 'ready') queueMicrotask(fn) },
+    load() {}, play() {}, pause() {}, seekTo() {}, setVolume() {},
+    getDuration: cb => cb(10000),
+    getCurrentSound: cb => cb({
+      title: 'Sound title', permalink_url: 'https://soundcloud.com/a/sound-title',
+      user: { username: 'Sound Artist' }, artwork_url: 'https://i1.sndcdn.com/sound.jpg'
+    })
+  }
+  const adapter = createSoundCloudAdapter({
+    host: {}, emit: (type, detail) => events.push([type, detail]),
+    widgetFactory: () => widget, iframeFactory: src => ({ src })
+  })
+  await adapter.load({ canonicalUrl: 'https://soundcloud.com/a/sets/mix' })
+  bindings.get('play')()
+  const metadata = events.find(([type]) => type === 'metadata')?.[1]
+  assert.ok(metadata)
+  assert.equal(metadata.title, 'Sound title')
+  assert.equal(metadata.author, 'Sound Artist')
+  assert.equal(metadata.artworkUrl, 'https://i1.sndcdn.com/sound.jpg')
+})

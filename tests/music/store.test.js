@@ -53,3 +53,49 @@ test('persists favorites and local playlist membership', async () => {
   assert.deepEqual(await store.listFavorites(), [])
   store.close()
 })
+
+
+test('persists playlist expansion cache and grouped queue snapshots', async () => {
+  const store = await openMusicStore({ indexedDBFactory: createFakeIndexedDB(), dbName: 'mc-test-expansion-cache' })
+  const expansion = {
+    fingerprint: 'youtube:playlist:PL123',
+    provider: 'youtube',
+    sourceId: 'PL123',
+    childIds: ['AAA', 'BBB'],
+    expandedAt: 123456
+  }
+  await store.savePlaylistExpansion(expansion)
+  assert.deepEqual(await store.getPlaylistExpansion(expansion.fingerprint), expansion)
+
+  const queue = {
+    entries: [{ id: 'q1', trackId: 'youtube:video:AAA', groupId: 'g1', groupIndex: 0 }],
+    groups: [{ id: 'g1', title: 'Mix', collapsed: true }],
+    playOrder: ['q1'], cursor: 0, shuffle: false, repeatMode: 'off'
+  }
+  await store.saveQueue(queue)
+  assert.deepEqual(await store.loadQueue(), queue)
+  store.close()
+})
+
+test('version 2 migration preserves data created by an older database', async () => {
+  const indexedDBFactory = createFakeIndexedDB()
+  const seed = indexedDBFactory.open('mc-test-migration', 1)
+  await new Promise((resolve, reject) => {
+    seed.onupgradeneeded = () => {
+      seed.result.createObjectStore('tracks', { keyPath: 'fingerprint' })
+    }
+    seed.onsuccess = () => resolve()
+    seed.onerror = () => reject(seed.error)
+  })
+  const legacyDb = seed.result
+  const tx = legacyDb.transaction('tracks', 'readwrite')
+  tx.objectStore('tracks').put({ fingerprint: 'legacy:track:1', title: 'Legacy' })
+  await new Promise(resolve => { tx.oncomplete = resolve })
+  legacyDb.close()
+
+  const store = await openMusicStore({ indexedDBFactory, dbName: 'mc-test-migration' })
+  assert.equal((await store.getTrack('legacy:track:1')).title, 'Legacy')
+  await store.savePlaylistExpansion({ fingerprint: 'youtube:playlist:PLX', provider: 'youtube', sourceId: 'PLX', childIds: [], expandedAt: 1 })
+  assert.equal((await store.getPlaylistExpansion('youtube:playlist:PLX')).sourceId, 'PLX')
+  store.close()
+})

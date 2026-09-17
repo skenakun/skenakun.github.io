@@ -33,18 +33,43 @@ export function loadSpotifyApi({ windowRef = globalThis.window, documentRef = gl
   })
 }
 
+function spotifyUriToUrl(uri) {
+  const match = String(uri || '').match(/^spotify:(track|episode):([^:]+)$/i)
+  return match ? `https://open.spotify.com/${match[1].toLowerCase()}/${encodeURIComponent(match[2])}` : ''
+}
+
+async function loadSpotifyOEmbedMetadata(canonicalUrl) {
+  if (!canonicalUrl || typeof globalThis.fetch !== 'function') return null
+  try {
+    const response = await globalThis.fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(canonicalUrl)}`)
+    if (!response?.ok) return null
+    const data = await response.json()
+    return {
+      title: String(data?.title || '').trim(),
+      author: '',
+      artworkUrl: String(data?.thumbnail_url || '').trim(),
+      canonicalUrl
+    }
+  } catch {
+    return null
+  }
+}
+
 export function createSpotifyAdapter({
   host,
   emit = () => {},
   windowRef = globalThis.window,
   documentRef = globalThis.document,
   apiLoader = () => loadSpotifyApi({ windowRef, documentRef }),
+  metadataLoader = loadSpotifyOEmbedMetadata,
   readinessTimeoutMs = 10000
 } = {}) {
   if (!host) throw new TypeError('Spotify adapter requires a host')
   let controller = null
   let state = { status: 'idle', position: 0, duration: null }
   let ownedNode = null
+  let metadataToken = 0
+  let lastPlayingUri = ''
 
   const capabilities = createCapabilitySet({
     play: true,
@@ -53,14 +78,29 @@ export function createSpotifyAdapter({
     progress: true
   })
 
+  function syncPlayingMetadata(playingURI) {
+    const uri = String(playingURI || '')
+    if (!uri || uri === lastPlayingUri) return
+    const canonicalUrl = spotifyUriToUrl(uri)
+    if (!canonicalUrl) return
+    lastPlayingUri = uri
+    const token = ++metadataToken
+    void Promise.resolve(metadataLoader(canonicalUrl)).then(metadata => {
+      if (!metadata || token !== metadataToken) return
+      emit('metadata', { ...metadata, canonicalUrl, providerLabel: 'Spotify', state: 'ready' })
+    }).catch(() => {})
+  }
+
   function attachListeners(active) {
     active.addListener?.('ready', () => {
       state = { ...state, status: 'ready' }
       emit('ready')
     })
     active.addListener?.('playback_started', event => {
+      const playingURI = event?.data?.playingURI || null
       state = { ...state, status: 'playing' }
-      emit('playing', { playingURI: event?.data?.playingURI || null })
+      syncPlayingMetadata(playingURI)
+      emit('playing', { playingURI })
     })
     active.addListener?.('playback_update', event => {
       const data = event?.data || {}
@@ -68,6 +108,7 @@ export function createSpotifyAdapter({
       const duration = Number(data.duration || 0) / 1000 || null
       const status = data.isPaused ? 'paused' : data.isBuffering ? 'loading' : 'playing'
       state = { ...state, status, position, duration }
+      syncPlayingMetadata(data.playingURI)
       emit('progress', { position, duration, paused: Boolean(data.isPaused), buffering: Boolean(data.isBuffering) })
       if (data.isPaused) emit('paused')
       else if (!data.isBuffering) emit('playing')
@@ -124,6 +165,8 @@ export function createSpotifyAdapter({
     destroy() {
       controller?.destroy?.()
       controller = null
+      metadataToken += 1
+      lastPlayingUri = ''
       state = { status: 'idle', position: 0, duration: null }
       removeProviderNode(ownedNode)
       ownedNode = null

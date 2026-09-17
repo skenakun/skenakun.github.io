@@ -44,3 +44,18 @@ test('uses immediate safe fallback for providers without a frontend metadata end
   assert.equal(called, false)
   assert.equal(result.providerLabel, 'Apple Music')
 })
+
+test('resolves direct YouTube video metadata through oEmbed', async () => {
+  let requestedUrl = ''
+  const result = await resolveMetadata(
+    { provider: 'youtube', type: 'video', canonicalUrl: 'https://www.youtube.com/watch?v=AAA' },
+    { fetchImpl: async url => {
+      requestedUrl = String(url)
+      return { ok: true, json: async () => ({ title: 'Video A', author_name: 'Channel A', thumbnail_url: 'https://i.ytimg.com/vi/AAA/hqdefault.jpg' }) }
+    } }
+  )
+  assert.match(requestedUrl, /youtube\.com\/oembed/)
+  assert.equal(result.title, 'Video A')
+  assert.equal(result.author, 'Channel A')
+  assert.equal(result.artworkUrl, 'https://i.ytimg.com/vi/AAA/hqdefault.jpg')
+})

@@ -205,14 +205,80 @@ function renderTrackCard(track, favoriteSet) {
   </article>`
 }
 
-function renderQueueItem(track, index) {
+function renderQueueItem(track, index, activeId, options = {}) {
   const id = escapeHtml(track.queueEntryId || track.fingerprint || '')
   const title = escapeHtml(track.title || track.metadata?.title || 'Saved music')
-  const provider = escapeHtml(track.providerLabel || PROVIDER_LABELS[track.provider] || track.provider || 'Music')
-  return `<article class="mc-queue-item" draggable="true" data-mc-queue-index="${index}" data-mc-id="${id}">
-    <button type="button" class="mc-queue-play" data-mc-action="queue-play" data-mc-id="${id}"><span>${index + 1}</span><div><strong>${title}</strong><small>${provider}</small></div></button>
+  const author = escapeHtml(track.author || track.metadata?.author || track.providerLabel || PROVIDER_LABELS[track.provider] || track.provider || 'Music')
+  const artwork = safeArtwork(track.artworkUrl || track.metadata?.artworkUrl || '')
+  const current = (track.queueEntryId || track.fingerprint) === activeId
+  const queueIndex = Number.isInteger(options.queueIndex) ? options.queueIndex : index
+  const position = Number.isInteger(options.position) ? options.position : index + 1
+  const draggable = options.draggable !== false
+  return `<article class="mc-queue-item${current ? ' is-current' : ''}${options.nested ? ' is-nested' : ''}" ${draggable ? `draggable="true" data-mc-queue-index="${queueIndex}"` : 'draggable="false"'} data-mc-id="${id}"${current ? ' aria-current="true"' : ''}>
+    <button type="button" class="mc-queue-play" data-mc-action="queue-play" data-mc-id="${id}">
+      <span class="mc-queue-position">${position}</span>
+      <span class="mc-queue-thumb">${artwork ? `<img src="${escapeHtml(artwork)}" alt="">` : '♫'}</span>
+      <span class="mc-queue-copy"><strong>${title}</strong><small>${author}</small></span>
+    </button>
     <button type="button" class="mc-card-action" data-mc-action="queue-remove" data-mc-id="${id}" aria-label="Remove ${title}">×</button>
   </article>`
+}
+
+export function renderQueueMarkup(model = {}) {
+  const queue = model.queue || []
+  const state = model.queueState || {}
+  if (!queue.length) return ''
+  const activeId = Number.isInteger(state.cursor) && state.cursor >= 0 ? state.playOrder?.[state.cursor] || null : null
+  if (state.shuffle) return queue.map((track, index) => renderQueueItem(track, index, activeId, { queueIndex: index, position: index + 1 })).join('')
+
+  const groups = new Map((state.groups || []).map(group => [group.id, group]))
+  const renderedGroups = new Set()
+  const chunks = []
+  queue.forEach((track, queueIndex) => {
+    if (!track.queueGroupId) {
+      chunks.push(renderQueueItem(track, queueIndex, activeId, { queueIndex, position: queueIndex + 1 }))
+      return
+    }
+    if (renderedGroups.has(track.queueGroupId)) return
+    renderedGroups.add(track.queueGroupId)
+    const group = groups.get(track.queueGroupId) || { id: track.queueGroupId, title: 'Playlist', collapsed: false }
+    const children = queue.filter(row => row.queueGroupId === track.queueGroupId)
+    const activeChildIndex = children.findIndex(row => row.queueEntryId === activeId)
+    const title = escapeHtml(group.title || 'Playlist')
+    const groupId = escapeHtml(group.id)
+    const collapsed = Boolean(group.collapsed)
+    const playingText = activeChildIndex >= 0 ? `<span class="mc-queue-group-playing">Playing ${activeChildIndex + 1} / ${children.length}</span>` : ''
+    const childMarkup = collapsed ? '' : children.map(child => {
+      const actualQueueIndex = queue.findIndex(row => row.queueEntryId === child.queueEntryId)
+      return renderQueueItem(child, actualQueueIndex, activeId, {
+        queueIndex: actualQueueIndex,
+        position: Number.isInteger(child.queueGroupIndex) ? child.queueGroupIndex + 1 : actualQueueIndex + 1,
+        nested: true,
+        draggable: false
+      })
+    }).join('')
+    chunks.push(`<section class="mc-queue-group" data-mc-group-id="${groupId}">
+      <div class="mc-queue-group-header">
+        <button type="button" class="mc-queue-group-toggle" data-mc-action="queue-group-toggle" data-mc-id="${groupId}" aria-expanded="${collapsed ? 'false' : 'true'}">
+          <span aria-hidden="true">${collapsed ? '›' : '⌄'}</span>
+          <span><strong>${title}</strong><small>${children.length} track${children.length === 1 ? '' : 's'}${playingText}</small></span>
+        </button>
+        <button type="button" class="mc-card-action" data-mc-action="queue-group-remove" data-mc-id="${groupId}" aria-label="Remove playlist ${title}">×</button>
+      </div>
+      <div class="mc-queue-group-items"${collapsed ? ' hidden' : ''}>${childMarkup}</div>
+    </section>`)
+  })
+  return chunks.join('')
+}
+
+export function selectTracksForView(activeView, model = {}) {
+  const favoriteSet = new Set(model.favorites || [])
+  if (activeView === 'favorites') return (model.tracks || []).filter(track => favoriteSet.has(track.fingerprint))
+  if (activeView === 'recent') {
+    const byId = new Map((model.tracks || []).map(track => [track.fingerprint, track]))
+    return (model.history || []).map(row => byId.get(row.trackId)).filter(Boolean)
+  }
+  return (model.tracks || []).filter(track => track.libraryVisible !== false)
 }
 
 export function createMusicView({ overlayRoot, miniRoot, playbackHost, dispatch = () => {}, documentRef = globalThis.document } = {}) {
@@ -336,6 +402,13 @@ export function createMusicView({ overlayRoot, miniRoot, playbackHost, dispatch 
       }
     }
 
+    const transportArt = query('#mc-transport-art')
+    const miniArt = miniQuery('#mc-mini-art')
+    for (const node of [transportArt, miniArt]) {
+      if (!node) continue
+      node.innerHTML = model.artworkUrl ? `<img src="${escapeHtml(model.artworkUrl)}" alt="">` : '♫'
+    }
+
     const playButtons = [query('#mc-play-btn'), miniQuery('#mc-mini-play')].filter(Boolean)
     for (const button of playButtons) {
       button.disabled = model.playDisabled
@@ -378,20 +451,10 @@ export function createMusicView({ overlayRoot, miniRoot, playbackHost, dispatch 
     overlayRoot.classList?.toggle?.('has-error', Boolean(model.error))
   }
 
-  function tracksForView(model) {
-    const favoriteSet = new Set(model.favorites || [])
-    if (activeView === 'favorites') return (model.tracks || []).filter(track => favoriteSet.has(track.fingerprint))
-    if (activeView === 'recent') {
-      const byId = new Map((model.tracks || []).map(track => [track.fingerprint, track]))
-      return (model.history || []).map(row => byId.get(row.trackId)).filter(Boolean)
-    }
-    return model.tracks || []
-  }
-
   function renderLibrary(model = {}) {
     libraryModel = { ...libraryModel, ...model }
     const favorites = new Set(libraryModel.favorites || [])
-    const tracks = tracksForView(libraryModel)
+    const tracks = selectTracksForView(activeView, libraryModel)
     const grid = query('#mc-library-grid')
     if (grid) {
       grid.innerHTML = tracks.length
@@ -407,7 +470,7 @@ export function createMusicView({ overlayRoot, miniRoot, playbackHost, dispatch 
 
     const queue = query('#mc-queue-list')
     if (queue) queue.innerHTML = (libraryModel.queue || []).length
-      ? libraryModel.queue.map(renderQueueItem).join('')
+      ? renderQueueMarkup(libraryModel)
       : '<p class="mc-empty-small">Queue is empty.</p>'
     const shuffleButton = query('#mc-shuffle-btn')
     const repeatButton = query('#mc-repeat-btn')

@@ -63,6 +63,7 @@ export function createYouTubeAdapter({
   let progressTimer = null
   let ready = false
   let ownedNode = null
+  let currentItem = null
 
   const capabilities = createCapabilitySet({
     play: true,
@@ -93,9 +94,26 @@ export function createYouTubeAdapter({
     progressTimer = setInterval(emitProgress, 1000)
   }
 
+  function emitMetadata() {
+    const data = player?.getVideoData?.() || {}
+    const title = String(data.title || '').trim()
+    const author = String(data.author || '').trim()
+    const videoId = String(data.video_id || data.videoId || '').trim()
+    if (!title && !author && !videoId) return
+    emit('metadata', {
+      state: 'ready',
+      title,
+      author,
+      artworkUrl: videoId ? `https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/hqdefault.jpg` : '',
+      providerLabel: currentItem?.sourceBrand === 'youtube-music' ? 'YouTube Music' : 'YouTube',
+      canonicalUrl: videoId ? `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}` : ''
+    })
+  }
+
   function onStateChange(event) {
     const state = Number(event?.data)
     if (state === 1) {
+      emitMetadata()
       emit('playing')
       startProgress()
     } else if (state === 2) {
@@ -157,6 +175,7 @@ export function createYouTubeAdapter({
       player = null
       playerReadyPromise = null
       ready = false
+      currentItem = null
       removeProviderNode(ownedNode)
       ownedNode = null
       throw error
@@ -167,6 +186,7 @@ export function createYouTubeAdapter({
     kind: 'controlled',
     capabilities,
     async load(item) {
+      currentItem = item
       const active = await ensurePlayer()
       if (item.type === 'playlist') {
         active.cuePlaylist({ listType: 'playlist', list: item.sourceId })
@@ -197,6 +217,7 @@ export function createYouTubeAdapter({
       player = null
       playerReadyPromise = null
       ready = false
+      currentItem = null
       removeProviderNode(ownedNode)
       ownedNode = null
     }

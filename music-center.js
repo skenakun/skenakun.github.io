@@ -1,13 +1,17 @@
 import { resolveMusicUrl } from './music/music-resolver.js'
 import { openMusicStore } from './music/music-store.js'
 import {
+  addGroupToEnd,
   addToEnd,
   createQueueState,
   getCurrentEntry,
   moveNext,
   movePrevious,
+  normalizeQueueState,
   removeEntry,
+  removeGroup,
   reorderEntry,
+  setGroupCollapsed,
   setRepeatMode,
   setShuffle
 } from './music/music-queue.js'
@@ -15,6 +19,7 @@ import { resolveMetadata, PROVIDER_LABELS } from './music/music-metadata.js'
 import { createProviderAdapter } from './music/provider-registry.js'
 import { createPlayerManager } from './music/music-player.js'
 import { createMusicView } from './music/music-view.js'
+import { expandPlaylist, isExpandablePlaylist } from './music/music-playlist-expander.js'
 
 const DEFAULT_SETTINGS = Object.freeze({
   volume: 0.8,
@@ -53,8 +58,58 @@ export function queueTracksForView(queueState, tracksById) {
   return (queueState?.playOrder || []).map(entryId => {
     const entry = byEntryId.get(entryId)
     const track = entry ? tracksById.get(entry.trackId) : null
-    return track ? { ...track, queueEntryId: entry.id } : null
+    return track ? {
+      ...track,
+      queueEntryId: entry.id,
+      queueGroupId: entry.groupId || null,
+      queueGroupIndex: Number.isInteger(entry.groupIndex) ? entry.groupIndex : null
+    } : null
   }).filter(Boolean)
+}
+
+export function applyExpandedPlaylistToQueue(queueState, expansion, options = {}) {
+  const tracks = Array.isArray(expansion?.tracks) ? expansion.tracks : []
+  if (!expansion?.group || !tracks.length) return { queue: queueState, startTrack: null }
+  const queue = addGroupToEnd(queueState, expansion.group, tracks.map(track => track.fingerprint), options.idFactory)
+  if (!options.activateFirst) return { queue, startTrack: null }
+  const firstGroupEntry = queue.entries.find(entry => entry.groupId === expansion.group.id)
+  const cursor = firstGroupEntry ? queue.playOrder.indexOf(firstGroupEntry.id) : -1
+  return {
+    queue: cursor >= 0 ? { ...queue, cursor } : queue,
+    startTrack: tracks[0] || null
+  }
+}
+
+export function normalizeStoredMusicState(tracks = [], snapshot = null) {
+  const fingerprintMap = new Map()
+  const byFingerprint = new Map()
+  for (const track of tracks || []) {
+    let normalized = track
+    if (track?.provider === 'spotify' && (String(track.type || '').startsWith('intl-') || /open\.spotify\.com\/intl-[a-z]{2,3}\//i.test(track.canonicalUrl || track.originalUrl || ''))) {
+      try {
+        const entity = resolveMusicUrl(track.originalUrl || track.canonicalUrl)
+        normalized = {
+          ...track,
+          ...entity,
+          title: /^Spotify intl-/i.test(String(track.title || '')) ? `Spotify ${entity.type}` : track.title,
+          providerLabel: 'Spotify'
+        }
+      } catch {
+        normalized = track
+      }
+    }
+    fingerprintMap.set(track.fingerprint, normalized.fingerprint)
+    const prior = byFingerprint.get(normalized.fingerprint)
+    byFingerprint.set(normalized.fingerprint, prior
+      ? { ...prior, ...normalized, libraryVisible: prior.libraryVisible !== false || normalized.libraryVisible !== false }
+      : normalized)
+  }
+  const queue = normalizeQueueState(snapshot)
+  const remappedQueue = {
+    ...queue,
+    entries: queue.entries.map(entry => ({ ...entry, trackId: fingerprintMap.get(entry.trackId) || entry.trackId }))
+  }
+  return { tracks: [...byFingerprint.values()], queue: remappedQueue, fingerprintMap }
 }
 
 export function queueCanMove(queueState) {
@@ -84,23 +139,13 @@ function immediateTrack(entity) {
     providerLabel: label,
     metadataState: 'loading',
     metadata: { title: '', author: '', artworkUrl: '' },
+    libraryVisible: true,
     savedAt: Date.now()
   }
 }
 
 function validQueueSnapshot(snapshot) {
-  if (!snapshot || !Array.isArray(snapshot.entries) || !Array.isArray(snapshot.playOrder)) return createQueueState([])
-  const ids = new Set(snapshot.entries.filter(entry => entry?.id && entry?.trackId).map(entry => entry.id))
-  const playOrder = snapshot.playOrder.filter(id => ids.has(id))
-  const entries = snapshot.entries.filter(entry => ids.has(entry.id))
-  const cursor = playOrder.length ? Math.max(0, Math.min(Number.isInteger(snapshot.cursor) ? snapshot.cursor : 0, playOrder.length - 1)) : -1
-  return {
-    entries,
-    playOrder: playOrder.length === entries.length ? playOrder : entries.map(entry => entry.id),
-    cursor,
-    shuffle: Boolean(snapshot.shuffle),
-    repeatMode: ['off', 'all', 'one'].includes(snapshot.repeatMode) ? snapshot.repeatMode : 'off'
-  }
+  return normalizeQueueState(snapshot)
 }
 
 function userMessage(error) {
@@ -156,13 +201,15 @@ async function createApp(options = {}) {
   ])
 
   let settings = { ...DEFAULT_SETTINGS, ...(savedSettings || {}) }
-  let queueState = validQueueSnapshot(savedQueue)
-  let tracksById = new Map((tracks || []).map(track => [track.fingerprint, track]))
+  const normalizedStored = normalizeStoredMusicState(tracks || [], savedQueue)
+  let queueState = normalizedStored.queue
+  let tracksById = new Map(normalizedStored.tracks.map(track => [track.fingerprint, track]))
   let favoriteIds = new Set(favorites || [])
   let historyRows = history || []
   let playlistRows = playlists || []
   let selectedPlaylistId = null
-  let selectedTrack = settings.lastTrackFingerprint ? tracksById.get(settings.lastTrackFingerprint) || null : null
+  const restoredTrackId = normalizedStored.fingerprintMap.get(settings.lastTrackFingerprint) || settings.lastTrackFingerprint
+  let selectedTrack = restoredTrackId ? tracksById.get(restoredTrackId) || null : null
   let lastNonZeroVolume = settings.volume > 0 ? settings.volume : 0.8
   let lastHistoryFingerprint = null
   let lastPlayerState = null
@@ -270,6 +317,33 @@ async function createApp(options = {}) {
     renderPlayer()
   }
 
+  async function syncTrackFromPlayback(track) {
+    if (!track?.fingerprint) return
+    const current = tracksById.get(track.fingerprint)
+    if (!current) return
+    const merged = { ...mergeTrackMetadata(current, track), activeCanonicalUrl: track.activeCanonicalUrl || current.activeCanonicalUrl || '' }
+    tracksById.set(track.fingerprint, merged)
+    selectedTrack = merged
+    const identityChanged = Boolean(track.activeCanonicalUrl && current.canonicalUrl && track.activeCanonicalUrl !== current.canonicalUrl)
+    if (!identityChanged) await store.saveTrack(merged)
+    renderLibrary()
+    renderPlayer(player?.getState?.() || {})
+  }
+
+  async function enrichTracksBounded(tracks, concurrency = 4) {
+    const pending = [...new Map((tracks || []).map(track => [track.fingerprint, track])).values()]
+    let cursor = 0
+    async function worker() {
+      while (!destroyed) {
+        const index = cursor
+        cursor += 1
+        if (index >= pending.length) return
+        try { await enrichMetadata(pending[index]) } catch (error) { console.warn('Music Center metadata lookup failed', error) }
+      }
+    }
+    await Promise.all(Array.from({ length: Math.min(concurrency, pending.length) }, () => worker()))
+  }
+
   async function enrichMetadata(track) {
     const metadata = await resolveMetadata(track)
     if (destroyed) return
@@ -283,24 +357,69 @@ async function createApp(options = {}) {
     renderPlayer()
   }
 
+  async function saveExpandedTracks(tracks) {
+    const saved = []
+    for (const child of tracks) {
+      const existing = tracksById.get(child.fingerprint)
+      const merged = existing
+        ? {
+            ...child,
+            ...existing,
+            title: existing.title && existing.title !== `${existing.providerLabel || providerLabel(existing)} ${existing.type || 'content'}` ? existing.title : child.title,
+            author: existing.author || child.author,
+            artworkUrl: existing.artworkUrl || child.artworkUrl,
+            libraryVisible: existing.libraryVisible !== false
+          }
+        : child
+      tracksById.set(merged.fingerprint, merged)
+      await store.saveTrack(merged)
+      saved.push(merged)
+    }
+    return saved
+  }
+
+  async function addExpandedPlaylist(parentTrack, { activateFirst = false } = {}) {
+    const expansion = await expandPlaylist(parentTrack, { store, windowRef, documentRef })
+    const tracks = await saveExpandedTracks(expansion.tracks)
+    const applied = applyExpandedPlaylistToQueue(queueState, { ...expansion, tracks }, { activateFirst })
+    commitQueue(applied.queue)
+    renderLibrary()
+    if (expansion.usedStaleCache) view.showNotice('Playlist loaded from cached contents because the provider refresh failed.', 'info')
+    else view.showNotice(`Added ${tracks.length} playlist item${tracks.length === 1 ? '' : 's'} to queue.`, 'success')
+    void enrichTracksBounded(tracks)
+    if (applied.startTrack) await loadAndMaybePlay(applied.startTrack, true, { focusQueue: false })
+    return { expansion: { ...expansion, tracks }, startTrack: applied.startTrack }
+  }
+
   async function addUrl(rawUrl) {
     const entity = resolveMusicUrl(rawUrl)
     const existing = tracksById.get(entity.fingerprint)
     const track = existing
-      ? { ...existing, originalUrl: entity.originalUrl, canonicalUrl: entity.canonicalUrl, savedAt: existing.savedAt || Date.now() }
+      ? { ...existing, originalUrl: entity.originalUrl, canonicalUrl: entity.canonicalUrl, libraryVisible: true, savedAt: existing.savedAt || Date.now() }
       : immediateTrack(entity)
     tracksById.set(track.fingerprint, track)
     await store.saveTrack(track)
     renderLibrary()
+
+    if (isExpandablePlaylist(track)) {
+      const activateFirst = !player.getState().currentItem
+      try {
+        return await addExpandedPlaylist(track, { activateFirst })
+      } catch (error) {
+        view.showNotice(userMessage(error), 'error')
+        throw error
+      }
+    }
+
     view.showNotice(existing ? 'Link already exists in your library.' : 'Added to your Music Center.', 'success')
     void enrichMetadata(track).catch(error => console.warn('Music Center metadata lookup failed', error))
     return track
   }
 
-  async function loadAndMaybePlay(track, autoplay = true) {
+  async function loadAndMaybePlay(track, autoplay = true, options = {}) {
     if (!track) return
     selectedTrack = track
-    focusTrackInQueue(track.fingerprint)
+    if (options.focusQueue !== false) focusTrackInQueue(track.fingerprint)
     updateSettings({ lastTrackFingerprint: track.fingerprint })
     await player.load(track)
     renderPlayer()
@@ -385,9 +504,12 @@ async function createApp(options = {}) {
           view.setActiveView(intent.view || 'home')
           updateSettings({ activeView: intent.view || 'home' })
           break
-        case 'play-item':
-          await loadAndMaybePlay(tracksById.get(intent.id), true)
+        case 'play-item': {
+          const track = tracksById.get(intent.id)
+          if (track && isExpandablePlaylist(track)) await addExpandedPlaylist(track, { activateFirst: true })
+          else await loadAndMaybePlay(track, true)
           break
+        }
         case 'play-pause': {
           const state = player.getState()
           if (!state.currentItem && selectedTrack) await loadAndMaybePlay(selectedTrack, true)
@@ -445,13 +567,21 @@ async function createApp(options = {}) {
           const entry = queueState.entries.find(row => row.id === intent.id)
           if (cursor >= 0 && entry) {
             commitQueue({ ...queueState, cursor })
-            await loadAndMaybePlay(tracksById.get(entry.trackId), true)
+            await loadAndMaybePlay(tracksById.get(entry.trackId), true, { focusQueue: false })
           }
           break
         }
         case 'queue-remove':
           commitQueue(removeEntry(queueState, intent.id))
           break
+        case 'queue-group-remove':
+          commitQueue(removeGroup(queueState, intent.id))
+          break
+        case 'queue-group-toggle': {
+          const group = (queueState.groups || []).find(row => row.id === intent.id)
+          if (group) commitQueue(setGroupCollapsed(queueState, intent.id, !group.collapsed))
+          break
+        }
         case 'queue-reorder':
           reorderVisibleQueue(intent.from, intent.to)
           break
@@ -506,7 +636,13 @@ async function createApp(options = {}) {
   const unsubscribe = player.subscribe(state => {
     const previous = lastPlayerState
     lastPlayerState = state
-    if (state.currentItem) selectedTrack = tracksById.get(state.currentItem.fingerprint) || state.currentItem
+    if (state.currentItem) {
+      selectedTrack = state.currentItem
+      const stored = tracksById.get(state.currentItem.fingerprint)
+      if (stored && (stored.title !== state.currentItem.title || stored.author !== state.currentItem.author || stored.artworkUrl !== state.currentItem.artworkUrl || state.currentItem.activeCanonicalUrl)) {
+        void syncTrackFromPlayback(state.currentItem).catch(error => console.warn('Music Center playback metadata sync failed', error))
+      }
+    }
     renderPlayer(state)
 
     const fingerprint = state.currentItem?.fingerprint || null

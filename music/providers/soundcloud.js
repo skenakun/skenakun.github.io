@@ -53,6 +53,20 @@ export function createSoundCloudAdapter({
     READY: 'ready', PLAY: 'play', PAUSE: 'pause', FINISH: 'finish', PLAY_PROGRESS: 'playProgress', ERROR: 'error'
   }
 
+  function emitCurrentMetadata(active) {
+    active.getCurrentSound?.(sound => {
+      if (!sound) return
+      emit('metadata', {
+        state: 'ready',
+        title: String(sound.title || '').trim(),
+        author: String(sound.user?.username || sound.publisher_metadata?.artist || '').trim(),
+        artworkUrl: String(sound.artwork_url || '').trim(),
+        providerLabel: 'SoundCloud',
+        canonicalUrl: String(sound.permalink_url || '').trim()
+      })
+    })
+  }
+
   function bindWidget(active) {
     return new Promise((resolve, reject) => {
       active.bind?.(events.READY, () => {
@@ -65,6 +79,7 @@ export function createSoundCloudAdapter({
       })
       active.bind?.(events.PLAY, () => {
         state = { ...state, status: 'playing' }
+        emitCurrentMetadata(active)
         emit('playing')
       })
       active.bind?.(events.PAUSE, () => {

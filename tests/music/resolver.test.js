@@ -59,3 +59,20 @@ test('rejects all release security probe URLs without producing provider entitie
   ]
   for (const value of unsafe) assert.throws(() => resolveMusicUrl(value))
 })
+
+test('normalizes locale-prefixed Spotify share URLs', () => {
+  const cases = [
+    ['https://open.spotify.com/intl-id/track/4xAJlngfYcP4NbUqQkruOV?si=84a6908536704104', 'track', '4xAJlngfYcP4NbUqQkruOV'],
+    ['https://open.spotify.com/intl-id/album/1ABCDEF234567890', 'album', '1ABCDEF234567890'],
+    ['https://open.spotify.com/intl-id/playlist/37i9dQZF1DXcBWIGoYBM5M', 'playlist', '37i9dQZF1DXcBWIGoYBM5M']
+  ]
+
+  for (const [url, type, id] of cases) {
+    const item = resolveMusicUrl(url)
+    assert.equal(item.provider, 'spotify')
+    assert.equal(item.type, type)
+    assert.equal(item.sourceId, id)
+    assert.equal(item.canonicalUrl, `https://open.spotify.com/${type}/${id}`)
+    assert.equal(item.fingerprint, `spotify:${type}:${id}`)
+  }
+})

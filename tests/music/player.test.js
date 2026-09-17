@@ -60,3 +60,39 @@ test('maps adapter progress events into unified state', async () => {
   assert.equal(manager.getState().position, 12)
   assert.equal(manager.getState().duration, 100)
 })
+
+test('maps adapter metadata events into the current item without changing identity', async () => {
+  let emit
+  const manager = createPlayerManager({
+    createAdapter: (_item, eventEmitter) => {
+      emit = eventEmitter
+      return {
+        capabilities: { play: true, pause: true, seek: false, volume: false, next: false, previous: false, progress: false, endedEvent: false },
+        async load() {}, async play() {}, async pause() {}, async seek() {}, async setVolume() {}, getState() { return {} }, destroy() {}
+      }
+    }
+  })
+  await manager.load({ provider: 'youtube', fingerprint: 'youtube:video:AAA', sourceId: 'AAA', title: 'YouTube video' })
+  emit('metadata', { title: 'Real title', author: 'Channel', artworkUrl: 'https://img.example/a.jpg', providerLabel: 'YouTube' })
+  const current = manager.getState().currentItem
+  assert.equal(current.fingerprint, 'youtube:video:AAA')
+  assert.equal(current.sourceId, 'AAA')
+  assert.equal(current.title, 'Real title')
+  assert.equal(current.author, 'Channel')
+  assert.equal(current.artworkUrl, 'https://img.example/a.jpg')
+})
+
+test('provider-native next resumes playback when local queue has no next item', async () => {
+  const calls = []
+  const manager = createPlayerManager({
+    queueController: { next: () => null },
+    createAdapter: () => ({
+      capabilities: { play: true, pause: true, seek: false, volume: false, next: true, previous: false, progress: false, endedEvent: false },
+      async load() {}, async play() { calls.push('play') }, async pause() {}, async next() { calls.push('next') },
+      async seek() {}, async setVolume() {}, getState() { return {} }, destroy() {}
+    })
+  })
+  await manager.load({ provider: 'spotify', sourceId: 'playlist' })
+  await manager.next()
+  assert.deepEqual(calls, ['next', 'play'])
+})

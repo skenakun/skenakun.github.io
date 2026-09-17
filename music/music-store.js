@@ -1,6 +1,6 @@
 import { ERROR_CODES, MusicCenterError } from './music-contracts.js'
 
-const DB_VERSION = 1
+const DB_VERSION = 2
 const STORE_NAMES = Object.freeze({
   tracks: 'tracks',
   playlists: 'playlists',
@@ -8,7 +8,8 @@ const STORE_NAMES = Object.freeze({
   history: 'history',
   favorites: 'favorites',
   queue: 'queue',
-  settings: 'settings'
+  settings: 'settings',
+  playlistExpansions: 'playlistExpansions'
 })
 
 function makeId(prefix = 'mc') {
@@ -60,6 +61,7 @@ export async function openMusicStore(options = {}) {
     if (!db.objectStoreNames.contains(STORE_NAMES.favorites)) db.createObjectStore(STORE_NAMES.favorites, { keyPath: 'trackId' })
     if (!db.objectStoreNames.contains(STORE_NAMES.queue)) db.createObjectStore(STORE_NAMES.queue, { keyPath: 'key' })
     if (!db.objectStoreNames.contains(STORE_NAMES.settings)) db.createObjectStore(STORE_NAMES.settings, { keyPath: 'key' })
+    if (!db.objectStoreNames.contains(STORE_NAMES.playlistExpansions)) db.createObjectStore(STORE_NAMES.playlistExpansions, { keyPath: 'fingerprint' })
   }
 
   const db = await new Promise((resolve, reject) => {
@@ -195,6 +197,27 @@ export async function openMusicStore(options = {}) {
       const row = await requestPromise(tx.objectStore(STORE_NAMES.queue).get('active'))
       await transactionPromise(tx)
       return row?.value ?? null
+    },
+
+    async savePlaylistExpansion(record) {
+      if (!record?.fingerprint) throw storageError('Playlist expansion fingerprint is required')
+      const tx = db.transaction(STORE_NAMES.playlistExpansions, 'readwrite')
+      tx.objectStore(STORE_NAMES.playlistExpansions).put(cloneValue(record))
+      await transactionPromise(tx)
+      return cloneValue(record)
+    },
+
+    async getPlaylistExpansion(fingerprint) {
+      const tx = db.transaction(STORE_NAMES.playlistExpansions, 'readonly')
+      const result = await requestPromise(tx.objectStore(STORE_NAMES.playlistExpansions).get(fingerprint))
+      await transactionPromise(tx)
+      return result || null
+    },
+
+    async deletePlaylistExpansion(fingerprint) {
+      const tx = db.transaction(STORE_NAMES.playlistExpansions, 'readwrite')
+      tx.objectStore(STORE_NAMES.playlistExpansions).delete(fingerprint)
+      await transactionPromise(tx)
     },
 
     async saveSettings(settings) {

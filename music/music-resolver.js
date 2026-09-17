@@ -78,7 +78,9 @@ function parseYouTube(url, originalUrl) {
 }
 
 function parseSpotify(url, originalUrl) {
-  const parts = normalizePath(url.pathname).split('/').filter(Boolean)
+  let parts = normalizePath(url.pathname).split('/').filter(Boolean)
+  const spotifyTypes = new Set(['track', 'album', 'playlist', 'artist', 'episode', 'show'])
+  if (/^intl-[a-z]{2,3}$/i.test(parts[0] || '') && spotifyTypes.has(parts[1])) parts = parts.slice(1)
   let type = parts[0] || 'link'
   let sourceId = parts[1] || normalizePath(url.pathname)
   if (url.hostname.toLowerCase() === 'spotify.link') {
@@ -86,7 +88,7 @@ function parseSpotify(url, originalUrl) {
     sourceId = normalizePath(url.pathname)
   }
   const canonicalUrl = url.hostname.toLowerCase() === 'open.spotify.com'
-    ? `https://open.spotify.com/${[type, parts[1]].filter(Boolean).join('/')}`
+    ? `https://open.spotify.com/${[type, sourceId].filter(Boolean).join('/')}`
     : `https://${url.hostname.toLowerCase()}${normalizePath(url.pathname)}`
   return buildEntity({ provider: 'spotify', type, sourceId, canonicalUrl, originalUrl })
 }

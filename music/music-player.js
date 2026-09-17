@@ -50,6 +50,23 @@ export function createPlayerManager({ createAdapter, queueController = null, ini
       position: Number(detail?.position || 0),
       duration: Number.isFinite(Number(detail?.duration)) && Number(detail.duration) > 0 ? Number(detail.duration) : state.duration
     })
+    else if (type === 'metadata' && state.currentItem) publish({
+      currentItem: {
+        ...state.currentItem,
+        title: detail?.title || state.currentItem.title || '',
+        author: detail?.author || state.currentItem.author || '',
+        artworkUrl: detail?.artworkUrl || state.currentItem.artworkUrl || '',
+        providerLabel: detail?.providerLabel || state.currentItem.providerLabel || '',
+        activeCanonicalUrl: detail?.canonicalUrl || state.currentItem.activeCanonicalUrl || '',
+        metadataState: detail?.state || state.currentItem.metadataState || 'ready',
+        metadata: {
+          ...(state.currentItem.metadata || {}),
+          title: detail?.title || state.currentItem.metadata?.title || '',
+          author: detail?.author || state.currentItem.metadata?.author || '',
+          artworkUrl: detail?.artworkUrl || state.currentItem.metadata?.artworkUrl || ''
+        }
+      }
+    })
     else if (type === 'error') publish({
       status: PLAYBACK_STATUS.ERROR,
       error: detail instanceof Error ? detail : new MusicCenterError(ERROR_CODES.PLAYBACK_ERROR, 'Playback error')
@@ -142,6 +159,7 @@ export function createPlayerManager({ createAdapter, queueController = null, ini
     const capability = direction === 'previous' ? 'previous' : 'next'
     if (activeAdapter && state.capabilities[capability] && typeof activeAdapter[method] === 'function') {
       await activeAdapter[method]()
+      if (autoplay && state.capabilities.play) await activeAdapter.play?.()
       return state.currentItem
     }
     return null

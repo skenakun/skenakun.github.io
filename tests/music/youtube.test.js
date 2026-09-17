@@ -93,3 +93,27 @@ test('fails YouTube load when the player never becomes ready', async () => {
     error => error?.code === 'PLAYER_API_TIMEOUT'
   )
 })
+
+test('emits active YouTube video metadata from player video data', async () => {
+  const events = []
+  let handlers
+  const fakePlayer = {
+    cueVideoById() {},
+    getCurrentTime: () => 0,
+    getDuration: () => 180,
+    getVideoData: () => ({ title: 'Video title', author: 'Channel name', video_id: 'AAA' }),
+    destroy() {}
+  }
+  const adapter = createYouTubeAdapter({
+    host: {}, emit: (type, detail) => events.push([type, detail]),
+    apiLoader: async () => ({ createPlayer: (_target, nextHandlers) => { handlers = nextHandlers; queueMicrotask(() => handlers.ready?.()); return fakePlayer } })
+  })
+  await adapter.load({ provider: 'youtube', type: 'video', sourceId: 'AAA', startSeconds: 0 })
+  handlers.stateChange({ data: 1 })
+  adapter.destroy()
+  const metadata = events.find(([type]) => type === 'metadata')?.[1]
+  assert.ok(metadata)
+  assert.equal(metadata.title, 'Video title')
+  assert.equal(metadata.author, 'Channel name')
+  assert.equal(metadata.artworkUrl, 'https://i.ytimg.com/vi/AAA/hqdefault.jpg')
+})

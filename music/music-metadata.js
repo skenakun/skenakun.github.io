@@ -15,6 +15,7 @@ const PROVIDER_LABELS = Object.freeze({
 })
 
 const OEMBED_BUILDERS = Object.freeze({
+  youtube: item => item?.type === 'playlist' ? null : `https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(item.canonicalUrl)}`,
   spotify: item => `https://open.spotify.com/oembed?url=${encodeURIComponent(item.canonicalUrl)}`,
   soundcloud: item => `https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(item.canonicalUrl)}`,
   mixcloud: item => `https://app.mixcloud.com/oembed/?url=${encodeURIComponent(item.canonicalUrl)}&format=json`
@@ -43,12 +44,13 @@ export async function resolveMetadata(item, options = {}) {
   const fetchImpl = options.fetchImpl || globalThis.fetch
   const timeoutMs = Number.isFinite(options.timeoutMs) ? options.timeoutMs : 6000
   const builder = OEMBED_BUILDERS[item?.provider]
-  if (!builder || typeof fetchImpl !== 'function') return fallbackMetadata(item)
+  const endpoint = typeof builder === 'function' ? builder(item) : null
+  if (!endpoint || typeof fetchImpl !== 'function') return fallbackMetadata(item)
 
   const controller = typeof AbortController === 'function' ? new AbortController() : null
   const timer = controller ? setTimeout(() => controller.abort(), timeoutMs) : null
   try {
-    const response = await fetchImpl(builder(item), controller ? { signal: controller.signal } : undefined)
+    const response = await fetchImpl(endpoint, controller ? { signal: controller.signal } : undefined)
     if (!response?.ok) return fallbackMetadata(item)
     const data = await response.json()
     const title = scalar(data?.title)

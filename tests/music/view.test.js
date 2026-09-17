@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { buildMusicCenterMarkup, createPlayerPresentation } from '../../music/music-view.js'
+import { buildMusicCenterMarkup, createPlayerPresentation, renderQueueMarkup, selectTracksForView } from '../../music/music-view.js'
 
 test('music center markup contains semantic dialog, add-link form, navigation, queue, and transport', () => {
   const html = buildMusicCenterMarkup()
@@ -79,4 +79,61 @@ test('minimize keeps the provider overlay mounted for background playback', asyn
   assert.equal(overlayRoot.hidden, false)
   assert.equal(overlayRoot.classList.contains('is-minimized'), true)
   assert.equal(overlayRoot.getAttribute?.('aria-hidden'), undefined)
+})
+
+
+test('grouped queue markup renders playlist header, thumbnails, metadata, and controls', () => {
+  const model = {
+    queue: [
+      { queueEntryId: 'q1', queueGroupId: 'g1', queueGroupIndex: 0, title: 'Track One', author: 'Artist A', artworkUrl: 'https://img.example/one.jpg', provider: 'youtube' },
+      { queueEntryId: 'q2', queueGroupId: 'g1', queueGroupIndex: 1, title: 'Track Two', author: 'Artist B', artworkUrl: 'https://img.example/two.jpg', provider: 'youtube' }
+    ],
+    queueState: {
+      groups: [{ id: 'g1', title: 'Road Mix', collapsed: false }],
+      playOrder: ['q1', 'q2'], cursor: 1, shuffle: false
+    }
+  }
+  const html = renderQueueMarkup(model)
+  assert.match(html, /mc-queue-group/)
+  assert.match(html, /Road Mix/)
+  assert.match(html, /aria-expanded="true"/)
+  assert.match(html, /data-mc-action="queue-group-remove"/)
+  assert.match(html, /https:\/\/img\.example\/one\.jpg/)
+  assert.match(html, /Track One/)
+  assert.match(html, /Artist A/)
+  assert.match(html, /is-current/)
+})
+
+test('collapsed queue group hides children and reports active playlist position', () => {
+  const html = renderQueueMarkup({
+    queue: [
+      { queueEntryId: 'q1', queueGroupId: 'g1', queueGroupIndex: 0, title: 'Hidden One' },
+      { queueEntryId: 'q2', queueGroupId: 'g1', queueGroupIndex: 1, title: 'Hidden Two' }
+    ],
+    queueState: { groups: [{ id: 'g1', title: 'Collapsed Mix', collapsed: true }], playOrder: ['q1', 'q2'], cursor: 1, shuffle: false }
+  })
+  assert.match(html, /aria-expanded="false"/)
+  assert.match(html, /Playing 2 \/ 2/)
+  assert.doesNotMatch(html, /Hidden One/)
+  assert.doesNotMatch(html, /Hidden Two/)
+})
+
+test('shuffle queue markup renders the actual play order as a flat list', () => {
+  const html = renderQueueMarkup({
+    queue: [
+      { queueEntryId: 'q2', queueGroupId: 'g1', title: 'Second' },
+      { queueEntryId: 'q1', queueGroupId: 'g1', title: 'First' }
+    ],
+    queueState: { groups: [{ id: 'g1', title: 'Mix', collapsed: false }], playOrder: ['q2', 'q1'], cursor: 0, shuffle: true }
+  })
+  assert.doesNotMatch(html, /mc-queue-group-header/)
+  assert.ok(html.indexOf('Second') < html.indexOf('First'))
+})
+
+test('expanded playlist children stay out of Home until promoted but remain available in history', () => {
+  const hidden = { fingerprint: 'a', title: 'Child', libraryVisible: false }
+  const visible = { fingerprint: 'b', title: 'Saved', libraryVisible: true }
+  const model = { tracks: [hidden, visible], favorites: [], history: [{ trackId: 'a' }] }
+  assert.deepEqual(selectTracksForView('home', model).map(track => track.fingerprint), ['b'])
+  assert.deepEqual(selectTracksForView('recent', model).map(track => track.fingerprint), ['a'])
 })
