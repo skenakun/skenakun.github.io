@@ -30,6 +30,18 @@ function formatTime(seconds) {
   return `${minutes}:${String(value % 60).padStart(2, '0')}`
 }
 
+export function calculateTitleMarquee(contentWidth, viewportWidth) {
+  const content = Math.max(0, Number(contentWidth) || 0)
+  const viewport = Math.max(0, Number(viewportWidth) || 0)
+  const distance = Math.ceil(content - viewport)
+  if (!viewport || distance <= 4) return { active: false, distance: 0, duration: 0 }
+  return {
+    active: true,
+    distance,
+    duration: Math.max(7, Math.min(18, Number((6 + distance / 55).toFixed(2))))
+  }
+}
+
 export function createPlayerPresentation(state = {}) {
   const item = state.currentItem || null
   const caps = state.capabilities || {}
@@ -142,7 +154,7 @@ export function buildMusicCenterMarkup() {
       <footer class="mc-transport mc-panel" aria-label="Music playback controls">
         <div class="mc-transport-track">
           <div class="mc-mini-art" id="mc-transport-art">♫</div>
-          <div><strong id="mc-transport-title">Nothing playing</strong><small id="mc-transport-author">Music Center</small></div>
+          <div class="mc-title-copy"><div class="mc-title-viewport" id="mc-transport-title-viewport"><strong class="mc-marquee-title" id="mc-transport-title">Nothing playing</strong></div><small id="mc-transport-author">Music Center</small></div>
         </div>
         <div class="mc-transport-center">
           <div class="mc-transport-buttons">
@@ -174,7 +186,7 @@ export function buildMusicCenterMarkup() {
 function buildMiniMarkup() {
   return `
     <div class="mc-mini-shell mc-panel" aria-label="Mini music player">
-      <div class="mc-mini-track"><div class="mc-mini-art" id="mc-mini-art">♫</div><div><strong id="mc-mini-title">Nothing playing</strong><small id="mc-mini-author">Music Center</small></div></div>
+      <div class="mc-mini-track"><div class="mc-mini-art" id="mc-mini-art">♫</div><div class="mc-title-copy"><div class="mc-title-viewport" id="mc-mini-title-viewport"><strong class="mc-marquee-title" id="mc-mini-title">Nothing playing</strong></div><small id="mc-mini-author">Music Center</small></div></div>
       <div class="mc-mini-controls">
         <button type="button" data-mc-action="previous" aria-label="Previous">◀</button>
         <button type="button" class="mc-play-button" data-mc-action="play-pause" id="mc-mini-play" aria-label="Play">▶</button>
@@ -302,6 +314,41 @@ export function createMusicView({ overlayRoot, miniRoot, playbackHost, dispatch 
   const query = selector => overlayRoot.querySelector(selector)
   const miniQuery = selector => miniRoot.querySelector(selector)
 
+  const titleViewports = [
+    query('#mc-transport-title-viewport'),
+    miniQuery('#mc-mini-title-viewport')
+  ].filter(Boolean)
+
+  function refreshTitleMarquee(viewport) {
+    const title = viewport?.querySelector?.('.mc-marquee-title')
+    if (!title) return
+    const motion = calculateTitleMarquee(title.scrollWidth, viewport.clientWidth)
+    viewport.classList?.toggle?.('is-marquee', motion.active)
+    if (motion.active) {
+      viewport.style?.setProperty?.('--mc-marquee-distance', `${motion.distance}px`)
+      viewport.style?.setProperty?.('--mc-marquee-duration', `${motion.duration}s`)
+    } else {
+      viewport.style?.removeProperty?.('--mc-marquee-distance')
+      viewport.style?.removeProperty?.('--mc-marquee-duration')
+    }
+  }
+
+  function refreshTitleMarquees() {
+    for (const viewport of titleViewports) refreshTitleMarquee(viewport)
+  }
+
+  const scheduleTitleMarquees = () => {
+    const raf = documentRef?.defaultView?.requestAnimationFrame || globalThis.requestAnimationFrame
+    if (typeof raf === 'function') raf(refreshTitleMarquees)
+    else refreshTitleMarquees()
+  }
+
+  const ResizeObserverCtor = documentRef?.defaultView?.ResizeObserver || globalThis.ResizeObserver
+  const titleResizeObserver = typeof ResizeObserverCtor === 'function'
+    ? new ResizeObserverCtor(() => scheduleTitleMarquees())
+    : null
+  for (const viewport of titleViewports) titleResizeObserver?.observe?.(viewport)
+
   function dispatchAction(event, root) {
     const button = event.target?.closest?.('[data-mc-action]')
     if (!button || !root.contains?.(button)) return
@@ -387,6 +434,7 @@ export function createMusicView({ overlayRoot, miniRoot, playbackHost, dispatch 
     setText('#mc-duration', model.durationText)
     setText('#mc-mini-title', model.title, true)
     setText('#mc-mini-author', model.author || model.provider, true)
+    scheduleTitleMarquees()
 
     const artwork = query('#mc-artwork')
     const placeholder = query('#mc-art-placeholder')
@@ -522,6 +570,7 @@ export function createMusicView({ overlayRoot, miniRoot, playbackHost, dispatch 
     overlayRoot.setAttribute?.('aria-hidden', 'true')
     documentRef?.body?.classList?.remove('mc-page-open')
     miniRoot.hidden = !playerState?.currentItem
+    scheduleTitleMarquees()
   }
 
   return {
@@ -533,6 +582,7 @@ export function createMusicView({ overlayRoot, miniRoot, playbackHost, dispatch 
     show,
     minimize,
     destroy() {
+      titleResizeObserver?.disconnect?.()
       overlayRoot.removeEventListener('click', onOverlayClick)
       miniRoot.removeEventListener('click', onMiniClick)
       overlayRoot.removeEventListener('input', onRange)
